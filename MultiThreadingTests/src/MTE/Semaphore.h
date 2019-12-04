@@ -16,6 +16,7 @@ namespace MTE {
 		void Down();
 		void Up(); 
 
+		int GetValue() const { return m_Value; }
 
 	private:
 		int m_Value;

@@ -10,5 +10,11 @@ namespace MTE {
 		}
 
 		void Run();
+		void Stop() { 
+			this->m_Running = false; 
+		};
+
+	private:
+		bool m_Running;
 	};
 }
