@@ -3,6 +3,7 @@
 #include "Kinematics/Semaphore.h"
 #include "Kinematics/Bus/MessageBus.h"
 #include "Kinematics/Bus/BusNode.h"
+#include "Kinematics/Framework/Framework.h"
 #include <atomic>
 #include <thread>
 #include <Windows.h>
@@ -116,7 +117,12 @@ namespace Kinematics {
 
 	void Application::Run()
 	{
-		m_Running = true;
+		Framework framework;
+
+		framework.Initialize();
+		framework.Shutdown();
+
+		/*m_Running = true;
 
 		MessageBus* MB = new MessageBus();
 		InputSystem IS(MB);
@@ -153,6 +159,6 @@ namespace Kinematics {
 
 
 		ISth.join();
-		OSth.join();
+		OSth.join();*/
 	}
 }

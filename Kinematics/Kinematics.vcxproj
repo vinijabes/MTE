@@ -150,6 +150,7 @@
     <ClInclude Include="src\Kinematics\Framework\Framework.h" />
     <ClInclude Include="src\Kinematics\Framework\Interface\SubSystemInterface.h" />
     <ClInclude Include="src\Kinematics.h" />
+    <ClInclude Include="src\Kinematics\Framework\TaskManager.h" />
     <ClInclude Include="src\Kinematics\Semaphore.h" />
     <ClInclude Include="src\mtepch.h" />
   </ItemGroup>
@@ -158,6 +159,7 @@
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp" />
     <ClCompile Include="src\Kinematics\Core\Log.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Framework.cpp" />
+    <ClCompile Include="src\Kinematics\Framework\TaskManager.cpp" />
     <ClCompile Include="src\Kinematics\Semaphore.cpp" />
     <ClCompile Include="src\mtepch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

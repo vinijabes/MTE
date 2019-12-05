@@ -50,6 +50,7 @@
     <ClInclude Include="src\Kinematics\Core\Application.h">
       <Filter>Kinematics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Framework\TaskManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
@@ -66,5 +67,6 @@
       <Filter>Kinematics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kinematics\Core\Log.cpp" />
+    <ClCompile Include="src\Kinematics\Framework\TaskManager.cpp" />
   </ItemGroup>
 </Project>
