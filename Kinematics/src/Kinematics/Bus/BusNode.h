@@ -5,7 +5,7 @@
 #include "Message.h"
 #include "MessageBus.h"
 
-namespace MTE {
+namespace Kinematics {
 
 	class BusNode
 	{

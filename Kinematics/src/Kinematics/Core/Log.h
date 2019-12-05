@@ -5,8 +5,8 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/ostr.h"
 
-namespace Ava {
-	class AVA_API Log
+namespace Kinematics {
+	class KINEMATICS_API Log
 	{
 	public:
 		static void Init();
@@ -20,15 +20,15 @@ namespace Ava {
 }
 
 //Core log macros
-#define AVA_CORE_TRACE(...)		::Ava::Log::GetCoreLogger()->trace(__VA_ARGS__)
-#define AVA_CORE_INFO(...)		::Ava::Log::GetCoreLogger()->info(__VA_ARGS__)
-#define AVA_CORE_WARN(...)		::Ava::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define AVA_CORE_ERROR(...)		::Ava::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define AVA_CORE_FATAL(...)		::Ava::Log::GetCoreLogger()->fatal(__VA_ARGS__)
+#define KINEMATICS_CORE_TRACE(...)		::Kinematics::Log::GetCoreLogger()->trace(__VA_ARGS__)
+#define KINEMATICS_CORE_INFO(...)		::Kinematics::Log::GetCoreLogger()->info(__VA_ARGS__)
+#define KINEMATICS_CORE_WARN(...)		::Kinematics::Log::GetCoreLogger()->warn(__VA_ARGS__)
+#define KINEMATICS_CORE_ERROR(...)		::Kinematics::Log::GetCoreLogger()->error(__VA_ARGS__)
+#define KINEMATICS_CORE_FATAL(...)		::Kinematics::Log::GetCoreLogger()->fatal(__VA_ARGS__)
 
 //Client log macros
-#define AVA_TRACE(...)		::Ava::Log::GetClientLogger()->trace(__VA_ARGS__)
-#define AVA_INFO(...)		::Ava::Log::GetClientLogger()->info(__VA_ARGS__)
-#define AVA_WARN(...)		::Ava::Log::GetClientLogger()->warn(__VA_ARGS__)
-#define AVA_ERROR(...)		::Ava::Log::GetClientLogger()->error(__VA_ARGS__)
-#define AVA_FATAL(...)		::Ava::Log::GetClientLogger()->fatal(__VA_ARGS__)
+#define KINEMATICS_TRACE(...)		::Kinematics::Log::GetClientLogger()->trace(__VA_ARGS__)
+#define KINEMATICS_INFO(...)		::Kinematics::Log::GetClientLogger()->info(__VA_ARGS__)
+#define KINEMATICS_WARN(...)		::Kinematics::Log::GetClientLogger()->warn(__VA_ARGS__)
+#define KINEMATICS_ERROR(...)		::Kinematics::Log::GetClientLogger()->error(__VA_ARGS__)
+#define KINEMATICS_FATAL(...)		::Kinematics::Log::GetClientLogger()->fatal(__VA_ARGS__)

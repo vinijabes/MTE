@@ -3,7 +3,7 @@
 #include <mutex>
 #include <condition_variable>
 
-namespace MTE {
+namespace Kinematics {
 	class Semaphore
 	{
 	public:

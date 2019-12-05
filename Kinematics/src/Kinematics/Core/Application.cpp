@@ -1,22 +1,25 @@
 #include "mtepch.h"
 #include "Application.h"
-#include "Semaphore.h"
-#include "./Bus/MessageBus.h"
-#include "./Bus/BusNode.h"
+#include "Kinematics/Semaphore.h"
+#include "Kinematics/Bus/MessageBus.h"
+#include "Kinematics/Bus/BusNode.h"
 #include <atomic>
 #include <thread>
 #include <Windows.h>
 #include <conio.h>
 
-namespace MTE {
+namespace Kinematics {
 
 	Semaphore iSemaphore(1);
 	Semaphore oSemaphore(1);
 
-	class InputSystem : public BusNode {
+	class InputSystem : public BusNode
+	{
 	public:
 		InputSystem(MessageBus* messageBus)
-			: BusNode(messageBus) {}
+			: BusNode(messageBus)
+		{
+		}
 
 		void Run()
 		{
@@ -25,11 +28,13 @@ namespace MTE {
 			{
 				iSemaphore.Down();
 
-				if (GetKeyState(65) & 0x8000) {
+				if (GetKeyState(65) & 0x8000)
+				{
 					this->m_MessageBus->SendMessage(Message("A"));
 				}
 
-				if (GetKeyState(VK_UP) & 0x8000) {
+				if (GetKeyState(VK_UP) & 0x8000)
+				{
 					this->m_MessageBus->SendMessage(Message("SETA PRA CIMA"));
 				}
 
@@ -55,10 +60,13 @@ namespace MTE {
 		std::atomic<bool> m_Running;
 	};
 
-	class OutputSystem : public BusNode {
+	class OutputSystem : public BusNode
+	{
 	public:
 		OutputSystem(MessageBus* messageBus)
-			: BusNode(messageBus) {}
+			: BusNode(messageBus)
+		{
+		}
 
 		void Run()
 		{
@@ -93,6 +101,19 @@ namespace MTE {
 		}
 	}
 
+	Application* Application::s_Instance = nullptr;
+
+	Application::Application()
+	{
+		KINEMATICS_CORE_ASSERT(!s_Instance, "Application Already Exists");
+		s_Instance = this;
+	}
+
+	Application::~Application()
+	{
+
+	}
+
 	void Application::Run()
 	{
 		m_Running = true;
@@ -105,7 +126,8 @@ namespace MTE {
 		else std::cout << "Nao salve!" << std::endl;
 
 		MB->AddReceiver([=](Message message) -> void {
-			if (message.getEvent() == "Stop") {
+			if (message.getEvent() == "Stop")
+			{
 				this->Stop();
 			}
 			});
@@ -116,7 +138,8 @@ namespace MTE {
 		std::thread ISth(&InputSystem::Run, &IS);
 		std::thread OSth(&OutputSystem::Run, &OS);
 
-		while (m_Running) {
+		while (m_Running)
+		{
 			if (iSemaphore.GetValue() == -1 && oSemaphore.GetValue() == -1)
 			{
 				iSemaphore.Up();

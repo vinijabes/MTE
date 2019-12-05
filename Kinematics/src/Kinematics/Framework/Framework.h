@@ -31,6 +31,7 @@ namespace Kinematics {
 		}
 
 	private:
+		bool m_Running = true;
 		std::unordered_map<std::string, SubSystemInterface*> m_SubSystems;
 	};
 

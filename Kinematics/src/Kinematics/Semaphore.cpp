@@ -1,7 +1,7 @@
 #include "mtepch.h"
 #include "Semaphore.h"
 
-namespace MTE {
+namespace Kinematics {
 
 	void Semaphore::Down()
 	{

@@ -1,57 +1,70 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Arquivos de Origem">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Kinematics">
+      <UniqueIdentifier>{6D2B3314-59E3-7461-C2EA-4DBDAEC10F52}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Arquivos de Cabeçalho">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Kinematics\Bus">
+      <UniqueIdentifier>{0608A007-F2D5-930D-DB69-0434C7D66F72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Arquivos de Recurso">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Kinematics\Core">
+      <UniqueIdentifier>{E57BA1FB-5107-0FC0-5A18-92B4C6226BC0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kinematics\Framework">
+      <UniqueIdentifier>{2A94A088-1623-2A52-BF41-3E4DABAF3AF8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kinematics\Framework\Interface">
+      <UniqueIdentifier>{8AB89A99-76DE-6400-5F24-EACB4BE989CC}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Kinematics.cpp">
-      <Filter>Arquivos de Origem</Filter>
-    </ClCompile>
-    <ClCompile Include="src\mtepch.cpp">
-      <Filter>Arquivos de Origem</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kinematics\Application.cpp">
-      <Filter>Arquivos de Origem</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kinematics\Semaphore.cpp">
-      <Filter>Arquivos de Origem</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kinematics\Framework\Framework.cpp">
-      <Filter>Arquivos de Origem</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\mtepch.h">
-      <Filter>Arquivos de Cabeçalho</Filter>
-    </ClInclude>
     <ClInclude Include="src\Kinematics\Bus\BusNode.h">
-      <Filter>Arquivos de Cabeçalho</Filter>
+      <Filter>Kinematics\Bus</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Bus\Message.h">
-      <Filter>Arquivos de Cabeçalho</Filter>
+      <Filter>Kinematics\Bus</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kinematics\Semaphore.h">
-      <Filter>Arquivos de Cabeçalho</Filter>
+    <ClInclude Include="src\Kinematics\Bus\MessageBus.h">
+      <Filter>Kinematics\Bus</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Core\Core.h">
+      <Filter>Kinematics\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Core\Log.h">
+      <Filter>Kinematics\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Framework.h">
-      <Filter>Arquivos de Cabeçalho</Filter>
+      <Filter>Kinematics\Framework</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Interface\SubSystemInterface.h">
-      <Filter>Arquivos de Cabeçalho</Filter>
+      <Filter>Kinematics\Framework\Interface</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kinematics\Kinematics.h">
-      <Filter>Arquivos de Cabeçalho</Filter>
+    <ClInclude Include="src\Kinematics\Semaphore.h">
+      <Filter>Kinematics</Filter>
     </ClInclude>
+    <ClInclude Include="src\mtepch.h" />
+    <ClInclude Include="src\Kinematics.h">
+      <Filter>Kinematics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Core\EntryPoint.h" />
+    <ClInclude Include="src\Kinematics\Core\Application.h">
+      <Filter>Kinematics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
+      <Filter>Kinematics\Bus</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Framework\Framework.cpp">
+      <Filter>Kinematics\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Semaphore.cpp">
+      <Filter>Kinematics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mtepch.cpp" />
+    <ClCompile Include="src\Kinematics\Core\Application.cpp">
+      <Filter>Kinematics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Core\Log.cpp" />
   </ItemGroup>
 </Project>

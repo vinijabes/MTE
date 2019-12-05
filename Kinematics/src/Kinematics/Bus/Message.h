@@ -1,6 +1,6 @@
 #pragma once
 
-namespace MTE {
+namespace Kinematics {
 	class Message
 	{
 	public:

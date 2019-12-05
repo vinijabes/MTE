@@ -9,9 +9,14 @@ namespace Kinematics {
 
 	void Framework::Run()
 	{
+		while (m_Running)
+		{
+
+		}
 	}
 
 	void Framework::Stop()
 	{
+		m_Running = false;
 	}
 }

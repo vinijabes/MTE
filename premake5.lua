@@ -19,9 +19,6 @@ IncludeDir["glm"] = "Kinematics/vendor/glm"
 IncludeDir["stb_image"] = "Kinematics/vendor/stb_image"
 
 group "Dependencies"
-    include "Kinematics/vendor/GLFW"
-    include "Kinematics/vendor/Glad"
-    include "Kinematics/vendor/imgui"
 
 group ""
 
@@ -35,8 +32,8 @@ project "Kinematics"
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")
 
-    pchheader "Kinematicspch.h"
-    pchsource "Kinematics/src/Kinematicspch.cpp"
+    pchheader "mtepch.h"
+    pchsource "Kinematics/src/mtepch.cpp"
 
     files
     {
@@ -53,19 +50,10 @@ project "Kinematics"
     {
         "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
-        "%{IncludeDir.GLFW}",
-        "%{IncludeDir.Glad}",
-        "%{IncludeDir.ImGui}",
-        "%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
     }
 
     links
     {
-        "GLFW",
-        "Glad",
-        "ImGui",
-        "opengl32.lib"
     }
 
     filter "system:windows"        
@@ -74,7 +62,7 @@ project "Kinematics"
 
     defines
     {
-        "Kinematics_BUILD_DLL",
+        "KINEMATICS_BUILD_DLL",
         "GLFW_INCLUDE_NONE"
     }
 
@@ -84,17 +72,17 @@ project "Kinematics"
     }
 
     filter "configurations:Debug"
-        defines "Kinematics_DEBUG"
+        defines "KINEMATICS_DEBUG"
         runtime "Debug"        
         symbols "on"
 
     filter "configurations:Release"
-        defines "Kinematics_RELEASE"
+        defines "KINEMATICS_RELEASE"
         runtime "Release"
         optimize "on"
     
     filter "configurations:Dist"
-        defines "Kinematics_DIST"
+        defines "KINEMATICS_DIST"
         runtime "Release"
         optimize "on"
 
@@ -119,7 +107,6 @@ project "Sandbox"
         "Kinematics/vendor/spdlog/include",
         "Kinematics/src",
         "Kinematics/vendor",
-        "%{IncludeDir.glm}"
     }
 
     links
@@ -132,16 +119,16 @@ project "Sandbox"
         systemversion "latest"
 
     filter "configurations:Debug"
-        defines "Kinematics_DEBUG"
+        defines "KINEMATICS_DEBUG"
         runtime "Debug"
         symbols "on"
 
     filter "configurations:Release"
-        defines "Kinematics_RELEASE"
+        defines "KINEMATICS_RELEASE"
         runtime "Release"
         optimize "on"
     
     filter "configurations:Dist"
-        defines "Kinematics_DIST"
+        defines "KINEMATICS_DIST"
         runtime "Release"
         optimize "on"

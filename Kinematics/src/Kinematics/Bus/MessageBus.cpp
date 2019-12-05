@@ -1,5 +1,5 @@
 #include "mtepch.h"
 
-namespace MTE {
+namespace Kinematics {
 
 }

@@ -5,7 +5,7 @@
 
 #include "Message.h"
 
-namespace MTE {
+namespace Kinematics {
 	class MessageBus {
 	public:
 		MessageBus() {};
