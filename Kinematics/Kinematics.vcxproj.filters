@@ -39,9 +39,6 @@
     <ClInclude Include="src\Kinematics\Framework\Interface\SubSystemInterface.h">
       <Filter>Kinematics\Framework\Interface</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kinematics\Semaphore.h">
-      <Filter>Kinematics</Filter>
-    </ClInclude>
     <ClInclude Include="src\mtepch.h" />
     <ClInclude Include="src\Kinematics.h">
       <Filter>Kinematics</Filter>
@@ -50,10 +47,14 @@
     <ClInclude Include="src\Kinematics\Core\Application.h">
       <Filter>Kinematics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kinematics\Framework\TaskManager.h" />
     <ClInclude Include="src\Kinematics\Framework\Interface\TaskInterface.h" />
-    <ClInclude Include="src\Kinematics\Framework\FactoryManager.h" />
     <ClInclude Include="src\Kinematics\Framework\Systems\GraphicsSubSystem.h" />
+    <ClInclude Include="src\Kinematics\Framework\Managers\FactoryManager.h" />
+    <ClInclude Include="src\Kinematics\Framework\Managers\TaskManager.h" />
+    <ClInclude Include="src\Kinematics\Framework\Async\Semaphore.h">
+      <Filter>Kinematics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Framework\Managers\BackgroundTask.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
@@ -62,15 +63,16 @@
     <ClCompile Include="src\Kinematics\Framework\Framework.cpp">
       <Filter>Kinematics\Framework</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kinematics\Semaphore.cpp">
-      <Filter>Kinematics</Filter>
-    </ClCompile>
     <ClCompile Include="src\mtepch.cpp" />
     <ClCompile Include="src\Kinematics\Core\Application.cpp">
       <Filter>Kinematics</Filter>
     </ClCompile>
     <ClCompile Include="src\Kinematics\Core\Log.cpp" />
-    <ClCompile Include="src\Kinematics\Framework\TaskManager.cpp" />
-    <ClCompile Include="src\Kinematics\Framework\FactoryManager.cpp" />
+    <ClCompile Include="src\Kinematics\Framework\Managers\FactoryManager.cpp" />
+    <ClCompile Include="src\Kinematics\Framework\Managers\TaskManager.cpp" />
+    <ClCompile Include="src\Kinematics\Framework\Async\Semaphore.cpp">
+      <Filter>Kinematics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Framework\Managers\BackgroundTask.cpp" />
   </ItemGroup>
 </Project>

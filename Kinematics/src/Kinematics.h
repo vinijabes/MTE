@@ -4,4 +4,5 @@
 #include "Kinematics/Core/Log.h"
 
 #include "Kinematics/Framework/Framework.h"
-#include "Kinematics/Framework/TaskManager.h"
+#include "Kinematics/Framework/Managers/TaskManager.h"
+#include "Kinematics/Framework/Managers/FactoryManager.h"

@@ -18,6 +18,8 @@ namespace Kinematics {
 	{
 		m_Running = false;
 
+		while (m_RunningCount > 0 || m_RunningBackgroundCount > 0);
+
 		m_Condition.notify_all();
 
 		for (int i = 0; i < m_Pool.size(); i++)

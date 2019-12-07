@@ -1,6 +1,5 @@
 #include "mtepch.h"
 #include "Application.h"
-#include "Kinematics/Semaphore.h"
 #include "Kinematics/Bus/MessageBus.h"
 #include "Kinematics/Bus/BusNode.h"
 #include "Kinematics/Framework/Framework.h"

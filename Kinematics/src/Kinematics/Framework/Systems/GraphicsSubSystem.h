@@ -1,6 +1,6 @@
 #pragma once
 #include "Kinematics/Framework/Interface/SubSystemInterface.h"
-#include "Kinematics/Framework/FactoryManager.h"
+#include "Kinematics/Framework/Managers/FactoryManager.h"
 
 namespace Kinematics {
 	class GraphicsSubSystem : public SubSystemInterface
@@ -22,7 +22,7 @@ namespace Kinematics {
 
 		virtual std::vector<std::string> GetDependencies()
 		{
-			return {"PhysicsSubSystem"};
+			return {};
 		}
 
 		SUBSYSTEM_CLASS_TYPE(GraphicsSubSystem);

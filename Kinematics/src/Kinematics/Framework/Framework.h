@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Kinematics/Framework/Interface/SubSystemInterface.h"
-#include "Kinematics/Framework/FactoryManager.h"
+#include "Kinematics/Framework/Managers/FactoryManager.h"
 #include <map>
 
 namespace Kinematics {

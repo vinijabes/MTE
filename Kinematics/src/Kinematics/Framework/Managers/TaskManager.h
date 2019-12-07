@@ -58,6 +58,7 @@ namespace Kinematics {
 		int m_ThreadCount;
 		std::atomic<bool> m_Running;
 		std::atomic<int> m_RunningCount = 0;
+		std::atomic<int> m_RunningBackgroundCount = 0;
 		std::vector<std::thread> m_Pool;
 		std::queue<TaskInterface*> m_Tasks;
 

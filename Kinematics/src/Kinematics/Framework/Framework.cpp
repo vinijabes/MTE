@@ -1,8 +1,7 @@
 #include "mtepch.h"
 #include "Framework.h"
-#include "TaskManager.h"
-#include "FactoryManager.h"
 #include "Systems/GraphicsSubSystem.h"
+#include "Kinematics/Framework/Managers/TaskManager.h"
 
 namespace Kinematics {
 	void Framework::Initialize()
