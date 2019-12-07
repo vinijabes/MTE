@@ -51,6 +51,9 @@
       <Filter>Kinematics</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\TaskManager.h" />
+    <ClInclude Include="src\Kinematics\Framework\Interface\TaskInterface.h" />
+    <ClInclude Include="src\Kinematics\Framework\FactoryManager.h" />
+    <ClInclude Include="src\Kinematics\Framework\Systems\GraphicsSubSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
@@ -68,5 +71,6 @@
     </ClCompile>
     <ClCompile Include="src\Kinematics\Core\Log.cpp" />
     <ClCompile Include="src\Kinematics\Framework\TaskManager.cpp" />
+    <ClCompile Include="src\Kinematics\Framework\FactoryManager.cpp" />
   </ItemGroup>
 </Project>

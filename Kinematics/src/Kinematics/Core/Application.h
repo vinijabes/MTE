@@ -10,13 +10,8 @@ namespace Kinematics {
 
 		virtual ~Application();
 
-		void Run();
-		void Stop() { 
-			this->m_Running = false; 
-		};
-
-	private:
-		bool m_Running = true;
+		virtual void Run() = 0;
+		virtual void Stop() = 0;
 
 	private:
 		static Application* s_Instance;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Kinematics/Framework/Interface/SubSystemInterface.h"
+#include "Kinematics/Framework/FactoryManager.h"
 #include <map>
 
 namespace Kinematics {
@@ -14,14 +15,30 @@ namespace Kinematics {
 		virtual void Initialize();
 		virtual void Shutdown();
 
-		virtual void Run();
-		virtual void Stop();
+		virtual void Update();
 
 		template <class T>
 		void AddSubSystem()
 		{
-			SubSystemInterface *subSystem = new T();
-			m_SubSystems[T::GetStaticName()] = subSystem;
+			this->AddSubSystem(T::GetStaticName());
+		}
+
+		void AddSubSystem(std::string name)
+		{
+			SubSystemInterface* subSystem = FactoryManager::GetInstance()->Create(name);
+
+			KINEMATICS_ASSERT(subSystem != NULL, "Factory can't instantiate selected subsystem!");
+			m_SubSystems[subSystem->GetName()] = subSystem;
+
+			std::vector<std::string> dependencies = subSystem->GetDependencies();
+
+			for (auto dependencie : dependencies)
+			{
+				if (m_SubSystems.find(dependencie) == m_SubSystems.end())
+				{
+					this->AddSubSystem(dependencie);
+				}
+			}
 		}
 
 		template <class T>
@@ -31,7 +48,6 @@ namespace Kinematics {
 		}
 
 	private:
-		bool m_Running = true;
 		std::unordered_map<std::string, SubSystemInterface*> m_SubSystems;
 	};
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Kinematics/Core/Log.h"
+#include "Kinematics/Framework/Interface/TaskInterface.h"
 #include <thread>
 #include <atomic>
 #include <vector>
@@ -30,7 +31,7 @@ namespace Kinematics {
 		void Initialize();
 		void Shutdown();
 
-		void AddTask(std::string task)
+		void AddTask(TaskInterface* task)
 		{
 			{
 				std::unique_lock<std::mutex> lock(m_QueueMutex);
@@ -38,6 +39,11 @@ namespace Kinematics {
 			}
 
 			m_Condition.notify_one();
+		}
+
+		void WaitRunningTaskComplete()
+		{
+			while (m_RunningCount > 0);
 		}
 
 	private:
@@ -51,8 +57,9 @@ namespace Kinematics {
 
 		int m_ThreadCount;
 		std::atomic<bool> m_Running;
+		std::atomic<int> m_RunningCount = 0;
 		std::vector<std::thread> m_Pool;
-		std::queue<std::string> m_Tasks;
+		std::queue<TaskInterface*> m_Tasks;
 
 		std::mutex m_QueueMutex;
 		std::condition_variable m_Condition;

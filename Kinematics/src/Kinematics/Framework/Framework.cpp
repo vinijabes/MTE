@@ -1,30 +1,23 @@
 #include "mtepch.h"
 #include "Framework.h"
 #include "TaskManager.h"
+#include "FactoryManager.h"
+#include "Systems/GraphicsSubSystem.h"
 
 namespace Kinematics {
-
 	void Framework::Initialize()
 	{
 		TaskManager::GetInstance()->SetThreadCount(std::thread::hardware_concurrency());
 		TaskManager::GetInstance()->Initialize();
-		TaskManager::GetInstance()->AddTask("Teste1");
-		TaskManager::GetInstance()->AddTask("Teste2");
-		TaskManager::GetInstance()->AddTask("Teste3");
-		TaskManager::GetInstance()->AddTask("Teste4");
+
+		this->AddSubSystem("GraphicsSubSystem");
 	}
 
-	void Framework::Run()
+	void Framework::Update()
 	{
-		while (m_Running)
-		{
+		for (auto subSystem : m_SubSystems) subSystem.second->Update();
 
-		}
-	}
-
-	void Framework::Stop()
-	{
-		m_Running = false;
+		TaskManager::GetInstance()->WaitRunningTaskComplete();
 	}
 
 	void Framework::Shutdown()

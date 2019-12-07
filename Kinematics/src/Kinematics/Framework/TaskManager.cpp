@@ -35,21 +35,27 @@ namespace Kinematics {
 	void TaskManager::ThreadLoop()
 	{
 		KINEMATICS_TRACE("RUNNING THREAD: {}", std::this_thread::get_id());
-		std::string task;
+		TaskInterface* task = NULL;
 		while (m_Running)
 		{
 			{
 				std::unique_lock<std::mutex> lock(m_QueueMutex);
-
+				
+				m_RunningCount -= 1;
 				m_Condition.wait(lock, [=] {return !m_Tasks.empty() || !m_Running; });
 				if (!m_Tasks.empty())
 				{
 					task = m_Tasks.front();
 					m_Tasks.pop();
+					m_RunningCount += 1;
 				}
 			}
 
-			KINEMATICS_TRACE("EXECUTING THASK {} ON THREAD {}", task,  std::this_thread::get_id());
+			if(task != NULL){
+				task->OnAccepted();
+				task->Run();
+				task->OnCompleted();
+			}
 		}
 	}
 }

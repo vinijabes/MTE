@@ -13,6 +13,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "Kinematics/Core/Log.h"
+
 #define MTE_PLATFORM_WINDOWS
 
 #ifdef MTE_PLATFORM_WINDOWS

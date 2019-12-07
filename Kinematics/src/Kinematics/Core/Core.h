@@ -58,7 +58,7 @@
 #endif
 
 #ifdef KINEMATICS_DEBUG
-#define AVA_ENABLE_ASSERTS
+#define KINEMATICS_ENABLE_ASSERTS
 #endif
 
 
