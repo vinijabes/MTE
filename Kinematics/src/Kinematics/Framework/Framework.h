@@ -26,8 +26,8 @@ namespace Kinematics {
 		void AddSubSystem(std::string name)
 		{
 			SubSystemInterface* subSystem = FactoryManager::GetInstance()->Create(name);
-
 			KINEMATICS_ASSERT(subSystem != NULL, "Factory can't instantiate selected subsystem!");
+
 			m_SubSystems[subSystem->GetName()] = subSystem;
 
 			std::vector<std::string> dependencies = subSystem->GetDependencies();
@@ -39,6 +39,8 @@ namespace Kinematics {
 					this->AddSubSystem(dependencie);
 				}
 			}
+
+			subSystem->Initialize();
 		}
 
 		template <class T>

@@ -59,6 +59,24 @@ private:
 	std::function<void()> m_Callback;
 };
 
+class BackgroundReadFile : public Kinematics::BackgroundTask
+{
+	void Run() override
+	{
+		for (int i = 0; i < 500; i++);
+	}
+
+	void OnCancel() override
+	{
+		KINEMATICS_TRACE("BACKGROUND TASK CANCELLED");
+	}
+
+	void OnBackgroundCompleted() override
+	{
+		KINEMATICS_TRACE("BACKGROUND TASK COMPLETED");
+	}
+};
+
 class Sandbox : public Kinematics::Application
 {
 public:
@@ -78,24 +96,7 @@ public:
 		Kinematics::Framework framework;
 
 		framework.Initialize();
-
-		Kinematics::TaskManager::GetInstance()->AddTask(new FunctionTask([=] {
-			std::this_thread::sleep_for(std::chrono::milliseconds(100));
-			Kinematics::TaskManager::GetInstance()->AddTask(new FunctionTask([=] { this->Stop(); }));
-		}));
-		Kinematics::TaskManager::GetInstance()->AddTask(new ExampleTask(rand() % 10000 + 2000));
-		Kinematics::TaskManager::GetInstance()->AddTask(new ExampleTask(rand() % 10000 + 2000));
-		Kinematics::TaskManager::GetInstance()->AddTask(new ExampleTask(rand() % 10000 + 2000));
-		Kinematics::TaskManager::GetInstance()->AddTask(new ExampleTask(rand() % 10000 + 2000));
-		Kinematics::TaskManager::GetInstance()->AddTask(new ExampleTask(rand() % 10000 + 2000));
-		Kinematics::TaskManager::GetInstance()->AddTask(new ExampleTask(rand() % 10000 + 2000));
-		Kinematics::TaskManager::GetInstance()->AddTask(new ExampleTask(rand() % 10000 + 2000));
-		Kinematics::TaskManager::GetInstance()->AddTask(new ExampleTask(rand() % 10000 + 2000));
-		Kinematics::TaskManager::GetInstance()->AddTask(new ExampleTask(rand() % 10000 + 2000));
-		Kinematics::TaskManager::GetInstance()->AddTask(new ExampleTask(rand() % 10000 + 2000));
-		Kinematics::TaskManager::GetInstance()->AddTask(new ExampleTask(rand() % 10000 + 2000));
-
-
+		
 		while (this->m_Running)
 		{
 			framework.Update();

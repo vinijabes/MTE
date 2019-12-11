@@ -2,6 +2,7 @@
 
 #include "Kinematics/Core/Log.h"
 #include "Kinematics/Framework/Interface/TaskInterface.h"
+#include "Kinematics/Framework/Interface/BackgroundTaskInterface.h"
 #include <thread>
 #include <atomic>
 #include <vector>
@@ -26,7 +27,11 @@ namespace Kinematics {
 			return m_Instance;
 		}
 
-		void SetThreadCount(int count) { this->m_ThreadCount = count; }
+		void SetThreadCount(int count) 
+		{ 
+			this->m_ThreadCount = count; 
+			this->m_MaxBackgroundThreads = std::max(count / 4, 1);
+		}
 
 		void Initialize();
 		void Shutdown();
@@ -35,7 +40,11 @@ namespace Kinematics {
 		{
 			{
 				std::unique_lock<std::mutex> lock(m_QueueMutex);
-				m_Tasks.push(task);
+
+				if (task->GetType() == TASK_TYPE::ASYNC_TASK)
+					m_Tasks.push(task);
+				else if (task->GetType() == TASK_TYPE::BACKGROUND_TASK)
+					m_BackgroundTasks.push(task);
 			}
 
 			m_Condition.notify_one();
@@ -47,7 +56,10 @@ namespace Kinematics {
 		}
 
 	private:
-		TaskManager() {}
+		TaskManager()
+			: m_ThreadCount(std::thread::hardware_concurrency()),
+			m_MaxBackgroundThreads(std::thread::hardware_concurrency() / 4)
+		{}
 
 		void ThreadLoop();
 		void Push();
@@ -56,11 +68,14 @@ namespace Kinematics {
 		static TaskManager* m_Instance;
 
 		int m_ThreadCount;
+		int m_MaxBackgroundThreads;
 		std::atomic<bool> m_Running;
 		std::atomic<int> m_RunningCount = 0;
 		std::atomic<int> m_RunningBackgroundCount = 0;
+
 		std::vector<std::thread> m_Pool;
 		std::queue<TaskInterface*> m_Tasks;
+		std::queue<TaskInterface*> m_BackgroundTasks;
 
 		std::mutex m_QueueMutex;
 		std::condition_variable m_Condition;

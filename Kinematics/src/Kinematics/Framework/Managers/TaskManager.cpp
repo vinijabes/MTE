@@ -42,18 +42,42 @@ namespace Kinematics {
 		{
 			{
 				std::unique_lock<std::mutex> lock(m_QueueMutex);
-				
-				m_RunningCount -= 1;
-				m_Condition.wait(lock, [=] {return !m_Tasks.empty() || !m_Running; });
-				if (!m_Tasks.empty())
+
+				if (task) 
 				{
-					task = m_Tasks.front();
-					m_Tasks.pop();
-					m_RunningCount += 1;
+					if (task->GetType() == TASK_TYPE::ASYNC_TASK)
+					{
+						m_RunningCount -= 1;
+					}
+					else if (task->GetType() == TASK_TYPE::BACKGROUND_TASK)
+					{
+						m_RunningBackgroundCount -= 1;
+					}
+				}
+
+				task = NULL;
+
+				m_Condition.wait(lock, [=] {return !m_Tasks.empty() || !m_Running; });
+
+				if ((!m_Tasks.empty() || !m_BackgroundTasks.empty()) && m_Running)
+				{
+					if (m_RunningBackgroundCount < this->m_MaxBackgroundThreads && !m_BackgroundTasks.empty())
+					{
+						task = m_BackgroundTasks.front();
+						m_BackgroundTasks.pop();
+						m_RunningBackgroundCount += 1;
+					}
+					else if (!m_Tasks.empty())
+					{
+						task = m_Tasks.front();
+						m_Tasks.pop();
+						m_RunningCount += 1;
+					}
+
 				}
 			}
 
-			if(task != NULL){
+			if (task != NULL) {
 				task->OnAccepted();
 				task->Run();
 				task->OnCompleted();

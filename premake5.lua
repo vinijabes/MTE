@@ -19,6 +19,8 @@ IncludeDir["glm"] = "Kinematics/vendor/glm"
 IncludeDir["stb_image"] = "Kinematics/vendor/stb_image"
 
 group "Dependencies"
+    include "Kinematics/vendor/GLFW"
+    include "Kinematics/vendor/Glad"
 
 group ""
 
@@ -39,6 +41,8 @@ project "Kinematics"
     {
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp",
+        "%{prj.name}/vendor/glm/glm/**.hpp",
+        "%{prj.name}/vendor/glm/glm/**.inl",
     }
 
     defines
@@ -50,10 +54,16 @@ project "Kinematics"
     {
         "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
+        "%{IncludeDir.GLFW}",
+        "%{IncludeDir.Glad}",
+        "%{IncludeDir.glm}",
     }
 
     links
     {
+        "GLFW",
+        "Glad",
+        "opengl32.lib"
     }
 
     filter "system:windows"        
@@ -107,6 +117,7 @@ project "Sandbox"
         "Kinematics/vendor/spdlog/include",
         "Kinematics/src",
         "Kinematics/vendor",
+        "%{IncludeDir.glm}"
     }
 
     links

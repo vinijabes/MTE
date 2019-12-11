@@ -22,7 +22,7 @@ namespace Kinematics {
 
 		virtual std::vector<std::string> GetDependencies()
 		{
-			return {};
+			return { "WindowSubSystem" };
 		}
 
 		SUBSYSTEM_CLASS_TYPE(GraphicsSubSystem);

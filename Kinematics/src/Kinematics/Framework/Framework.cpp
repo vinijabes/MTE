@@ -1,6 +1,7 @@
 #include "mtepch.h"
 #include "Framework.h"
 #include "Systems/GraphicsSubSystem.h"
+#include "Systems/WindowSubSystem.h"
 #include "Kinematics/Framework/Managers/TaskManager.h"
 
 namespace Kinematics {
@@ -21,6 +22,7 @@ namespace Kinematics {
 
 	void Framework::Shutdown()
 	{
+		for (auto subSystem : m_SubSystems) subSystem.second->Shutdown();
 		TaskManager::GetInstance()->Shutdown();
 	}
 }

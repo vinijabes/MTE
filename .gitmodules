@@ -1,0 +1,9 @@
+[submodule "Ava/vendor/spdlog"]
+	path = Ava/vendor/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "Ava/vendor/GLFW"]
+	path = Ava/vendor/GLFW
+	url = https://github.com/TheCherno/GLFW
+[submodule "Ava/vendor/glm"]
+	path = Ava/vendor/glm
+	url = https://github.com/g-truc/glm

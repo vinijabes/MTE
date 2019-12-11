@@ -17,8 +17,7 @@ namespace Kinematics {
 			FactoryManager::GetInstance()->RegisterSubSystem(id, []() {return static_cast<SubSystemInterface*>(new T()); });
 		}
 	};
-
-#define CREATE_FACTORY(id, type) FactoryRegistrator<type> _##type##Factory(id);
+#define CREATE_FACTORY(id, type) inline extern FactoryRegistrator<type> _##type##Factory(id);
 
 	class FactoryManager
 	{
