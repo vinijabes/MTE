@@ -11,11 +11,12 @@ namespace Kinematics {
 		if (m_FactoryTemplates.find(subsystem) == m_FactoryTemplates.end())
 			m_FactoryTemplates[subsystem] = subsystemFactory;
 	}
-	SubSystemInterface* FactoryManager::Create(std::string subsystem)
+
+	Ref<SubSystemInterface> FactoryManager::Create(std::string subsystem)
 	{
 		KINEMATICS_CORE_ASSERT(m_FactoryTemplates.find(subsystem) != m_FactoryTemplates.end(), "Factory of " + subsystem + " is not registered");
 		if (m_FactoryTemplates.find(subsystem) == m_FactoryTemplates.end()) return NULL;
 
-		return m_FactoryTemplates[subsystem]();
+		return Ref<SubSystemInterface>(m_FactoryTemplates[subsystem]());
 	}
 }

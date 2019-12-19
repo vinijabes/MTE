@@ -59,6 +59,19 @@ private:
 	std::function<void()> m_Callback;
 };
 
+class EmptyTask : public Kinematics::TaskInterface
+{
+public:
+	EmptyTask(int i) : m_Index(i) {}
+
+	void Run() override {
+		for (size_t i = 0; i < 100000; i++);
+		//KINEMATICS_TRACE("RUNNING TASK {}", m_Index);
+	};
+
+	int m_Index;
+};
+
 class BackgroundReadFile : public Kinematics::BackgroundTask
 {
 	void Run() override
@@ -76,6 +89,7 @@ class BackgroundReadFile : public Kinematics::BackgroundTask
 		KINEMATICS_TRACE("BACKGROUND TASK COMPLETED");
 	}
 };
+
 
 class Sandbox : public Kinematics::Application
 {
@@ -95,11 +109,16 @@ public:
 		srand(time(NULL));
 		Kinematics::Framework framework;
 
+		std::function<void()>* cb = new std::function<void()>([=] { m_Running = false; });
 		framework.Initialize();
-		
+		framework.GetSubSystem("WindowSubSystem")->SendMessage("Close", (void*)(cb));
+
 		while (this->m_Running)
 		{
-			framework.Update();
+			{
+				Timer t("Sandbox::Update", []{});
+				framework.Update();
+			}
 		}
 
 		framework.Shutdown();

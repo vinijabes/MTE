@@ -22,8 +22,14 @@ namespace Kinematics {
 		virtual void Initialize() = 0;
 		virtual void Shutdown() = 0;
 
+		virtual void PreSchedule() {};
+		virtual void Schedule() {};
+		virtual void PreUpdate() {};
 		virtual void Update() = 0;
+		virtual void PostUpdate() {};
 
 		virtual std::vector<std::string> GetDependencies() = 0;
+
+		virtual void SendMessage(std::string name, void* content) {}
 	};
 }

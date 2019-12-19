@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Kinematics/Core/Core.h"
 #include "Kinematics/Framework/Interface/SubSystemInterface.h"
 #include <functional>
 #include <unordered_map>
@@ -36,7 +37,7 @@ namespace Kinematics {
 		}
 
 		void RegisterSubSystem(std::string subsystem, SUBSYSTEM_CONSTRUCTOR subsystemFactory);
-		SubSystemInterface* Create(std::string subsystem);
+		Ref<SubSystemInterface> Create(std::string subsystem);
 	private:
 		FactoryManager() {}
 

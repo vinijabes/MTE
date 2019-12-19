@@ -3,6 +3,7 @@
 #include "Systems/GraphicsSubSystem.h"
 #include "Systems/WindowSubSystem.h"
 #include "Kinematics/Framework/Managers/TaskManager.h"
+#include "Kinematics/Core/Timer.h"
 
 namespace Kinematics {
 	void Framework::Initialize()
@@ -15,9 +16,39 @@ namespace Kinematics {
 
 	void Framework::Update()
 	{
-		for (auto subSystem : m_SubSystems) subSystem.second->Update();
+		{
+			/*READ PHASE*/
+			for (auto subSystem : m_SubSystems)
+				subSystem.second->PreSchedule();
+		}
 
-		TaskManager::GetInstance()->WaitRunningTaskComplete();
+		{
+			/*SCHEDULING ALL TASKS*/
+			for (auto subSystem : m_SubSystems)
+				subSystem.second->Schedule();
+		}
+
+		{
+			/*CALLED JUST BEFORE UPDATE*/
+			for (auto subSystem : m_SubSystems)
+				subSystem.second->PreUpdate();
+		}
+
+		{
+			/*UPDATING ALL STATES AND DOING PROGRAM LOGIC*/
+			for (auto subSystem : m_SubSystems)
+				subSystem.second->Update();
+		}
+
+		{
+			/*CALLED JUST AFTER UPDATE*/
+			for (auto subSystem : m_SubSystems)
+				subSystem.second->PostUpdate();
+		}
+
+		{
+			TaskManager::GetInstance()->WaitRunningTaskComplete();
+		}
 	}
 
 	void Framework::Shutdown()

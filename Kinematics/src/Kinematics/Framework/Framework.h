@@ -25,7 +25,7 @@ namespace Kinematics {
 
 		void AddSubSystem(std::string name)
 		{
-			SubSystemInterface* subSystem = FactoryManager::GetInstance()->Create(name);
+			Ref<SubSystemInterface> subSystem = FactoryManager::GetInstance()->Create(name);
 			KINEMATICS_ASSERT(subSystem != NULL, "Factory can't instantiate selected subsystem!");
 
 			m_SubSystems[subSystem->GetName()] = subSystem;
@@ -49,8 +49,19 @@ namespace Kinematics {
 			m_SubSystems.erase(T::GetStaticName());
 		}
 
+		template <class T>
+		T* GetSubSystem()
+		{
+			return m_SubSystems[T::GetStaticName()];
+		}
+
+		Ref<SubSystemInterface> GetSubSystem(std::string name)
+		{
+			return m_SubSystems[name];
+		}
+
 	private:
-		std::unordered_map<std::string, SubSystemInterface*> m_SubSystems;
+		std::unordered_map<std::string, Ref<SubSystemInterface>> m_SubSystems;
 	};
 
 }

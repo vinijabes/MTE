@@ -156,13 +156,17 @@
     <ClInclude Include="src\Kinematics\Core\Application.h" />
     <ClInclude Include="src\Kinematics\Core\Core.h" />
     <ClInclude Include="src\Kinematics\Core\EntryPoint.h" />
+    <ClInclude Include="src\Kinematics\Core\Hash.h" />
     <ClInclude Include="src\Kinematics\Core\Log.h" />
+    <ClInclude Include="src\Kinematics\Core\Timer.h" />
     <ClInclude Include="src\Kinematics\Framework\Async\Semaphore.h" />
+    <ClInclude Include="src\Kinematics\Framework\Async\WorkerThread.h" />
     <ClInclude Include="src\Kinematics\Framework\Framework.h" />
     <ClInclude Include="src\Kinematics\Framework\Interface\BackgroundTaskInterface.h" />
     <ClInclude Include="src\Kinematics\Framework\Interface\SubSystemInterface.h" />
     <ClInclude Include="src\Kinematics\Framework\Interface\TaskInterface.h" />
     <ClInclude Include="src\Kinematics\Framework\Managers\FactoryManager.h" />
+    <ClInclude Include="src\Kinematics\Framework\Managers\StateManager.h" />
     <ClInclude Include="src\Kinematics\Framework\Managers\TaskManager.h" />
     <ClInclude Include="src\Kinematics\Framework\Systems\GraphicsSubSystem.h" />
     <ClInclude Include="src\Kinematics\Framework\Systems\WindowSubSystem.h" />
@@ -541,6 +545,7 @@
     <ClCompile Include="src\Kinematics\Core\Application.cpp" />
     <ClCompile Include="src\Kinematics\Core\Log.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Async\Semaphore.cpp" />
+    <ClCompile Include="src\Kinematics\Framework\Async\WorkerThread.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Framework.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Managers\FactoryManager.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Managers\TaskManager.cpp" />

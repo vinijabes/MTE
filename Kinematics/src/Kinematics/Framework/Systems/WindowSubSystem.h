@@ -5,6 +5,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+
 namespace Kinematics {
 
 	static void GLFWErrorCallback(int error, const char* description)
@@ -33,8 +34,27 @@ namespace Kinematics {
 			return {};
 		}
 
+		void SetWindowCloseCallback(GLFWwindowclosefun fun) { glfwSetWindowCloseCallback(m_Window, fun); }
+
 		void SetVSync(bool enabled);
 		bool IsVSync() const;
+
+		virtual void SendMessage(std::string name, void* content)
+		{
+			if (name == "Close")
+			{
+				m_Data.closeCb = ((std::function<void()>*)(content));
+				glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
+					WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+					if (data.closeCb)
+					{
+						std::function<void()>* cb = data.closeCb;
+						(*cb)();
+					}
+						
+				});
+			}
+		}
 
 		SUBSYSTEM_CLASS_TYPE(WindowSubSystem);
 
@@ -43,11 +63,12 @@ namespace Kinematics {
 
 	private:
 
-		struct WindowData 
+		struct WindowData
 		{
 			std::string Title;
 			unsigned int Width, Height;
 			bool VSync;
+			std::function<void()> *closeCb;
 		};
 
 		WindowData m_Data;

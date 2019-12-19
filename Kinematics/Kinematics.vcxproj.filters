@@ -99,6 +99,9 @@
     <ClInclude Include="src\Kinematics\Framework\Systems\GraphicsSubSystem.h">
       <Filter>src\Kinematics\Framework\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Framework\Systems\WindowSubSystem.h">
+      <Filter>src\Kinematics\Framework\Systems</Filter>
+    </ClInclude>
     <ClInclude Include="src\mtepch.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -1206,7 +1209,10 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kinematics\Framework\Systems\WindowSubSystem.h" />
+    <ClInclude Include="src\Kinematics\Framework\Async\WorkerThread.h" />
+    <ClInclude Include="src\Kinematics\Core\Timer.h" />
+    <ClInclude Include="src\Kinematics\Core\Hash.h" />
+    <ClInclude Include="src\Kinematics\Framework\Managers\StateManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
@@ -1230,9 +1236,12 @@
     <ClCompile Include="src\Kinematics\Framework\Managers\TaskManager.cpp">
       <Filter>src\Kinematics\Framework\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kinematics\Framework\Systems\WindowSubSystem.cpp">
+      <Filter>src\Kinematics\Framework\Systems</Filter>
+    </ClCompile>
     <ClCompile Include="src\mtepch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kinematics\Framework\Systems\WindowSubSystem.cpp" />
+    <ClCompile Include="src\Kinematics\Framework\Async\WorkerThread.cpp" />
   </ItemGroup>
 </Project>
