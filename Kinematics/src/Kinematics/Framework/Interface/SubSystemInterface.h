@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "Kinematics/Framework/Events/Event.h"
+
 namespace Kinematics {
 
 #define SUBSYSTEM_CLASS_TYPE(type) static const char* GetStaticName() {return #type;}\
@@ -27,6 +29,8 @@ namespace Kinematics {
 		virtual void PreUpdate() {};
 		virtual void Update() = 0;
 		virtual void PostUpdate() {};
+
+		virtual void OnEvent(Event& e) {};
 
 		virtual std::vector<std::string> GetDependencies() = 0;
 

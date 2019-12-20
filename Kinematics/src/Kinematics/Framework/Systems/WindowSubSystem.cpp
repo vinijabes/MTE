@@ -32,6 +32,16 @@ namespace Kinematics {
 		glViewport(0, 0, width, height);
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
+
+		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
+			WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+			StateManager::GetInstance()->Emit(new WindowCloseEvent());
+			});
+
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+			WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+			StateManager::GetInstance()->Emit(new WindowResizeEvent(width, height));
+			});
 	};
 
 	void WindowSubSystem::Shutdown()
@@ -58,6 +68,16 @@ namespace Kinematics {
 	bool WindowSubSystem::IsVSync() const
 	{
 		return m_Data.VSync;
+	}
+
+	void WindowSubSystem::SetWindowCloseCallback(WindowInputCallback fun)
+	{
+		m_Data.closeCb = fun;
+	}
+
+	void WindowSubSystem::SetWindowResizeCallback(WindowInputCallback fun)
+	{
+		m_Data.resizeCb = fun;
 	}
 
 }

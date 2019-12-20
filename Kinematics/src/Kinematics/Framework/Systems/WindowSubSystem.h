@@ -1,6 +1,7 @@
 #pragma once
-#include "Kinematics/Framework/Interface/SubSystemInterface.h"
+#include "Kinematics/Framework/Interface/WindowSubSystemInterface.h"
 #include "Kinematics/Framework/Managers/FactoryManager.h"
+#include "Kinematics/Framework/Managers/StateManager.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -13,7 +14,7 @@ namespace Kinematics {
 		KINEMATICS_CORE_ERROR("GLFW ERROR {0}: {1}", error, description);
 	}
 
-	class WindowSubSystem : public SubSystemInterface
+	class WindowSubSystem : public WindowSubSystemInterface
 	{
 	public:
 		WindowSubSystem()
@@ -22,39 +23,23 @@ namespace Kinematics {
 		}
 		~WindowSubSystem() {}
 
-		virtual void Install() {};
-		virtual void Uninstall() {};
+		virtual void Install() override {};
+		virtual void Uninstall() override {};
 
-		virtual void Initialize();
-		virtual void Shutdown();
+		virtual void Initialize() override;
+		virtual void Shutdown() override;
 
-		virtual void Update();
-		virtual std::vector<std::string> GetDependencies()
+		virtual void Update() override;
+		virtual std::vector<std::string> GetDependencies() override
 		{
 			return {};
 		}
 
-		void SetWindowCloseCallback(GLFWwindowclosefun fun) { glfwSetWindowCloseCallback(m_Window, fun); }
+		void SetWindowCloseCallback(WindowInputCallback fun) override;
+		void SetWindowResizeCallback(WindowInputCallback fun) override;
 
-		void SetVSync(bool enabled);
-		bool IsVSync() const;
-
-		virtual void SendMessage(std::string name, void* content)
-		{
-			if (name == "Close")
-			{
-				m_Data.closeCb = ((std::function<void()>*)(content));
-				glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
-					WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-					if (data.closeCb)
-					{
-						std::function<void()>* cb = data.closeCb;
-						(*cb)();
-					}
-						
-				});
-			}
-		}
+		void SetVSync(bool enabled) override;
+		bool IsVSync() const override;
 
 		SUBSYSTEM_CLASS_TYPE(WindowSubSystem);
 
@@ -68,7 +53,8 @@ namespace Kinematics {
 			std::string Title;
 			unsigned int Width, Height;
 			bool VSync;
-			std::function<void()> *closeCb;
+			WindowInputCallback closeCb;
+			WindowInputCallback resizeCb;
 		};
 
 		WindowData m_Data;

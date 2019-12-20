@@ -16,6 +16,8 @@ namespace Kinematics {
 
 	void Framework::Update()
 	{
+		StateManager::GetInstance()->NotifyAll();
+
 		{
 			/*READ PHASE*/
 			for (auto subSystem : m_SubSystems)

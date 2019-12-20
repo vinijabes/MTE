@@ -1213,6 +1213,8 @@
     <ClInclude Include="src\Kinematics\Core\Timer.h" />
     <ClInclude Include="src\Kinematics\Core\Hash.h" />
     <ClInclude Include="src\Kinematics\Framework\Managers\StateManager.h" />
+    <ClInclude Include="src\Kinematics\Framework\Interface\WindowSubSystemInterface.h" />
+    <ClInclude Include="src\Kinematics\Framework\Events\Event.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
@@ -1243,5 +1245,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Kinematics\Framework\Async\WorkerThread.cpp" />
+    <ClCompile Include="src\Kinematics\Framework\Managers\StateManager.cpp" />
   </ItemGroup>
 </Project>

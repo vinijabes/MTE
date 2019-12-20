@@ -32,10 +32,10 @@
  * since android is based on the linux kernel
  * it has __linux__ defined */
 #elif defined(__ANDROID__)
-#define HZ_PLATFORM_ANDROID
+#define KINEMATICS_PLATFORM_ANDROID
 #error "Android is not supported!"
 #elif defined(__linux__)
-#define HZ_PLATFORM_LINUX
+#define KINEMATICS_PLATFORM_LINUX
 #error "Linux is not supported!"
 #else
 /* Unknown compiler/platform */
@@ -45,16 +45,16 @@
 
 #ifdef KINEMATICS_PLATFORM_WINDOWS
 #if KINEMATICS_DYNAMIC_LINK
-#ifdef AVA_BUILD_DLL
-#define AVA_API __declspec(dllexport)
+#ifdef KINEMATICS_BUILD_DLL
+#define KINEMATICS_API __declspec(dllexport)
 #else
-#define AVA_API __declspec(dllimport)
+#define KINEMATICS_API __declspec(dllimport)
 #endif
 #else
 #define KINEMATICS_API 
 #endif
 #else
-#error Ava only support Windows!
+#error Kinematics only support Windows!
 #endif
 
 #ifdef KINEMATICS_DEBUG

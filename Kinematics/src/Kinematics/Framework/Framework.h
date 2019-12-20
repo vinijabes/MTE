@@ -50,9 +50,9 @@ namespace Kinematics {
 		}
 
 		template <class T>
-		T* GetSubSystem()
+		Ref<T> GetSubSystem()
 		{
-			return m_SubSystems[T::GetStaticName()];
+			return std::dynamic_pointer_cast<T>(m_SubSystems[T::GetStaticName()]);
 		}
 
 		Ref<SubSystemInterface> GetSubSystem(std::string name)

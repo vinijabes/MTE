@@ -64,7 +64,8 @@ class EmptyTask : public Kinematics::TaskInterface
 public:
 	EmptyTask(int i) : m_Index(i) {}
 
-	void Run() override {
+	void Run() override
+	{
 		for (size_t i = 0; i < 100000; i++);
 		//KINEMATICS_TRACE("RUNNING TASK {}", m_Index);
 	};
@@ -111,12 +112,25 @@ public:
 
 		std::function<void()>* cb = new std::function<void()>([=] { m_Running = false; });
 		framework.Initialize();
-		framework.GetSubSystem("WindowSubSystem")->SendMessage("Close", (void*)(cb));
+		Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::WindowClose, [=](Kinematics::Event* e) {
+			this->Stop();
+			return false;
+		});
+
+		Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::WindowResize, [=](Kinematics::Event* e) {
+			Kinematics::WindowResizeEvent* we = (Kinematics::WindowResizeEvent*) e;
+			KINEMATICS_TRACE("Window Resize: {} {}", we->GetWidth(), we->GetHeight());
+			return false;
+		});
+
+		framework.GetSubSystem<Kinematics::WindowSubSystemInterface>()->SetWindowResizeCallback([=](Kinematics::Event& e) {
+			//KINEMATICS_CORE_TRACE("Window Resized: {} {}", message.GetWidth(), message.GetHeight());
+			});
 
 		while (this->m_Running)
 		{
 			{
-				Timer t("Sandbox::Update", []{});
+				//Timer t("Sandbox::Update", [] {});
 				framework.Update();
 			}
 		}
