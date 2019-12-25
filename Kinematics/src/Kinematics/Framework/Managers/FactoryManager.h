@@ -7,7 +7,7 @@
 
 namespace Kinematics {
 
-	typedef std::function<SubSystemInterface * ()> SUBSYSTEM_CONSTRUCTOR;
+	typedef std::function<Ref<SubSystemInterface>()> SUBSYSTEM_CONSTRUCTOR;
 
 	template <typename T>
 	class FactoryRegistrator
@@ -15,9 +15,15 @@ namespace Kinematics {
 	public:
 		FactoryRegistrator(const char* id)
 		{
-			FactoryManager::GetInstance()->RegisterSubSystem(id, []() {return static_cast<SubSystemInterface*>(new T()); });
+			FactoryManager::GetInstance()->RegisterSubSystem(id, []() {return std::static_pointer_cast<SubSystemInterface>( T::Create()); });
+		}
+
+		FactoryRegistrator(const char* id, SUBSYSTEM_CONSTRUCTOR fn)
+		{
+			FactoryManager::GetInstance()->RegisterSubSystem(id, fn);
 		}
 	};
+
 #define CREATE_FACTORY(id, type) inline extern FactoryRegistrator<type> _##type##Factory(id);
 
 	class FactoryManager

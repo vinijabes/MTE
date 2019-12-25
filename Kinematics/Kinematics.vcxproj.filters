@@ -19,14 +19,26 @@
     <Filter Include="src\Kinematics\Framework\Async">
       <UniqueIdentifier>{8E85C881-7AAB-92E8-63F1-17B44FB6B7B4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Kinematics\Framework\Events">
+      <UniqueIdentifier>{652E59C4-D111-6804-DA14-964046772E55}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Kinematics\Framework\Interface">
       <UniqueIdentifier>{C1668E08-ADA2-9172-16B5-A96902103A8D}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Kinematics\Framework\Managers">
       <UniqueIdentifier>{9EE8F164-0A57-47E4-5340-02E4BFED3C80}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Kinematics\Framework\Systems">
-      <UniqueIdentifier>{A8282E8D-9479-19CF-BDDD-0791A98DAC38}</UniqueIdentifier>
+    <Filter Include="src\Kinematics\Renderer">
+      <UniqueIdentifier>{4A74C244-B6AB-0ADC-BFB5-6EFF2B6C31D5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform">
+      <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\OpenGL">
+      <UniqueIdentifier>{35A49437-A105-7245-2A73-B8F796D3A804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\Windows">
+      <UniqueIdentifier>{5B054582-4794-CE4B-F0B2-E246DC20DFF1}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
@@ -48,6 +60,9 @@
     </Filter>
     <Filter Include="vendor\glm\glm\gtx">
       <UniqueIdentifier>{B3A6A76B-9F8A-68C1-08EB-6214F4ED5243}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\stb_image">
+      <UniqueIdentifier>{0DA0BA59-F998-D9AB-22CB-BE300E23B9B7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -72,16 +87,34 @@
     <ClInclude Include="src\Kinematics\Core\EntryPoint.h">
       <Filter>src\Kinematics\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Core\Hash.h">
+      <Filter>src\Kinematics\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Core\KeyCodes.h">
+      <Filter>src\Kinematics\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kinematics\Core\Log.h">
+      <Filter>src\Kinematics\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Core\Timer.h">
       <Filter>src\Kinematics\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Async\Semaphore.h">
       <Filter>src\Kinematics\Framework\Async</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Framework\Async\WorkerThread.h">
+      <Filter>src\Kinematics\Framework\Async</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Framework\Events\Event.h">
+      <Filter>src\Kinematics\Framework\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Framework.h">
       <Filter>src\Kinematics\Framework</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Interface\BackgroundTaskInterface.h">
+      <Filter>src\Kinematics\Framework\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Framework\Interface\GraphicsSubSystemInterface.h">
       <Filter>src\Kinematics\Framework\Interface</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Interface\SubSystemInterface.h">
@@ -90,17 +123,68 @@
     <ClInclude Include="src\Kinematics\Framework\Interface\TaskInterface.h">
       <Filter>src\Kinematics\Framework\Interface</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Framework\Interface\WindowSubSystemInterface.h">
+      <Filter>src\Kinematics\Framework\Interface</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Managers\FactoryManager.h">
+      <Filter>src\Kinematics\Framework\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Framework\Managers\StateManager.h">
       <Filter>src\Kinematics\Framework\Managers</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Managers\TaskManager.h">
       <Filter>src\Kinematics\Framework\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kinematics\Framework\Systems\GraphicsSubSystem.h">
-      <Filter>src\Kinematics\Framework\Systems</Filter>
+    <ClInclude Include="src\Kinematics\Renderer\Buffer.h">
+      <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kinematics\Framework\Systems\WindowSubSystem.h">
-      <Filter>src\Kinematics\Framework\Systems</Filter>
+    <ClInclude Include="src\Kinematics\Renderer\GraphicsContext.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\OrthographicCamera.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\RenderCommand.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\Renderer.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\Renderer2D.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\RendererAPI.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\Shader.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\Texture.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\VertexArray.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowSubSystem.h">
+      <Filter>src\Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\mtepch.h">
       <Filter>src</Filter>
@@ -1209,12 +1293,14 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kinematics\Framework\Async\WorkerThread.h" />
-    <ClInclude Include="src\Kinematics\Core\Timer.h" />
-    <ClInclude Include="src\Kinematics\Core\Hash.h" />
-    <ClInclude Include="src\Kinematics\Framework\Managers\StateManager.h" />
-    <ClInclude Include="src\Kinematics\Framework\Interface\WindowSubSystemInterface.h" />
-    <ClInclude Include="src\Kinematics\Framework\Events\Event.h" />
+    <ClInclude Include="vendor\stb_image\stb_image.h">
+      <Filter>vendor\stb_image</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\OrthographicCameraController.h" />
+    <ClInclude Include="src\Kinematics\Core\Timestep.h" />
+    <ClInclude Include="src\Kinematics\Framework\Events\ApplicationEvent.h" />
+    <ClInclude Include="src\Kinematics\Framework\Events\MouseEvent.h" />
+    <ClInclude Include="src\Kinematics\Debug\Instrumentor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
@@ -1229,22 +1315,75 @@
     <ClCompile Include="src\Kinematics\Framework\Async\Semaphore.cpp">
       <Filter>src\Kinematics\Framework\Async</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kinematics\Framework\Async\WorkerThread.cpp">
+      <Filter>src\Kinematics\Framework\Async</Filter>
+    </ClCompile>
     <ClCompile Include="src\Kinematics\Framework\Framework.cpp">
       <Filter>src\Kinematics\Framework</Filter>
     </ClCompile>
     <ClCompile Include="src\Kinematics\Framework\Managers\FactoryManager.cpp">
       <Filter>src\Kinematics\Framework\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kinematics\Framework\Managers\StateManager.cpp">
+      <Filter>src\Kinematics\Framework\Managers</Filter>
+    </ClCompile>
     <ClCompile Include="src\Kinematics\Framework\Managers\TaskManager.cpp">
       <Filter>src\Kinematics\Framework\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kinematics\Framework\Systems\WindowSubSystem.cpp">
-      <Filter>src\Kinematics\Framework\Systems</Filter>
+    <ClCompile Include="src\Kinematics\Renderer\Buffer.cpp">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Renderer\OrthographicCamera.cpp">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Renderer\RenderCommand.cpp">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Renderer\Renderer.cpp">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Renderer\Renderer2D.cpp">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Renderer\RendererAPI.cpp">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Renderer\Shader.cpp">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Renderer\Texture.cpp">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Renderer\VertexArray.cpp">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowSubSystem.cpp">
+      <Filter>src\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\mtepch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kinematics\Framework\Async\WorkerThread.cpp" />
-    <ClCompile Include="src\Kinematics\Framework\Managers\StateManager.cpp" />
+    <ClCompile Include="vendor\stb_image\stb_image.cpp">
+      <Filter>vendor\stb_image</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Renderer\OrthographicCameraController.cpp" />
   </ItemGroup>
 </Project>

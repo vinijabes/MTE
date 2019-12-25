@@ -1,9 +1,11 @@
 #include "mtepch.h"
 #include "Framework.h"
-#include "Systems/GraphicsSubSystem.h"
-#include "Systems/WindowSubSystem.h"
 #include "Kinematics/Framework/Managers/TaskManager.h"
 #include "Kinematics/Core/Timer.h"
+#include "Kinematics/Core/Timestep.h"
+
+#include "GLFW/glfw3.h"
+
 
 namespace Kinematics {
 	void Framework::Initialize()
@@ -11,12 +13,16 @@ namespace Kinematics {
 		TaskManager::GetInstance()->SetThreadCount(std::thread::hardware_concurrency());
 		TaskManager::GetInstance()->Initialize();
 
-		this->AddSubSystem("GraphicsSubSystem");
+		this->AddSubSystem("WindowSubSystem");
 	}
 
 	void Framework::Update()
 	{
 		StateManager::GetInstance()->NotifyAll();
+
+		float time = (float)glfwGetTime();
+		Timestep timestep = time - m_LastFrameTime;
+		m_LastFrameTime = time;
 
 		{
 			/*READ PHASE*/
@@ -39,7 +45,7 @@ namespace Kinematics {
 		{
 			/*UPDATING ALL STATES AND DOING PROGRAM LOGIC*/
 			for (auto subSystem : m_SubSystems)
-				subSystem.second->Update();
+				subSystem.second->Update(timestep);
 		}
 
 		{

@@ -4,6 +4,9 @@
 [submodule "Ava/vendor/GLFW"]
 	path = Ava/vendor/GLFW
 	url = https://github.com/TheCherno/GLFW
+[submodule "Ava/vendor/imgui"]
+	path = Ava/vendor/imgui
+	url = https://github.com/TheCherno/imgui
 [submodule "Ava/vendor/glm"]
 	path = Ava/vendor/glm
 	url = https://github.com/g-truc/glm

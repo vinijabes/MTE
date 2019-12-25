@@ -1,7 +1,16 @@
 #include "mtepch.h"
 #include "WindowSubSystem.h"
 
+#include "Platform/OpenGL/OpenGLContext.h"
+#include "Kinematics/Renderer/Renderer.h"
+#include "Kinematics/Renderer/Renderer2D.h"
+
+#include "Kinematics/Core/Timer.h"
+
+
 namespace Kinematics {
+
+	SUBSYSTEM_CONSTRUCTOR WindowSubSystemInterface::s_WindowSubSystemInterfaceFactory = [] {return CreateRef<WindowSubSystem>(); };
 
 	void WindowSubSystem::Initialize()
 	{
@@ -15,33 +24,32 @@ namespace Kinematics {
 		glfwSetErrorCallback(GLFWErrorCallback);
 
 		m_Window = glfwCreateWindow(m_Data.Width, m_Data.Height, m_Data.Title.c_str(), NULL, NULL);
-		KINEMATICS_ASSERT(m_Window, "Failed to create window!");
 
-		glfwMakeContextCurrent(m_Window);
-		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-
-		KINEMATICS_CORE_ASSERT(status, "Failed to initialize Glad!");
-
-		KINEMATICS_CORE_INFO("OpenGL Info:");
-		KINEMATICS_CORE_INFO(" Vendor: {0}", glGetString(GL_VENDOR));
-		KINEMATICS_CORE_INFO(" Renderer: {0}", glGetString(GL_RENDERER));
-		KINEMATICS_CORE_INFO(" Version: {0}", glGetString(GL_VERSION));
+		m_Context = CreateScope<OpenGLContext>(m_Window);
+		m_Context->Init();
 
 		int width, height;
 		glfwGetFramebufferSize(m_Window, &width, &height);
 		glViewport(0, 0, width, height);
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
+		SetVSync(m_Data.VSync);
 
 		glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
-			WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
 			StateManager::GetInstance()->Emit(new WindowCloseEvent());
 			});
 
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
-			WindowData* data = (WindowData*)glfwGetWindowUserPointer(window);
+			//glViewport(0, 0, width, height);
 			StateManager::GetInstance()->Emit(new WindowResizeEvent(width, height));
 			});
+
+		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double x, double y) {
+			StateManager::GetInstance()->Emit(new MouseMovedEvent(x, y));
+			});
+
+
+		Renderer::Init();
 	};
 
 	void WindowSubSystem::Shutdown()
@@ -50,10 +58,26 @@ namespace Kinematics {
 		glfwTerminate();
 	};
 
-	void WindowSubSystem::Update()
+	void WindowSubSystem::Update(Timestep ts)
 	{
+		KINEMATICS_PROFILE_FUNCTION();
+
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
+		m_Context->SwapBuffers();
+
+		m_CameraController.OnUpdate(ts);
+		{
+			KINEMATICS_PROFILE_SCOPE("Prepare to Render");
+			Kinematics::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+			Kinematics::RenderCommand::Clear();
+		}
+
+		{
+			KINEMATICS_PROFILE_SCOPE("Rendering");
+			Renderer2D::BeginScene(m_CameraController.GetCamera());
+			Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+			Renderer2D::EndScene();
+		}
 	}
 	void WindowSubSystem::SetVSync(bool enabled)
 	{
@@ -68,16 +92,6 @@ namespace Kinematics {
 	bool WindowSubSystem::IsVSync() const
 	{
 		return m_Data.VSync;
-	}
-
-	void WindowSubSystem::SetWindowCloseCallback(WindowInputCallback fun)
-	{
-		m_Data.closeCb = fun;
-	}
-
-	void WindowSubSystem::SetWindowResizeCallback(WindowInputCallback fun)
-	{
-		m_Data.resizeCb = fun;
 	}
 
 }

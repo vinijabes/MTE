@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "Kinematics/Framework/Events/Event.h"
+#include "Kinematics/Core/Timestep.h"
 
 namespace Kinematics {
 
@@ -27,7 +28,7 @@ namespace Kinematics {
 		virtual void PreSchedule() {};
 		virtual void Schedule() {};
 		virtual void PreUpdate() {};
-		virtual void Update() = 0;
+		virtual void Update(Timestep ts) = 0;
 		virtual void PostUpdate() {};
 
 		virtual void OnEvent(Event& e) {};

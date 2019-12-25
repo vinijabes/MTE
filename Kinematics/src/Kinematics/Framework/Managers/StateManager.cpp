@@ -21,7 +21,7 @@ namespace Kinematics {
 			Event* e = m_Messages.front();
 			for (auto observer : m_Observers[e->GetEventType()])
 			{
-				observer(e);
+				observer(*e);
 			}
 
 			m_Messages.pop();

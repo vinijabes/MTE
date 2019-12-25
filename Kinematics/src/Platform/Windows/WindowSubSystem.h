@@ -1,11 +1,10 @@
 #pragma once
 #include "Kinematics/Framework/Interface/WindowSubSystemInterface.h"
-#include "Kinematics/Framework/Managers/FactoryManager.h"
-#include "Kinematics/Framework/Managers/StateManager.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Kinematics/Renderer/OrthographicCameraController.h"
 
 namespace Kinematics {
 
@@ -18,6 +17,7 @@ namespace Kinematics {
 	{
 	public:
 		WindowSubSystem()
+			: m_CameraController(1280.0f / 720.0f, true)
 		{
 			KINEMATICS_TRACE("{0} Instantiated!", this->GetName());
 		}
@@ -29,23 +29,17 @@ namespace Kinematics {
 		virtual void Initialize() override;
 		virtual void Shutdown() override;
 
-		virtual void Update() override;
+		virtual void Update(Timestep ts) override;
 		virtual std::vector<std::string> GetDependencies() override
 		{
 			return {};
 		}
 
-		void SetWindowCloseCallback(WindowInputCallback fun) override;
-		void SetWindowResizeCallback(WindowInputCallback fun) override;
-
-		void SetVSync(bool enabled) override;
-		bool IsVSync() const override;
-
-		SUBSYSTEM_CLASS_TYPE(WindowSubSystem);
+		virtual void SetVSync(bool enabled) override;
+		virtual bool IsVSync() const override;
 
 	private:
 		GLFWwindow* m_Window;
-
 	private:
 
 		struct WindowData
@@ -58,7 +52,12 @@ namespace Kinematics {
 		};
 
 		WindowData m_Data;
+
+		GLuint VertexArrayID;
+		GLuint vertexbuffer;
+
+		OrthographicCameraController m_CameraController;
 	};
 
-	CREATE_FACTORY("WindowSubSystem", WindowSubSystem);
+	//CREATE_FACTORY("WindowSubSystem", WindowSubSystem);
 }

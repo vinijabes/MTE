@@ -2,6 +2,7 @@
 
 #include "Kinematics/Framework/Interface/SubSystemInterface.h"
 #include "Kinematics/Framework/Managers/FactoryManager.h"
+#include "Kinematics/Framework/Managers/StateManager.h"
 #include <map>
 
 namespace Kinematics {
@@ -62,6 +63,7 @@ namespace Kinematics {
 
 	private:
 		std::unordered_map<std::string, Ref<SubSystemInterface>> m_SubSystems;
+		float m_LastFrameTime = 0.0f;
 	};
 
 }

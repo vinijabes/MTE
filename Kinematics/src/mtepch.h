@@ -14,7 +14,8 @@
 #include <unordered_set>
 
 #include "Kinematics/Core/Log.h"
-#include "Kinematics/Core/Hash.h"
+
+#include "Kinematics/Debug/Instrumentor.h"
 
 #define MTE_PLATFORM_WINDOWS
 

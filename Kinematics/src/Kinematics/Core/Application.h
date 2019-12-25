@@ -13,6 +13,7 @@ namespace Kinematics {
 		virtual void Run() = 0;
 		virtual void Stop() = 0;
 
+		static inline Application& Get() { return *s_Instance; }
 	private:
 		static Application* s_Instance;
 	};
