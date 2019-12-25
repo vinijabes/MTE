@@ -14,6 +14,7 @@ namespace Kinematics {
 		TaskManager::GetInstance()->Initialize();
 
 		this->AddSubSystem("WindowSubSystem");
+		this->AddSubSystem("NetworkSubSystem");
 	}
 
 	void Framework::Update()

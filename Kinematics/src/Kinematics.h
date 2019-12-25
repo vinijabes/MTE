@@ -27,3 +27,4 @@
 #include "Kinematics/Framework/Managers/StateManager.h"
 
 #include "Kinematics/Framework/Interface/WindowSubSystemInterface.h"
+#include "Kinematics/Framework/Interface/NetworkSubSystemInterface.h"

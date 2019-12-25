@@ -1,8 +1,6 @@
 #include "mtepch.h"
 #include "Application.h"
 
-#include "Kinematics/Framework/Events/Event.h"
-
 namespace Kinematics {
 	Application* Application::s_Instance = nullptr;
 

@@ -7,6 +7,8 @@
 
 #include "Kinematics/Core/Timer.h"
 
+#include "Kinematics/Framework/Managers/StateManager.h"
+
 
 namespace Kinematics {
 
@@ -30,7 +32,6 @@ namespace Kinematics {
 
 		int width, height;
 		glfwGetFramebufferSize(m_Window, &width, &height);
-		glViewport(0, 0, width, height);
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(m_Data.VSync);
@@ -40,7 +41,10 @@ namespace Kinematics {
 			});
 
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
-			//glViewport(0, 0, width, height);
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			data.Width = width;
+			data.Height = height;
+
 			StateManager::GetInstance()->Emit(new WindowResizeEvent(width, height));
 			});
 
@@ -48,8 +52,12 @@ namespace Kinematics {
 			StateManager::GetInstance()->Emit(new MouseMovedEvent(x, y));
 			});
 
-
 		Renderer::Init();
+
+		StateManager::GetInstance()->On(EventType::WindowResize, [=](Event& e) {
+			this->OnEvent(e);
+			return false;
+			});
 	};
 
 	void WindowSubSystem::Shutdown()
@@ -75,7 +83,7 @@ namespace Kinematics {
 		{
 			KINEMATICS_PROFILE_SCOPE("Rendering");
 			Renderer2D::BeginScene(m_CameraController.GetCamera());
-			Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+			Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 			Renderer2D::EndScene();
 		}
 	}
@@ -92,6 +100,18 @@ namespace Kinematics {
 	bool WindowSubSystem::IsVSync() const
 	{
 		return m_Data.VSync;
+	}
+
+	void WindowSubSystem::OnEvent(Event& e)
+	{
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<WindowResizeEvent>(KINEMATICS_BIND_EVENT_FN(WindowSubSystem::OnWindowResize));
+	}
+
+	bool WindowSubSystem::OnWindowResize(WindowResizeEvent& e)
+	{
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+		return true;
 	}
 
 }

@@ -5,7 +5,6 @@
 #include "Kinematics/Framework/Managers/StateManager.h"
 #include "Kinematics/Framework/Events/Event.h"
 #include "Kinematics/Renderer/GraphicsContext.h"
-#include "Kinematics/Core/Hash.h"
 
 #include "Kinematics/Framework/Events/ApplicationEvent.h"
 #include "Kinematics/Framework/Events/MouseEvent.h"

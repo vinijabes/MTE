@@ -1301,6 +1301,8 @@
     <ClInclude Include="src\Kinematics\Framework\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Kinematics\Framework\Events\MouseEvent.h" />
     <ClInclude Include="src\Kinematics\Debug\Instrumentor.h" />
+    <ClInclude Include="src\Kinematics\Framework\Interface\NetworkSubSystemInterface.h" />
+    <ClInclude Include="src\Kinematics\Framework\Systems\NetworkSubSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
@@ -1385,5 +1387,6 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\Kinematics\Renderer\OrthographicCameraController.cpp" />
+    <ClCompile Include="src\Kinematics\Framework\Systems\NetworkSubSystem.cpp" />
   </ItemGroup>
 </Project>

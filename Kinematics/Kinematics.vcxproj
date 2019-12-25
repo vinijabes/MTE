@@ -170,12 +170,14 @@
     <ClInclude Include="src\Kinematics\Framework\Framework.h" />
     <ClInclude Include="src\Kinematics\Framework\Interface\BackgroundTaskInterface.h" />
     <ClInclude Include="src\Kinematics\Framework\Interface\GraphicsSubSystemInterface.h" />
+    <ClInclude Include="src\Kinematics\Framework\Interface\NetworkSubSystemInterface.h" />
     <ClInclude Include="src\Kinematics\Framework\Interface\SubSystemInterface.h" />
     <ClInclude Include="src\Kinematics\Framework\Interface\TaskInterface.h" />
     <ClInclude Include="src\Kinematics\Framework\Interface\WindowSubSystemInterface.h" />
     <ClInclude Include="src\Kinematics\Framework\Managers\FactoryManager.h" />
     <ClInclude Include="src\Kinematics\Framework\Managers\StateManager.h" />
     <ClInclude Include="src\Kinematics\Framework\Managers\TaskManager.h" />
+    <ClInclude Include="src\Kinematics\Framework\Systems\NetworkSubSystem.h" />
     <ClInclude Include="src\Kinematics\Renderer\Buffer.h" />
     <ClInclude Include="src\Kinematics\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Kinematics\Renderer\OrthographicCamera.h" />
@@ -575,6 +577,7 @@
     <ClCompile Include="src\Kinematics\Framework\Managers\FactoryManager.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Managers\StateManager.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Managers\TaskManager.cpp" />
+    <ClCompile Include="src\Kinematics\Framework\Systems\NetworkSubSystem.cpp" />
     <ClCompile Include="src\Kinematics\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Kinematics\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Kinematics\Renderer\OrthographicCameraController.cpp" />

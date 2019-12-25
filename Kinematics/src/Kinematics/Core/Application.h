@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Core.h"
+#include "Kinematics/Framework/Events/ApplicationEvent.h"
 
 namespace Kinematics {
 	class Application
@@ -12,6 +13,7 @@ namespace Kinematics {
 
 		virtual void Run() = 0;
 		virtual void Stop() = 0;
+
 
 		static inline Application& Get() { return *s_Instance; }
 	private:

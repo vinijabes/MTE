@@ -17,7 +17,7 @@ namespace Kinematics {
 	{
 	public:
 		WindowSubSystem()
-			: m_CameraController(1280.0f / 720.0f, true)
+			: m_CameraController(640.0f / 480.0f, true)
 		{
 			KINEMATICS_TRACE("{0} Instantiated!", this->GetName());
 		}
@@ -37,6 +37,10 @@ namespace Kinematics {
 
 		virtual void SetVSync(bool enabled) override;
 		virtual bool IsVSync() const override;
+
+	private:
+		void OnEvent(Event& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 
 	private:
 		GLFWwindow* m_Window;
