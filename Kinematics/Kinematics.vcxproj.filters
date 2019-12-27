@@ -1303,6 +1303,11 @@
     <ClInclude Include="src\Kinematics\Debug\Instrumentor.h" />
     <ClInclude Include="src\Kinematics\Framework\Interface\NetworkSubSystemInterface.h" />
     <ClInclude Include="src\Kinematics\Framework\Systems\NetworkSubSystem.h" />
+    <ClInclude Include="src\Kinematics\Network\Socket.h" />
+    <ClInclude Include="src\Kinematics\Network\SocketAPI.h" />
+    <ClInclude Include="src\Kinematics\Network\NetworkMessage.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsSocketAPI.h" />
+    <ClInclude Include="src\Kinematics\Network\Packet.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
@@ -1388,5 +1393,7 @@
     </ClCompile>
     <ClCompile Include="src\Kinematics\Renderer\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Systems\NetworkSubSystem.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsSocketAPI.cpp" />
+    <ClCompile Include="src\Kinematics\Network\Socket.cpp" />
   </ItemGroup>
 </Project>
