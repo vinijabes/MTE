@@ -4,6 +4,8 @@
 
 #include "SocketAPI.h"
 #include "NetworkMessage.h"
+#include "SocketMessages.h"
+
 
 namespace Kinematics {
 
@@ -13,7 +15,7 @@ namespace Kinematics {
 		SERVER_MODE
 	};
 
-	typedef std::function<void(NetworkMessage)> SocketCallback;
+	typedef std::function<void(NetworkMessage&)> SocketCallback;
 	class Socket
 	{
 	public:
@@ -23,7 +25,6 @@ namespace Kinematics {
 		virtual ~Socket() {};
 
 		void On(std::string type, SocketCallback cb) { m_CallbackMap[type] = cb; }
-
 		void Emit(std::string type, NetworkMessage& message) { m_SocketAPI->Emit(type, message); }
 
 		virtual void Update() = 0;
@@ -40,8 +41,12 @@ namespace Kinematics {
 
 		void OnMessage(NetworkMessage& message)
 		{
-			m_CallbackMap[message.GetType()](message);
+			if(m_CallbackMap.find(message.GetType()) != m_CallbackMap.end())
+				m_CallbackMap[message.GetType()](message);
 		}
+
+		friend class ClientSocket;
+		friend class ServerSocket;
 
 	protected:
 		static std::function<Scope<SocketAPI>()> s_Factory;
@@ -62,7 +67,9 @@ namespace Kinematics {
 
 		void Accept()
 		{
-			auto teste = m_SocketAPI->Accept();
+			auto client = m_SocketAPI->Accept();
+			if (client)
+				OnMessage(ConnectionMessage());
 		}
 
 		virtual void Update() override;
@@ -97,6 +104,11 @@ namespace Kinematics {
 		void Close() override
 		{
 			m_SocketAPI->ClientClose();
+		}
+
+		bool Closed()
+		{
+			return m_SocketAPI->Closed();
 		}
 
 	private:

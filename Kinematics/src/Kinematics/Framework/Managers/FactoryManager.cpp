@@ -19,4 +19,21 @@ namespace Kinematics {
 
 		return Ref<SubSystemInterface>(m_FactoryTemplates[subsystem]());
 	}
+
+	void FactoryManager::RegisterMessage(std::string message, MESSAGE_CONSTRUCTOR messageFactory)
+	{
+		KINEMATICS_CORE_ASSERT(m_FactoryTemplates.find(message) == m_FactoryTemplates.end(), "Can have only Factory with key " + message);
+
+		if (m_MessagesTemplates.find(message) == m_MessagesTemplates.end())
+			m_MessagesTemplates[message] = messageFactory;
+	}
+
+	Ref<NetworkMessage> FactoryManager::CreateMessage(std::string message)
+	{
+		KINEMATICS_CORE_ASSERT(m_MessagesTemplates.find(message) != m_MessagesTemplates.end(), "Factory of " + message + " is not registered");
+		if (m_MessagesTemplates.find(message) == m_MessagesTemplates.end()) return NULL;
+
+		return Ref<NetworkMessage>(m_MessagesTemplates[message]());
+	}
+
 }

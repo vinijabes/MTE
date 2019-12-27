@@ -3,8 +3,6 @@
 
 #include "Kinematics/Network/Socket.h"
 
-#define DEFAULT_PORT 27015
-
 namespace Kinematics {
 
 	SUBSYSTEM_CONSTRUCTOR NetworkSubSystemInterface::s_NetworkSubSystemInterfaceFactory = [] {return CreateRef<NetworkSubSystem>(); };
@@ -20,10 +18,6 @@ namespace Kinematics {
 
 	void NetworkSubSystem::Initialize()
 	{
-		Listen(DEFAULT_PORT);
-		m_ClientSocket = CreateScope<ClientSocket>("127.0.0.1", DEFAULT_PORT);
-
-		m_ClientSocket->Emit("teste", v());
 	}
 
 	void NetworkSubSystem::Shutdown()
@@ -48,6 +42,7 @@ namespace Kinematics {
 
 	void NetworkSubSystem::Connect(const char* ip, uint32_t port)
 	{
+		m_ClientSocket = CreateScope<ClientSocket>(ip, port);
 	}
 
 }

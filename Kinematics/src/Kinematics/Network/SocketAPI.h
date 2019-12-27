@@ -2,6 +2,7 @@
 
 #include <string>
 #include "NetworkMessage.h"
+#include "Kinematics/Network/Packet.h"
 
 namespace Kinematics {
 
@@ -17,9 +18,11 @@ namespace Kinematics {
 		virtual Ref<ClientSocket> Accept() = 0;
 
 		virtual void Emit(std::string type, NetworkMessage& message) = 0;
-		virtual void Receive() = 0;
+		virtual Ref<NetworkMessage> Receive() = 0;
 
-		std::list<Ref<ClientSocket>> GetClients() { return m_Clients; }
+		virtual bool Closed() = 0;
+
+		std::list<Ref<ClientSocket>> & GetClients() { return m_Clients; }
 	protected:
 		std::list<Ref<ClientSocket>> m_Clients;
 	};

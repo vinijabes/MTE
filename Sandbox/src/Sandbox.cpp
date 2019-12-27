@@ -30,19 +30,22 @@ public:
 		Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::WindowClose, [=](Kinematics::Event& e) {
 			this->Stop();
 			return false;
-			});
+		});
 
 		Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::WindowResize, [=](Kinematics::Event& e) {
 			Kinematics::WindowResizeEvent* we = (Kinematics::WindowResizeEvent*) & e;
-			KINEMATICS_TRACE("Window Resize: {} {}", we->GetWidth(), we->GetHeight());
 			return false;
-			});
+		});
 
 		Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::MouseMoved, [=](Kinematics::Event& e) {
 			Kinematics::MouseMovedEvent* me = (Kinematics::MouseMovedEvent*) & e;
-			KINEMATICS_TRACE("Mouse moved: {} {}", me->GetX(), me->GetY());
 			return false;
-			});
+		});
+
+		framework.GetSubSystem<Kinematics::NetworkSubSystemInterface>()->Listen(DEFAULT_PORT);
+		framework.GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetServer()->On("connection", [](Kinematics::NetworkMessage& message) {
+			KINEMATICS_TRACE("Client connected!");
+		});
 
 		while (this->m_Running)
 		{

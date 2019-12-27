@@ -1308,6 +1308,7 @@
     <ClInclude Include="src\Kinematics\Network\NetworkMessage.h" />
     <ClInclude Include="src\Platform\Windows\WindowsSocketAPI.h" />
     <ClInclude Include="src\Kinematics\Network\Packet.h" />
+    <ClInclude Include="src\Kinematics\Network\SocketMessages.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">

@@ -15,7 +15,10 @@ namespace Kinematics {
 
 	void Socket::Receive()
 	{
-		m_SocketAPI->Receive();
+		auto message = m_SocketAPI->Receive();
+		if (message){
+			OnMessage(*message);
+		}
 	}
 
 	ServerSocket::ServerSocket(uint32_t port)
@@ -29,13 +32,33 @@ namespace Kinematics {
 	{
 		Accept();
 
-		for (auto client : m_SocketAPI->GetClients())
-			client->Update();
+		auto begin = m_SocketAPI->GetClients().begin();
+		auto end = m_SocketAPI->GetClients().end();
+		while(begin != end)
+		{
+			if (!(*begin)->Closed())
+			{
+				(*begin)->Update();
+				++begin;
+			}
+			else
+			{
+				(*begin)->OnMessage(DisconnectionMessage());
+				m_SocketAPI->GetClients().erase(begin++);
+			}
+		}
 	}
 
 	void ServerSocket::Close()
 	{
 		m_SocketAPI->ServerClose();
+		auto begin = m_SocketAPI->GetClients().begin();
+		auto end = m_SocketAPI->GetClients().end();
+		while (begin != end)
+		{
+			(*begin)->Close();
+			(*begin++)->OnMessage(DisconnectionMessage());
+		}
 	}
 
 	void ClientSocket::Update()

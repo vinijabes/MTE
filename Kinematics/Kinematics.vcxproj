@@ -182,6 +182,7 @@
     <ClInclude Include="src\Kinematics\Network\Packet.h" />
     <ClInclude Include="src\Kinematics\Network\Socket.h" />
     <ClInclude Include="src\Kinematics\Network\SocketAPI.h" />
+    <ClInclude Include="src\Kinematics\Network\SocketMessages.h" />
     <ClInclude Include="src\Kinematics\Renderer\Buffer.h" />
     <ClInclude Include="src\Kinematics\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Kinematics\Renderer\OrthographicCamera.h" />

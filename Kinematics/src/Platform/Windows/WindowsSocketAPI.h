@@ -10,8 +10,8 @@ namespace Kinematics {
 	class WindowsSocketAPI : public SocketAPI
 	{
 	public:
-		WindowsSocketAPI() : m_Socket(INVALID_SOCKET) {};
-		WindowsSocketAPI(SOCKET socket) : m_Socket(socket) {}
+		WindowsSocketAPI() : m_Socket(INVALID_SOCKET), m_Closed(false) {};
+		WindowsSocketAPI(SOCKET socket) : m_Socket(socket), m_Closed(false) {}
 
 		virtual void Connect(std::string addr, unsigned int port) override;
 		virtual void Listen(uint32_t port) override;
@@ -20,9 +20,12 @@ namespace Kinematics {
 		virtual Ref<ClientSocket> Accept() override;
 
 		virtual void Emit(std::string type, NetworkMessage& message) override;
-		virtual void Receive() override;
+		virtual Ref<NetworkMessage> Receive() override;
+
+		virtual bool Closed() override;
 	private:
 		SOCKET m_Socket;
+		bool m_Closed;
 	};
 
 }

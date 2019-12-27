@@ -5,12 +5,17 @@
 
 #include "SubSystemInterface.h"
 
+#define DEFAULT_PORT 27015
+
 namespace Kinematics {
 	class NetworkSubSystemInterface : public SubSystemInterface
 	{
 	public:
 		virtual void Listen(uint32_t port) = 0;
 		virtual void Connect(const char* ip, uint32_t port) = 0;
+
+		Scope<Socket>& GetClient() { return m_ClientSocket; }
+		Scope<Socket>& GetServer() { return m_ServerSocket; }
 
 		SUBSYSTEM_CLASS_TYPE(NetworkSubSystem);
 

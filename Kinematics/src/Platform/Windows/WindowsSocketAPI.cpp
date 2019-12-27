@@ -87,12 +87,14 @@ namespace Kinematics {
 
 		closesocket(m_Socket);
 		WSACleanup();
+		m_Closed = true;
 	}
 
 	void WindowsSocketAPI::ClientClose()
 	{
 		KINEMATICS_CORE_INFO("Closing client socket");
 		closesocket(m_Socket);
+		m_Closed = true;
 	}
 
 	Ref<ClientSocket> WindowsSocketAPI::Accept()
@@ -117,10 +119,6 @@ namespace Kinematics {
 				return nullptr;
 			}
 		}
-		else
-		{
-			wprintf(L"Client connected.\n");
-		}
 
 		Ref<ClientSocket> client = CreateRef<ClientSocket>(CreateScope<WindowsSocketAPI>(AcceptSocket));
 		m_Clients.push_back(client);
@@ -130,7 +128,12 @@ namespace Kinematics {
 
 	void WindowsSocketAPI::Emit(std::string type, NetworkMessage& message)
 	{
-		int iResult = send(m_Socket, message, message.size(), 0);
+		OPacket packet;
+		packet& type;
+		packet& message;
+		packet.MakeHeader();
+
+		int iResult = send(m_Socket, packet, packet.GetSize(), 0);
 		if (iResult == SOCKET_ERROR)
 		{
 			wprintf(L"send failed with error: %d\n", WSAGetLastError());
@@ -139,29 +142,50 @@ namespace Kinematics {
 
 #define DEFAULT_BUFLEN 512
 
-	void WindowsSocketAPI::Receive()
+	Ref<NetworkMessage> WindowsSocketAPI::Receive()
 	{
 		char recvbuf[DEFAULT_BUFLEN];
 		int recvbuflen = DEFAULT_BUFLEN;
 
+
 		int iResult = recv(m_Socket, recvbuf, recvbuflen, 0);
 		if (iResult > 0)
 		{
-			recvbuf[iResult] = '\0';
-			printf("Bytes received: %s\n", recvbuf);
-			v teste = v(recvbuf);
-			std::cout << sizeof(NetworkMessage) << " " << sizeof(v) << " " << iResult << " " << teste.x << std::endl;
+			IPacket packet(recvbuf, iResult);
+			size_t count;
+			Ref<NetworkMessage> message;
+			while ((count = packet.Remaining()))
+			{
+				iResult = recv(m_Socket, recvbuf, count, 0);
+				packet.Add(recvbuf, iResult);
+			}
+			if (packet)
+			{
+				std::string type;
+				packet& type;
+				message = FactoryManager::GetInstance()->CreateMessage(type);
+				packet&* message;
+
+				KINEMATICS_INFO("Receiving packet of type: {}", type);
+				return message;
+			}
 		}
 		else if (iResult == 0)
 		{
-			printf("Connection closed\n");
+			m_Closed = true;
 		}
 		else
 		{
 			int ierr = WSAGetLastError();
-			if (ierr == WSAEWOULDBLOCK) return;
+			if (ierr == WSAEWOULDBLOCK) return nullptr;
 
 			printf("recv failed: %d\n", ierr);
 		}
+
+		return nullptr;
+	}
+	bool WindowsSocketAPI::Closed()
+	{
+		return m_Closed;
 	}
 }
