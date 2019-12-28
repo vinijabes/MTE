@@ -43,8 +43,12 @@ namespace Kinematics {
 		bind(m_Socket, (struct sockaddr*) & my_addr1, sizeof(struct sockaddr_in));
 		socklen_t addr_size = sizeof my_addr;
 
-		if (connect(m_Socket, (struct sockaddr*) & my_addr, sizeof my_addr) == 0)
+		iResult = connect(m_Socket, (struct sockaddr*) & my_addr, sizeof my_addr) == 0;
+
+		if (iResult != SOCKET_ERROR)
+		{
 			printf("Client Connected\n");
+		}
 	}
 
 	void WindowsSocketAPI::Listen(uint32_t port)
@@ -157,7 +161,27 @@ namespace Kinematics {
 			while ((count = packet.Remaining()))
 			{
 				iResult = recv(m_Socket, recvbuf, count, 0);
-				packet.Add(recvbuf, iResult);
+				if (iResult > 0)
+				{
+					packet.Add(recvbuf, iResult);
+				}
+				else if (iResult == 0)
+				{
+					m_Closed = true;
+					return nullptr;
+				}
+				else
+				{
+					int ierr = WSAGetLastError();
+					if (ierr == WSAEWOULDBLOCK) return nullptr;
+					if (ierr == WSAECONNRESET)
+					{
+						m_Closed = true;
+						return nullptr;
+					}
+
+					printf("recv failed: %d\n", ierr);
+				}
 			}
 			if (packet)
 			{
@@ -178,6 +202,11 @@ namespace Kinematics {
 		{
 			int ierr = WSAGetLastError();
 			if (ierr == WSAEWOULDBLOCK) return nullptr;
+			if (ierr == WSAECONNRESET)
+			{
+				m_Closed = true;
+				return nullptr;
+			}
 
 			printf("recv failed: %d\n", ierr);
 		}

@@ -27,7 +27,20 @@ namespace Kinematics {
 	void NetworkSubSystem::Update(Timestep ts)
 	{
 		if (m_ServerSocket)
-			m_ServerSocket->Update();
+		{
+			if (m_ServerSocket->m_SocketAPI->Closed())
+				m_ClientSocket = nullptr;
+			else
+				m_ServerSocket->Update();
+		}
+
+		if (m_ClientSocket)
+		{
+			if (m_ClientSocket->m_SocketAPI->Closed())
+				m_ClientSocket = nullptr;
+			else
+				m_ClientSocket->Update();
+		}
 	}
 
 	std::vector<std::string> NetworkSubSystem::GetDependencies()
@@ -43,6 +56,7 @@ namespace Kinematics {
 	void NetworkSubSystem::Connect(const char* ip, uint32_t port)
 	{
 		m_ClientSocket = CreateScope<ClientSocket>(ip, port);
+		m_ClientSocket->OnMessage(ConnectionMessage());
 	}
 
 }

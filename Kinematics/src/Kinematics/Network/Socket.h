@@ -47,6 +47,7 @@ namespace Kinematics {
 
 		friend class ClientSocket;
 		friend class ServerSocket;
+		friend class NetworkSubSystem;
 
 	protected:
 		static std::function<Scope<SocketAPI>()> s_Factory;
@@ -89,6 +90,7 @@ namespace Kinematics {
 			: m_ClientMode(ACTIVE_MODE)
 		{
 			Connect(addr, port);
+
 			m_Mode = CLIENT_MODE;
 		}
 
@@ -104,6 +106,7 @@ namespace Kinematics {
 		void Close() override
 		{
 			m_SocketAPI->ClientClose();
+			OnMessage(DisconnectionMessage());
 		}
 
 		bool Closed()

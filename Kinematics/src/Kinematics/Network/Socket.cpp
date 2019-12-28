@@ -43,7 +43,6 @@ namespace Kinematics {
 			}
 			else
 			{
-				(*begin)->OnMessage(DisconnectionMessage());
 				m_SocketAPI->GetClients().erase(begin++);
 			}
 		}
@@ -56,8 +55,7 @@ namespace Kinematics {
 		auto end = m_SocketAPI->GetClients().end();
 		while (begin != end)
 		{
-			(*begin)->Close();
-			(*begin++)->OnMessage(DisconnectionMessage());
+			(*begin++)->Close();
 		}
 	}
 

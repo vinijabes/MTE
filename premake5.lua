@@ -69,20 +69,43 @@ project "Kinematics"
         "opengl32.lib"
     }
 
+    filter "system:linux"
+		pic "On"
+		cppdialect "C++17"
+		staticruntime "On"
+		systemversion "latest"
+
+		links 
+		{ 
+			"Xrandr",
+			"Xi",
+			"GLEW",
+			"GLU",
+			"GL",
+			"X11"
+		}
+
+		defines
+		{
+			"KINEMATICS_PLATFORM_LINUX",
+			"KINEMATICS_BUILD_DLL"
+		}
+
+
     filter "system:windows"        
         staticruntime "On"
         systemversion "latest"
 
-    defines
-    {
-        "KINEMATICS_BUILD_DLL",
-        "GLFW_INCLUDE_NONE"
-    }
+        defines
+        {
+            "KINEMATICS_BUILD_DLL",
+            "GLFW_INCLUDE_NONE"
+        }
 
-    postbuildcommands
-    {
-        ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
-    }
+        postbuildcommands
+        {
+            ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
+        }
 
     filter "configurations:Debug"
         defines "KINEMATICS_DEBUG"
@@ -98,9 +121,166 @@ project "Kinematics"
         defines "KINEMATICS_DIST"
         runtime "Release"
         optimize "on"
+        
 
 project "Sandbox"
     location "Sandbox"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++17"
+    staticruntime "on"
+
+    targetdir("bin/" .. outputdir .. "/%{prj.name}")
+    objdir("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    files
+    {
+        "%{prj.name}/src/**.h",
+        "%{prj.name}/src/**.cpp"        
+    }
+
+    includedirs
+    {
+        "Kinematics/vendor/spdlog/include",
+        "Kinematics/src",
+        "Kinematics/vendor",
+        "%{IncludeDir.glm}"
+    }
+
+    links
+    {
+        "Kinematics"
+    }
+
+    filter "system:linux"
+		cppdialect "C++17"
+		staticruntime "On"
+		systemversion "latest"
+
+		defines
+		{
+			"KINEMATICS_PLATFORM_LINUX"
+		}
+
+    filter "system:windows"
+        staticruntime "On"
+        systemversion "latest"
+
+    filter "configurations:Debug"
+        defines "KINEMATICS_DEBUG"
+        runtime "Debug"
+        symbols "on"
+
+    filter "configurations:Release"
+        defines "KINEMATICS_RELEASE"
+        runtime "Release"
+        optimize "on"
+    
+    filter "configurations:Dist"
+        defines "KINEMATICS_DIST"
+        runtime "Release"
+        optimize "on"
+
+project "Client"
+    location "Client"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++17"
+    staticruntime "on"
+
+    targetdir("bin/" .. outputdir .. "/%{prj.name}")
+    objdir("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    files
+    {
+        "%{prj.name}/src/**.h",
+        "%{prj.name}/src/**.cpp"        
+    }
+
+    includedirs
+    {
+        "Kinematics/vendor/spdlog/include",
+        "Kinematics/src",
+        "Kinematics/vendor",
+        "Game/src",
+        "%{IncludeDir.glm}"
+    }
+
+    links
+    {
+        "Kinematics"
+    }
+
+    filter "system:windows"
+        staticruntime "On"
+        systemversion "latest"
+
+    filter "configurations:Debug"
+        defines "KINEMATICS_DEBUG"
+        runtime "Debug"
+        symbols "on"
+
+    filter "configurations:Release"
+        defines "KINEMATICS_RELEASE"
+        runtime "Release"
+        optimize "on"
+    
+    filter "configurations:Dist"
+        defines "KINEMATICS_DIST"
+        runtime "Release"
+        optimize "on"
+
+project "Server"
+    location "Server"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++17"
+    staticruntime "on"
+
+    targetdir("bin/" .. outputdir .. "/%{prj.name}")
+    objdir("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    files
+    {
+        "%{prj.name}/src/**.h",
+        "%{prj.name}/src/**.cpp"        
+    }
+
+    includedirs
+    {
+        "Kinematics/vendor/spdlog/include",
+        "Kinematics/src",
+        "Kinematics/vendor",
+        "Game/src",
+        "%{IncludeDir.glm}"
+    }
+
+    links
+    {
+        "Kinematics"
+    }
+
+    filter "system:windows"
+        staticruntime "On"
+        systemversion "latest"
+
+    filter "configurations:Debug"
+        defines "KINEMATICS_DEBUG"
+        runtime "Debug"
+        symbols "on"
+
+    filter "configurations:Release"
+        defines "KINEMATICS_RELEASE"
+        runtime "Release"
+        optimize "on"
+    
+    filter "configurations:Dist"
+        defines "KINEMATICS_DIST"
+        runtime "Release"
+        optimize "on"
+
+project "Game"
+    location "Game"
     kind "ConsoleApp"
     language "C++"
     cppdialect "C++17"

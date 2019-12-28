@@ -1,0 +1,2 @@
+﻿  glad.c
+ARM\Debug\glad.obj : fatal error LNK1112: tipo de m¾dulo de mßquina 'x86' conflita com tipo de mßquina alvo 'ARM'

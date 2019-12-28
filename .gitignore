@@ -5,3 +5,10 @@ bin-int/
 
 # Files
 .user
+
+Makefile
+Kinematics.config
+Kinematics.creator
+Kinematics.files
+Kinematics.includes
+imgui.ini

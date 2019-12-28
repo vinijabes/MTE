@@ -1,4 +1,4 @@
-// Sandbox.cpp : Este arquivo contÃ©m a funÃ§Ã£o 'main'. A execuÃ§Ã£o do programa comeÃ§a e termina ali.
+// Sandbox.cpp : Este arquivo contém a função 'main'. A execução do programa começa e termina ali.
 //
 #include <Kinematics.h>
 #include <Kinematics/Core/EntryPoint.h>
@@ -28,22 +28,6 @@ public:
 		framework.Initialize();
 
 		framework.AddSubSystem("NetworkSubSystem");
-
-		Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::WindowClose, [=](Kinematics::Event& e) {
-			this->Stop();
-			return false;
-		});
-
-		Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::WindowResize, [=](Kinematics::Event& e) {
-			Kinematics::WindowResizeEvent* we = (Kinematics::WindowResizeEvent*) & e;
-			return false;
-		});
-
-		Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::MouseMoved, [=](Kinematics::Event& e) {
-			Kinematics::MouseMovedEvent* me = (Kinematics::MouseMovedEvent*) & e;
-			return false;
-		});
-
 		framework.GetSubSystem<Kinematics::NetworkSubSystemInterface>()->Listen(DEFAULT_PORT);
 		framework.GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetServer()->On("connection", [](Kinematics::NetworkMessage& message) {
 			KINEMATICS_TRACE("Client connected!");

@@ -12,9 +12,6 @@ namespace Kinematics {
 	{
 		TaskManager::GetInstance()->SetThreadCount(std::thread::hardware_concurrency());
 		TaskManager::GetInstance()->Initialize();
-
-		this->AddSubSystem("WindowSubSystem");
-		this->AddSubSystem("NetworkSubSystem");
 	}
 
 	void Framework::Update()

@@ -13,6 +13,9 @@
     <Filter Include="src\Kinematics\Core">
       <UniqueIdentifier>{FCA20916-6804-E723-F171-2DD65DD21DE3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Kinematics\Debug">
+      <UniqueIdentifier>{9A5D4AD7-86EC-D3A0-2F0B-E89B1B79E446}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Kinematics\Framework">
       <UniqueIdentifier>{A1C1DF92-8DE6-2E13-B631-14A3A2B52D31}</UniqueIdentifier>
     </Filter>
@@ -27,6 +30,12 @@
     </Filter>
     <Filter Include="src\Kinematics\Framework\Managers">
       <UniqueIdentifier>{9EE8F164-0A57-47E4-5340-02E4BFED3C80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Kinematics\Framework\Systems">
+      <UniqueIdentifier>{A8282E8D-9479-19CF-BDDD-0791A98DAC38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Kinematics\Network">
+      <UniqueIdentifier>{9D8E65D6-8988-8E28-72F5-24395E8EF494}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Kinematics\Renderer">
       <UniqueIdentifier>{4A74C244-B6AB-0ADC-BFB5-6EFF2B6C31D5}</UniqueIdentifier>
@@ -99,13 +108,25 @@
     <ClInclude Include="src\Kinematics\Core\Timer.h">
       <Filter>src\Kinematics\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Core\Timestep.h">
+      <Filter>src\Kinematics\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Debug\Instrumentor.h">
+      <Filter>src\Kinematics\Debug</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Async\Semaphore.h">
       <Filter>src\Kinematics\Framework\Async</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Async\WorkerThread.h">
       <Filter>src\Kinematics\Framework\Async</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Framework\Events\ApplicationEvent.h">
+      <Filter>src\Kinematics\Framework\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Events\Event.h">
+      <Filter>src\Kinematics\Framework\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Framework\Events\MouseEvent.h">
       <Filter>src\Kinematics\Framework\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Framework.h">
@@ -115,6 +136,9 @@
       <Filter>src\Kinematics\Framework\Interface</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Interface\GraphicsSubSystemInterface.h">
+      <Filter>src\Kinematics\Framework\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Framework\Interface\NetworkSubSystemInterface.h">
       <Filter>src\Kinematics\Framework\Interface</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Interface\SubSystemInterface.h">
@@ -135,6 +159,24 @@
     <ClInclude Include="src\Kinematics\Framework\Managers\TaskManager.h">
       <Filter>src\Kinematics\Framework\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Framework\Systems\NetworkSubSystem.h">
+      <Filter>src\Kinematics\Framework\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Network\NetworkMessage.h">
+      <Filter>src\Kinematics\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Network\Packet.h">
+      <Filter>src\Kinematics\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Network\Socket.h">
+      <Filter>src\Kinematics\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Network\SocketAPI.h">
+      <Filter>src\Kinematics\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Network\SocketMessages.h">
+      <Filter>src\Kinematics\Network</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kinematics\Renderer\Buffer.h">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
@@ -142,6 +184,9 @@
       <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Renderer\OrthographicCamera.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\OrthographicCameraController.h">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Renderer\RenderCommand.h">
@@ -184,6 +229,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowSubSystem.h">
+      <Filter>src\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsSocketAPI.h">
       <Filter>src\Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\mtepch.h">
@@ -1296,19 +1344,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kinematics\Renderer\OrthographicCameraController.h" />
-    <ClInclude Include="src\Kinematics\Core\Timestep.h" />
-    <ClInclude Include="src\Kinematics\Framework\Events\ApplicationEvent.h" />
-    <ClInclude Include="src\Kinematics\Framework\Events\MouseEvent.h" />
-    <ClInclude Include="src\Kinematics\Debug\Instrumentor.h" />
-    <ClInclude Include="src\Kinematics\Framework\Interface\NetworkSubSystemInterface.h" />
-    <ClInclude Include="src\Kinematics\Framework\Systems\NetworkSubSystem.h" />
-    <ClInclude Include="src\Kinematics\Network\Socket.h" />
-    <ClInclude Include="src\Kinematics\Network\SocketAPI.h" />
-    <ClInclude Include="src\Kinematics\Network\NetworkMessage.h" />
-    <ClInclude Include="src\Platform\Windows\WindowsSocketAPI.h" />
-    <ClInclude Include="src\Kinematics\Network\Packet.h" />
-    <ClInclude Include="src\Kinematics\Network\SocketMessages.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
@@ -1338,10 +1373,19 @@
     <ClCompile Include="src\Kinematics\Framework\Managers\TaskManager.cpp">
       <Filter>src\Kinematics\Framework\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kinematics\Framework\Systems\NetworkSubSystem.cpp">
+      <Filter>src\Kinematics\Framework\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Network\Socket.cpp">
+      <Filter>src\Kinematics\Network</Filter>
+    </ClCompile>
     <ClCompile Include="src\Kinematics\Renderer\Buffer.cpp">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Kinematics\Renderer\OrthographicCamera.cpp">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Renderer\OrthographicCameraController.cpp">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Kinematics\Renderer\RenderCommand.cpp">
@@ -1386,15 +1430,14 @@
     <ClCompile Include="src\Platform\Windows\WindowSubSystem.cpp">
       <Filter>src\Platform\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsSocketAPI.cpp">
+      <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="src\mtepch.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kinematics\Renderer\OrthographicCameraController.cpp" />
-    <ClCompile Include="src\Kinematics\Framework\Systems\NetworkSubSystem.cpp" />
-    <ClCompile Include="src\Platform\Windows\WindowsSocketAPI.cpp" />
-    <ClCompile Include="src\Kinematics\Network\Socket.cpp" />
   </ItemGroup>
 </Project>
