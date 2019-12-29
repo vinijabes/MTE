@@ -29,7 +29,7 @@ public:
 
 		framework.AddSubSystem("WindowSubSystem");
 		framework.AddSubSystem("NetworkSubSystem");
-		framework.GetSubSystem<Kinematics::NetworkSubSystemInterface>()->Connect("127.0.0.1", DEFAULT_PORT);
+		framework.GetSubSystem<Kinematics::NetworkSubSystemInterface>()->Connect("172.18.44.49", DEFAULT_PORT);
 		framework.GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetClient()->On("disconnection", [](Kinematics::NetworkMessage& message) {
 			KINEMATICS_TRACE("Client Disconnected!");
 		});
@@ -37,6 +37,8 @@ public:
 		framework.GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetClient()->On("connection", [](Kinematics::NetworkMessage& message) {
 			KINEMATICS_TRACE("Connected!");
 		});
+
+		framework.GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetClient()->Emit("v", Kinematics::v());
 
 		Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::WindowClose, [=](Kinematics::Event& e) {
 			this->Stop();

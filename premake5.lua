@@ -9,6 +9,11 @@ workspace "Kinematics"
         "Dist"
     }
 
+    flags
+	{
+		"MultiProcessorCompile"
+	}
+
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
@@ -29,7 +34,7 @@ project "Kinematics"
     kind "StaticLib"
     language "C++"
     cppdialect "C++17"
-    staticruntime "on"
+    staticruntime "on"    
 
     targetdir("bin/" .. outputdir .. "/%{prj.name}")
     objdir("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -65,15 +70,11 @@ project "Kinematics"
     links
     {
         "GLFW",
-        "Glad",
-        "opengl32.lib"
-    }
+        "Glad"
+    }    
 
     filter "system:linux"
-		pic "On"
-		cppdialect "C++17"
-		staticruntime "On"
-		systemversion "latest"
+--		pic "on"
 
 		links 
 		{ 
@@ -87,14 +88,24 @@ project "Kinematics"
 
 		defines
 		{
-			"KINEMATICS_PLATFORM_LINUX",
-			"KINEMATICS_BUILD_DLL"
-		}
+            "KINEMATICS_BUILD_DLL",
+            "GLFW_INCLUDE_NONE"
+        }
+        
+        excludes
+        {
+            "%{prj.name}/src/Platform/Windows/**.h",
+            "%{prj.name}/src/Platform/Windows/**.cpp",
+        }
 
 
     filter "system:windows"        
-        staticruntime "On"
         systemversion "latest"
+
+        links 
+		{ 
+			"opengl32.lib"
+		}
 
         defines
         {
@@ -105,6 +116,12 @@ project "Kinematics"
         postbuildcommands
         {
             ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
+        }
+
+        excludes
+        {
+            "%{prj.name}/src/Platform/Linux/**.h",
+            "%{prj.name}/src/Platform/Linux/**.cpp",
         }
 
     filter "configurations:Debug"
@@ -153,17 +170,25 @@ project "Sandbox"
     }
 
     filter "system:linux"
-		cppdialect "C++17"
-		staticruntime "On"
-		systemversion "latest"
-
+		links
+		{
+			"GLFW",
+			"Glad",
+			"Xrandr",
+			"Xi",
+			"GLEW",
+			"GLU",
+			"GL",
+			"X11",
+			"dl",
+			"pthread",
+			"stdc++fs"
+		}
 		defines
 		{
-			"KINEMATICS_PLATFORM_LINUX"
 		}
 
     filter "system:windows"
-        staticruntime "On"
         systemversion "latest"
 
     filter "configurations:Debug"
@@ -193,6 +218,8 @@ project "Client"
 
     files
     {
+        "%{prj.name}/**.h",
+        "%{prj.name}/**.cpp",
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp"        
     }
@@ -211,8 +238,27 @@ project "Client"
         "Kinematics"
     }
 
+    filter "system:linux"
+		links
+		{
+			"GLFW",
+			"Glad",
+			"Xrandr",
+			"Xi",
+			"GLEW",
+			"GLU",
+			"GL",
+			"X11",
+			"dl",
+			"pthread",
+			"stdc++fs"
+        }
+        
+		defines
+		{
+		}
+
     filter "system:windows"
-        staticruntime "On"
         systemversion "latest"
 
     filter "configurations:Debug"
@@ -242,6 +288,8 @@ project "Server"
 
     files
     {
+        "%{prj.name}/**.h",
+        "%{prj.name}/**.cpp",
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp"        
     }
@@ -260,8 +308,27 @@ project "Server"
         "Kinematics"
     }
 
+    filter "system:linux"
+		links
+		{
+			"GLFW",
+			"Glad",
+			"Xrandr",
+			"Xi",
+			"GLEW",
+			"GLU",
+			"GL",
+			"X11",
+			"dl",
+			"pthread",
+			"stdc++fs"
+        }
+        
+		defines
+		{
+		}
+
     filter "system:windows"
-        staticruntime "On"
         systemversion "latest"
 
     filter "configurations:Debug"
@@ -291,6 +358,8 @@ project "Game"
 
     files
     {
+        "%{prj.name}/**.h",
+        "%{prj.name}/**.cpp",
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp"        
     }

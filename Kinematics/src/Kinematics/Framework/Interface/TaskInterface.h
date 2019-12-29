@@ -5,8 +5,8 @@
 
 namespace Kinematics {
 
-#define TASK_CLASS_TYPE(type) static TASK_TYPE GetStaticType() {return TASK_TYPE::##type;}\
-                              virtual TASK_TYPE GetType() const override {return TASK_TYPE::##type;}
+#define TASK_CLASS_TYPE(type) static TASK_TYPE GetStaticType() {return TASK_TYPE::type;}\
+                              virtual TASK_TYPE GetType() const override {return TASK_TYPE::type;}
 
 	typedef enum
 	{

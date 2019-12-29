@@ -29,7 +29,7 @@ namespace Kinematics {
 		if (m_ServerSocket)
 		{
 			if (m_ServerSocket->m_SocketAPI->Closed())
-				m_ClientSocket = nullptr;
+				m_ServerSocket.reset(nullptr);
 			else
 				m_ServerSocket->Update();
 		}
@@ -37,7 +37,7 @@ namespace Kinematics {
 		if (m_ClientSocket)
 		{
 			if (m_ClientSocket->m_SocketAPI->Closed())
-				m_ClientSocket = nullptr;
+				m_ClientSocket.reset(nullptr);
 			else
 				m_ClientSocket->Update();
 		}
@@ -56,7 +56,9 @@ namespace Kinematics {
 	void NetworkSubSystem::Connect(const char* ip, uint32_t port)
 	{
 		m_ClientSocket = CreateScope<ClientSocket>(ip, port);
-		m_ClientSocket->OnMessage(ConnectionMessage());
+
+		auto message = ConnectionMessage();
+		m_ClientSocket->OnMessage(message);
 	}
 
 }

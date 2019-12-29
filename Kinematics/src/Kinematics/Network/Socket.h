@@ -6,7 +6,6 @@
 #include "NetworkMessage.h"
 #include "SocketMessages.h"
 
-
 namespace Kinematics {
 
 	enum SocketMode
@@ -69,8 +68,10 @@ namespace Kinematics {
 		void Accept()
 		{
 			auto client = m_SocketAPI->Accept();
-			if (client)
-				OnMessage(ConnectionMessage());
+			if (client) {
+				auto message = ConnectionMessage();
+				OnMessage(message);
+			}
 		}
 
 		virtual void Update() override;
@@ -106,7 +107,8 @@ namespace Kinematics {
 		void Close() override
 		{
 			m_SocketAPI->ClientClose();
-			OnMessage(DisconnectionMessage());
+			auto message = DisconnectionMessage();
+			OnMessage(message);
 		}
 
 		bool Closed()

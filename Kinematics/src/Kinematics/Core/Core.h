@@ -79,8 +79,8 @@
 		#define KINEMATICS_CORE_ASSERT(x, ...) { if(!(x)) {KINEMATICS_CORE_ERROR("Assertion failed: {0}", __VA_ARGS__); __debugbreak();}}
      #elif defined KINEMATICS_PLATFORM_LINUX
         #include <signal.h>
-		#define KINEMATICS_ASSERT(x, ...) { if(!(x)) { HZ_ERROR("Assertion Failed: {0}", __VA_ARGS__); raise(SIGTRAP); } }
-		#define KINEMATICS_CORE_ASSERT(x, ...) { if(!(x)) { HZ_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); raise(SIGTRAP); } }
+		#define KINEMATICS_ASSERT(x, ...) { if(!(x)) { KINEMATICS_ERROR("Assertion Failed: {0}", __VA_ARGS__); raise(SIGTRAP); } }
+		#define KINEMATICS_CORE_ASSERT(x, ...) { if(!(x)) { KINEMATICS_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); raise(SIGTRAP); } }
      #endif
 #else
 #define KINEMATICS_ASSERT(x, ...)

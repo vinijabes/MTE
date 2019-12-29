@@ -228,10 +228,10 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\WindowSubSystem.h">
+    <ClInclude Include="src\Platform\Windows\SocketAPI.h">
       <Filter>src\Platform\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\WindowsSocketAPI.h">
+    <ClInclude Include="src\Platform\Windows\WindowSubSystem.h">
       <Filter>src\Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\mtepch.h">
@@ -1427,10 +1427,10 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Windows\WindowSubSystem.cpp">
+    <ClCompile Include="src\Platform\Windows\SocketAPI.cpp">
       <Filter>src\Platform\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Windows\WindowsSocketAPI.cpp">
+    <ClCompile Include="src\Platform\Windows\WindowSubSystem.cpp">
       <Filter>src\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\mtepch.cpp">

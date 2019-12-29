@@ -11,6 +11,8 @@ namespace Kinematics {
 	class NetworkSubSystemInterface : public SubSystemInterface
 	{
 	public:
+		NetworkSubSystemInterface() : m_ClientSocket(nullptr), m_ServerSocket(nullptr) {}
+
 		virtual void Listen(uint32_t port) = 0;
 		virtual void Connect(const char* ip, uint32_t port) = 0;
 

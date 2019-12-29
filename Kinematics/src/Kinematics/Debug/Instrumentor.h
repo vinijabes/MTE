@@ -129,7 +129,11 @@ namespace Kinematics {
 	#define KINEMATICS_PROFILE_BEGIN_SESSION(name, filepath) ::Kinematics::Instrumentor::Get().BeginSession(name, filepath);
 	#define KINEMATICS_PROFILE_END_SESSION() ::Kinematics::Instrumentor::Get().EndSession();
 	#define KINEMATICS_PROFILE_SCOPE(name) ::Kinematics::InstrumentationTimer timer##__LINE__(name);
-	#define KINEMATICS_PROFILE_FUNCTION() KINEMATICS_PROFILE_SCOPE(__FUNCSIG__)
+    #if defined(KINEMATICS_PLATFORM_WINDOWS)
+		#define KINEMATICS_PROFILE_FUNCTION() KINEMATICS_PROFILE_SCOPE(__FUNCSIG__)
+	#elif defined(KINEMATICS_PLATFORM_LINUX)
+		#define KINEMATICS_PROFILE_FUNCTION() KINEMATICS_PROFILE_SCOPE(__PRETTY_FUNCTION__)
+	#endif
 #else
 	#define KINEMATICS_PROFILE_BEGIN_SESSION(name, filepath)
 	#define KINEMATICS_PROFILE_END_SESSION()

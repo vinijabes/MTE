@@ -17,8 +17,6 @@
 
 #include "Kinematics/Debug/Instrumentor.h"
 
-#define MTE_PLATFORM_WINDOWS
-
-#ifdef MTE_PLATFORM_WINDOWS
-#include <Windows.h>
+#ifdef KINEMATICS_PLATFORM_WINDOWS
+	#include <Windows.h>
 #endif

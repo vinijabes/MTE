@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <list>
+
 #include "NetworkMessage.h"
 #include "Kinematics/Network/Packet.h"
 

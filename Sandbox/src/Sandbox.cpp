@@ -28,6 +28,7 @@ public:
 		framework.Initialize();
 
 		framework.AddSubSystem("NetworkSubSystem");
+		//framework.AddSubSystem("WindowSubSystem");
 
 		Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::WindowClose, [=](Kinematics::Event& e) {
 			this->Stop();
