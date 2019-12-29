@@ -1,3 +1,21 @@
+.DS_Store
+_ReSharper*
+*.opensdf
+*.sdf
+*.suo
+*.dir
+*.vcxproj*
+*.sln
+Win32
+x64
+Debug
+Release
+MinSizeRel
+RelWithDebInfo
+*.xcodeproj
+bin
+bin-int
+
 # Directories
 .vs/
 bin/
