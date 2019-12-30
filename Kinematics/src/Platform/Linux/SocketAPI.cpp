@@ -8,7 +8,7 @@
 namespace Kinematics {
 	std::function<Scope<SocketAPI>()> Socket::s_Factory = [] { return CreateScope<LinuxSocketAPI>(); };
 
-	void LinuxSocketAPI::Connect(std::string addr, unsigned int port)
+	int LinuxSocketAPI::Connect(std::string addr, unsigned int port)
 	{
 		struct sockaddr_in serv_addr;
     	struct hostent *server;
@@ -34,10 +34,12 @@ namespace Kinematics {
 		if (connect(m_Socket,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0) 
 			KINEMATICS_ERROR("Connecting error");
 		else
-			KINEMATICS_CORE_TRACE("Connected!");
+		{
+			return KINEMATICS_SOCKET_WOULD_BLOCK;
+		}
 	}
 
-	void LinuxSocketAPI::Listen(uint32_t port)
+	int LinuxSocketAPI::Listen(uint32_t port)
 	{
 		struct sockaddr_in serv_addr, cli_addr;
 		int flags;
@@ -77,7 +79,7 @@ namespace Kinematics {
 		m_Closed = true;
 	}
 
-	Ref<ClientSocket> LinuxSocketAPI::Accept()
+	Ref<ConnectionSocket> LinuxSocketAPI::Accept()
 	{
 		socklen_t clilen;
 		struct sockaddr_in cli_addr;
@@ -100,7 +102,7 @@ namespace Kinematics {
 		int flags = fcntl(AcceptSocket, F_GETFL);
 		fcntl(AcceptSocket, F_SETFL, flags | O_NONBLOCK);
 
-		Ref<ClientSocket> client = CreateRef<ClientSocket>(CreateScope<LinuxSocketAPI>(AcceptSocket));
+		Ref<ConnectionSocket> client = CreateRef<ConnectionSocket>(CreateScope<LinuxSocketAPI>(AcceptSocket));
 		m_Clients.push_back(client);
 
 		return client;

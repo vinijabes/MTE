@@ -135,6 +135,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Server.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Kinematics\Kinematics.vcxproj">
       <Project>{6D2B3314-59E3-7461-C2EA-4DBDAEC10F52}</Project>
     </ProjectReference>

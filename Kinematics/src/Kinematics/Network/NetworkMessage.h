@@ -23,35 +23,4 @@ namespace Kinematics {
 	private:
 		std::string m_Type;
 	};
-
-	struct v : public NetworkMessage
-	{
-		v() : NetworkMessage("Test") {}
-		v(int x, int y) : NetworkMessage("Test"), x(x), y(y) {}
-		v(char* data) : NetworkMessage("Test")
-		{
-			*this = *((v*)(data));
-		}
-
-		virtual size_t size() { return sizeof(*this); }
-
-		void Serialize(IPacket& p) override
-		{
-			p& x;
-			p& y;
-		}
-
-		void Serialize(OPacket& p) override
-		{
-			p& x;
-			p& y;
-		}
-
-		int x = 2;
-		int y = 3;
-
-		NETWORK_MESSAGE_TYPE(v);
-	};
-
-	CREATE_MESSAGE_FACTORY("v", v);
 }

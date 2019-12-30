@@ -19,11 +19,11 @@ namespace Kinematics {
 		LinuxSocketAPI() : m_Socket(-1), m_Closed(false) {};
 		LinuxSocketAPI(SOCKET socket) : m_Socket(socket), m_Closed(false) {}
 
-		virtual void Connect(std::string addr, unsigned int port) override;
-		virtual void Listen(uint32_t port) override;
+		virtual int Connect(std::string addr, unsigned int port) override;
+		virtual int Listen(uint32_t port) override;
 		virtual void ClientClose() override;
 		virtual void ServerClose() override;
-		virtual Ref<ClientSocket> Accept() override;
+		virtual Ref<ConnectionSocket> Accept() override;
 
 		virtual void Emit(std::string type, NetworkMessage& message) override;
 		virtual Ref<NetworkMessage> Receive() override;

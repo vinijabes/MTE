@@ -38,8 +38,6 @@ public:
 			KINEMATICS_TRACE("Connected!");
 		});
 
-		framework.GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetClient()->Emit("v", Kinematics::v());
-
 		Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::WindowClose, [=](Kinematics::Event& e) {
 			this->Stop();
 			return false;

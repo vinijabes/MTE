@@ -10,8 +10,11 @@
 namespace Kinematics {
 	std::function<Scope<SocketAPI>()> Socket::s_Factory = [] { return CreateScope<WindowsSocketAPI>(); };
 
-	void WindowsSocketAPI::Connect(std::string addr, unsigned int port)
+	int WindowsSocketAPI::Connect(std::string addr, unsigned int port)
 	{
+		m_Timeout.tv_sec = 0;
+		m_Timeout.tv_usec = 200000;
+
 		WSADATA wsaData;
 		int iResult;
 		u_long iMode = 1;
@@ -27,7 +30,7 @@ namespace Kinematics {
 		{
 			printf("Error at socket(): %ld\n", WSAGetLastError());
 			WSACleanup();
-			return;
+			return KINEMATICS_SOCKET_ERROR;
 		}
 
 		iResult = ioctlsocket(m_Socket, FIONBIO, &iMode);
@@ -43,15 +46,48 @@ namespace Kinematics {
 		bind(m_Socket, (struct sockaddr*) & my_addr1, sizeof(struct sockaddr_in));
 		socklen_t addr_size = sizeof my_addr;
 
-		iResult = connect(m_Socket, (struct sockaddr*) & my_addr, sizeof my_addr) == 0;
+		iResult = connect(m_Socket, (struct sockaddr*) & my_addr, sizeof my_addr);
 
-		if (iResult != SOCKET_ERROR)
+		if (iResult == SOCKET_ERROR)
 		{
-			printf("Client Connected\n");
+			int ierr = WSAGetLastError();
+			if (ierr != WSAEWOULDBLOCK)
+			{
+				closesocket(m_Socket);
+				WSACleanup();
+				m_Socket = INVALID_SOCKET;
+				return KINEMATICS_SOCKET_ERROR;
+			}
+
+			FD_ZERO(&m_WriteSet);
+			FD_ZERO(&m_ReadSet);
+			FD_ZERO(&m_ExceptionSet);
+
+			FD_SET(m_Socket, &m_WriteSet);
+			FD_SET(m_Socket, &m_ExceptionSet);
+
+			int ret = select(0, NULL, &m_WriteSet, &m_ExceptionSet, &m_Timeout);
+			if (ret <= 0)
+			{
+				closesocket(m_Socket);
+				WSACleanup();
+				m_Socket = INVALID_SOCKET;
+				return KINEMATICS_SOCKET_ERROR;
+			}
+
+			if (FD_ISSET(m_Socket, &m_ExceptionSet))
+			{
+				closesocket(m_Socket);
+				WSACleanup();
+				m_Socket = INVALID_SOCKET;
+				return KINEMATICS_SOCKET_ERROR;
+			}
 		}
+
+		return KINEMATICS_SOCKET_WOULD_BLOCK;
 	}
 
-	void WindowsSocketAPI::Listen(uint32_t port)
+	int WindowsSocketAPI::Listen(uint32_t port)
 	{
 		WSADATA wsaData;
 		int iResult;
@@ -68,7 +104,7 @@ namespace Kinematics {
 		{
 			printf("Error at socket(): %ld\n", WSAGetLastError());
 			WSACleanup();
-			return;
+			return KINEMATICS_SOCKET_INVALID_SOCKET;
 		}
 
 		iResult = ioctlsocket(m_Socket, FIONBIO, &iMode);
@@ -81,7 +117,7 @@ namespace Kinematics {
 
 		bind(m_Socket, (SOCKADDR*)&serverAddr, sizeof(serverAddr));
 		listen(m_Socket, 0);
-	
+
 		KINEMATICS_CORE_INFO("Listening for incoming connections on port: {}", port);
 	}
 
@@ -101,7 +137,7 @@ namespace Kinematics {
 		m_Closed = true;
 	}
 
-	Ref<ClientSocket> WindowsSocketAPI::Accept()
+	Ref<ConnectionSocket> WindowsSocketAPI::Accept()
 	{
 		if (m_Socket == INVALID_SOCKET) return nullptr;
 
@@ -124,7 +160,7 @@ namespace Kinematics {
 			}
 		}
 
-		Ref<ClientSocket> client = CreateRef<ClientSocket>(CreateScope<WindowsSocketAPI>(AcceptSocket));
+		Ref<ConnectionSocket> client = CreateRef<ConnectionSocket>(CreateScope<WindowsSocketAPI>(AcceptSocket));
 		m_Clients.push_back(client);
 
 		return client;
@@ -150,7 +186,7 @@ namespace Kinematics {
 	{
 		char recvbuf[DEFAULT_BUFLEN];
 		int recvbuflen = DEFAULT_BUFLEN;
-		 
+
 		int iResult = recv(m_Socket, recvbuf, recvbuflen, 0);
 		if (iResult > 0)
 		{
@@ -175,7 +211,8 @@ namespace Kinematics {
 					if (ierr == WSAEWOULDBLOCK) return nullptr;
 					if (ierr == WSAECONNRESET)
 					{
-						m_Closed = true;
+						m_KinematicsSocket->SetState(SocketState::DISCONNECTED);
+						//m_Closed = true;
 						return nullptr;
 					}
 
@@ -203,7 +240,8 @@ namespace Kinematics {
 			if (ierr == WSAEWOULDBLOCK) return nullptr;
 			if (ierr == WSAECONNRESET)
 			{
-				m_Closed = true;
+				m_KinematicsSocket->SetState(SocketState::DISCONNECTED);
+				//m_Closed = true;
 				return nullptr;
 			}
 

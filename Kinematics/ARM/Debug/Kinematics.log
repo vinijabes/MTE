@@ -1,2 +1,0 @@
-﻿  mtepch.cpp
-C:\Users\vinij\source\repos\MultiThreadingTests\Kinematics\src\Kinematics\Core\Core.h(68,1): fatal error C1189: #error:  Kinematics only support Windows and Linux!

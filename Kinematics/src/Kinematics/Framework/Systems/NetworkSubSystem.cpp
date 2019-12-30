@@ -31,15 +31,17 @@ namespace Kinematics {
 			if (m_ServerSocket->m_SocketAPI->Closed())
 				m_ServerSocket.reset(nullptr);
 			else
-				m_ServerSocket->Update();
+				m_ServerSocket->Update(ts);
 		}
 
 		if (m_ClientSocket)
 		{
 			if (m_ClientSocket->m_SocketAPI->Closed())
 				m_ClientSocket.reset(nullptr);
+			else if (m_ClientSocket->GetState() == SocketState::DISCONNECTED)
+				m_ClientSocket->SetState(SocketState::RECONNECTING);
 			else
-				m_ClientSocket->Update();
+				m_ClientSocket->Update(ts);
 		}
 	}
 
