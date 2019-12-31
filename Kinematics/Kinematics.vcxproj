@@ -153,6 +153,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Users\vinij\Desktop\Ava\Ava\src\Ava\Events\KeyEvent.h" />
     <ClInclude Include="src\Kinematics.h" />
     <ClInclude Include="src\Kinematics\Bus\BusNode.h" />
     <ClInclude Include="src\Kinematics\Bus\Message.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="src\Kinematics\Framework\Async\WorkerThread.h" />
     <ClInclude Include="src\Kinematics\Framework\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Kinematics\Framework\Events\Event.h" />
+    <ClInclude Include="src\Kinematics\Framework\Events\KeyEvent.h" />
     <ClInclude Include="src\Kinematics\Framework\Events\MouseEvent.h" />
     <ClInclude Include="src\Kinematics\Framework\Framework.h" />
     <ClInclude Include="src\Kinematics\Framework\Interface\BackgroundTaskInterface.h" />

@@ -124,7 +124,7 @@ namespace Kinematics {
 	};
 }
 
-#define KINEMATICS_PROFILE 1
+#define KINEMATICS_PROFILE 0
 #if KINEMATICS_PROFILE
 	#define KINEMATICS_PROFILE_BEGIN_SESSION(name, filepath) ::Kinematics::Instrumentor::Get().BeginSession(name, filepath);
 	#define KINEMATICS_PROFILE_END_SESSION() ::Kinematics::Instrumentor::Get().EndSession();

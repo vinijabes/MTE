@@ -138,7 +138,57 @@ project "Kinematics"
         defines "KINEMATICS_DIST"
         runtime "Release"
         optimize "on"
-        
+
+
+project "Game"
+    location "Game"
+    kind "StaticLib"
+    language "C++"
+    cppdialect "C++17"
+    staticruntime "on"
+
+    targetdir("bin/" .. outputdir .. "/%{prj.name}")
+    objdir("bin-int/" .. outputdir .. "/%{prj.name}")
+
+    files
+    {
+        "%{prj.name}/**.h",
+        "%{prj.name}/**.cpp",
+        "%{prj.name}/src/**.h",
+        "%{prj.name}/src/**.cpp"        
+    }
+
+    includedirs
+    {
+        "Kinematics/vendor/spdlog/include",
+        "Kinematics/src",
+        "Kinematics/vendor",
+        "%{IncludeDir.glm}"
+    }
+
+    links
+    {
+        "Kinematics"
+    }
+
+    filter "system:windows"
+        staticruntime "On"
+        systemversion "latest"
+
+    filter "configurations:Debug"
+        defines "KINEMATICS_DEBUG"
+        runtime "Debug"
+        symbols "on"
+
+    filter "configurations:Release"
+        defines "KINEMATICS_RELEASE"
+        runtime "Release"
+        optimize "on"
+    
+    filter "configurations:Dist"
+        defines "KINEMATICS_DIST"
+        runtime "Release"
+        optimize "on"        
 
 project "Sandbox"
     location "Sandbox"
@@ -329,56 +379,6 @@ project "Server"
 		}
 
     filter "system:windows"
-        systemversion "latest"
-
-    filter "configurations:Debug"
-        defines "KINEMATICS_DEBUG"
-        runtime "Debug"
-        symbols "on"
-
-    filter "configurations:Release"
-        defines "KINEMATICS_RELEASE"
-        runtime "Release"
-        optimize "on"
-    
-    filter "configurations:Dist"
-        defines "KINEMATICS_DIST"
-        runtime "Release"
-        optimize "on"
-
-project "Game"
-    location "Game"
-    kind "ConsoleApp"
-    language "C++"
-    cppdialect "C++17"
-    staticruntime "on"
-
-    targetdir("bin/" .. outputdir .. "/%{prj.name}")
-    objdir("bin-int/" .. outputdir .. "/%{prj.name}")
-
-    files
-    {
-        "%{prj.name}/**.h",
-        "%{prj.name}/**.cpp",
-        "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"        
-    }
-
-    includedirs
-    {
-        "Kinematics/vendor/spdlog/include",
-        "Kinematics/src",
-        "Kinematics/vendor",
-        "%{IncludeDir.glm}"
-    }
-
-    links
-    {
-        "Kinematics"
-    }
-
-    filter "system:windows"
-        staticruntime "On"
         systemversion "latest"
 
     filter "configurations:Debug"

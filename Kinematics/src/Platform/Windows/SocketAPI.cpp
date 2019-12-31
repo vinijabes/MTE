@@ -184,10 +184,9 @@ namespace Kinematics {
 
 	Ref<NetworkMessage> WindowsSocketAPI::Receive()
 	{
-		char recvbuf[DEFAULT_BUFLEN];
-		int recvbuflen = DEFAULT_BUFLEN;
+		recvbuflen = DEFAULT_BUFLEN;
 
-		int iResult = recv(m_Socket, recvbuf, recvbuflen, 0);
+		int iResult = recv(m_Socket, recvbuf, sizeof(size_t), 0);
 		if (iResult > 0)
 		{
 			IPacket packet(recvbuf, iResult);
@@ -226,7 +225,6 @@ namespace Kinematics {
 				message = FactoryManager::GetInstance()->CreateMessage(type);
 				packet&* message;
 
-				KINEMATICS_INFO("Receiving packet of type: {}", type);
 				return message;
 			}
 		}

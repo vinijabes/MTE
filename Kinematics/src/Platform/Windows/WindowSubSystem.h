@@ -36,7 +36,7 @@ namespace Kinematics {
 		}
 
 		virtual void SetVSync(bool enabled) override;
-		virtual bool IsVSync() const override;
+		virtual bool IsVSync() const override;		
 
 	private:
 		void OnEvent(Event& e);
@@ -60,7 +60,7 @@ namespace Kinematics {
 		GLuint VertexArrayID;
 		GLuint vertexbuffer;
 
-		OrthographicCameraController m_CameraController;
+		OrthographicCameraController m_CameraController;		
 	};
 
 	//CREATE_FACTORY("WindowSubSystem", WindowSubSystem);

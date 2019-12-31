@@ -27,9 +27,19 @@ namespace Kinematics {
 	{
 		Listen(port);
 		m_Mode = SERVER_MODE;
-		m_State = LISTENING;	
+		m_State = LISTENING;
 	}
 
+
+	void ServerSocket::Accept()
+	{
+		auto client = m_SocketAPI->Accept();
+		if (client) {
+			client->SetServer(this);
+			auto message = ConnectionMessage(client);
+			OnMessage(message);
+		}
+	}
 
 	void ServerSocket::Update(Timestep ts)
 	{
@@ -72,18 +82,20 @@ namespace Kinematics {
 		BroadcastTo(nullptr, type, message, room);
 	}
 
-	void ServerSocket::Broadcast(const Ref<ConnectionSocket>& client, std::string type, NetworkMessage& message)
+	void ServerSocket::Broadcast(ConnectionSocket* client, std::string type, NetworkMessage& message)
 	{
 		auto begin = m_SocketAPI->GetClients().begin();
 		auto end = m_SocketAPI->GetClients().end();
 		while (begin != end)
 		{
-			if (*begin != client)
+			if ((*begin).get() != client)
 				(*begin++)->Emit(type, message);
+			else
+				begin++;
 		}
 	}
 
-	void ServerSocket::BroadcastTo(const Ref<ConnectionSocket>& client, std::string type, NetworkMessage& message, uint32_t room)
+	void ServerSocket::BroadcastTo(ConnectionSocket* client, std::string type, NetworkMessage& message, uint32_t room)
 	{
 		if (m_RoomList.find(room) != m_RoomList.end())
 		{
@@ -91,8 +103,10 @@ namespace Kinematics {
 			auto end = m_RoomList[room].end();
 			while (begin != end)
 			{
-				if (*begin != client)
+				if ((*begin).get() != client)
 					(*begin++)->Emit(type, message);
+				else
+					begin++;
 			}
 		}
 	}
@@ -113,10 +127,10 @@ namespace Kinematics {
 
 	void ServerSocket::OnDisconnection(const Ref<ConnectionSocket>& client)
 	{
-		for (auto group : client->m_Groups) 
+		for (auto group : client->m_Groups)
 		{
 			m_RoomList[group].remove(client);
-			if (m_RoomList[group].size() == 0) 
+			if (m_RoomList[group].size() == 0)
 			{
 				m_RoomList.erase(group);
 			}
@@ -125,19 +139,19 @@ namespace Kinematics {
 
 	void ClientSocket::Update(Timestep ts)
 	{
-		if (m_State == CONNECTING || m_State == RECONNECTING) 
+		if (m_State == CONNECTING || m_State == RECONNECTING)
 		{
 			m_Timeout += ts;
-			if (m_Timeout > 4.0f) 
+			if (m_Timeout > 4.0f)
 			{
-				if (Connect(m_Addr, m_Port) == KINEMATICS_SOCKET_WOULD_BLOCK) 
+				if (Connect(m_Addr, m_Port) == KINEMATICS_SOCKET_WOULD_BLOCK)
 				{
 					SetState(SocketState::CONNECTED);
 				}
 				else
 				{
 					m_Timeout = 0.0f;
-					if (++m_ConnectionTries == 5) 
+					if (++m_ConnectionTries == 5)
 					{
 						Close();
 					}
@@ -157,6 +171,6 @@ namespace Kinematics {
 	void ConnectionSocket::Close()
 	{
 		m_SocketAPI->ClientClose();
-		SetState(SocketState::CLOSED);		
+		SetState(SocketState::CLOSED);
 	}
 }

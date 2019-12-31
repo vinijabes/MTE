@@ -23,6 +23,7 @@ namespace Kinematics {
 		virtual Ref<NetworkMessage> Receive() override;
 
 		virtual bool Closed() override;
+		virtual uint32_t GetID() { return m_Socket; }
 	private:
 		SOCKET m_Socket;
 		bool m_Closed;
@@ -31,6 +32,9 @@ namespace Kinematics {
 		FD_SET m_WriteSet;
 		FD_SET m_ReadSet;
 		FD_SET m_ExceptionSet;
+
+		char recvbuf[512];
+		int recvbuflen;
 	};
 
 }

@@ -129,7 +129,7 @@ namespace Kinematics {
 		char recvbuf[DEFAULT_BUFLEN];
 		int recvbuflen = DEFAULT_BUFLEN;
 
-		int iResult = read(m_Socket, recvbuf, recvbuflen);
+		int iResult = read(m_Socket, recvbuf, sizeof(size_t));
 		if(iResult > 0){
 			IPacket packet(recvbuf, iResult);
 			size_t count;

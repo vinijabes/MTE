@@ -103,5 +103,4 @@ namespace Kinematics {
 
 		EVENT_CLASS_TYPE(MouseButtonReleased)
 	};
-
 }

@@ -48,15 +48,16 @@ namespace Kinematics {
 		virtual void Close() = 0;
 
 		void Receive();
+		uint32_t GetID() { return m_SocketAPI->GetID(); }
 
 		SocketMode GetMode() { return m_Mode; }
 		SocketState GetState() { return m_State; }
-		void SetState(SocketState state) 
+		void SetState(SocketState state)
 		{
 			if (state == m_State) return;
-			m_State = state; 
+			m_State = state;
 
-			if (m_State == SocketState::CONNECTED) 
+			if (m_State == SocketState::CONNECTED)
 			{
 				auto message = ConnectionMessage();
 				OnMessage(message);
@@ -103,14 +104,7 @@ namespace Kinematics {
 		ServerSocket(uint32_t port);
 		~ServerSocket() { Close(); }
 
-		void Accept()
-		{
-			auto client = m_SocketAPI->Accept();
-			if (client) {
-				auto message = ConnectionMessage();
-				OnMessage(message);
-			}
-		}
+		void Accept();
 
 		virtual void Update(Timestep ts) override;
 		virtual void Close() override;
@@ -118,10 +112,10 @@ namespace Kinematics {
 		virtual void Emit(std::string type, NetworkMessage& message) override;
 		void EmitTo(std::string type, NetworkMessage& message, uint32_t room);
 
-		void Broadcast(const Ref<ConnectionSocket>& client, std::string type, NetworkMessage& message);
-		void BroadcastTo(const Ref<ConnectionSocket>& client, std::string type, NetworkMessage& message, uint32_t room);
+		void Broadcast(ConnectionSocket* client, std::string type, NetworkMessage& message);
+		void BroadcastTo(ConnectionSocket* client, std::string type, NetworkMessage& message, uint32_t room);
 
-		void Join(uint32_t group,const Ref<ConnectionSocket>& client);
+		void Join(uint32_t group, const Ref<ConnectionSocket>& client);
 		void Leave(uint32_t group, const Ref<ConnectionSocket>& client);
 	protected:
 		void OnDisconnection(const Ref<ConnectionSocket>& client);
@@ -145,8 +139,14 @@ namespace Kinematics {
 			Close();
 		}
 
+		void SetServer(ServerSocket* server) { m_Server = server; }
+		ServerSocket* GetServer() { return m_Server; }
+
 		virtual void Update(Timestep step) override;
 		virtual void Close() override;
+
+		void Broadcast(std::string type, NetworkMessage& message) { m_Server->Broadcast(this, type, message); };
+		void BroadcastTo(std::string type, NetworkMessage& message, uint32_t room) { m_Server->BroadcastTo(this, type, message, room); };
 
 		bool Closed()
 		{
@@ -155,6 +155,7 @@ namespace Kinematics {
 
 	protected:
 		std::list<uint32_t> m_Groups;
+		ServerSocket* m_Server;
 	};
 
 	class ClientSocket : public Socket
@@ -163,12 +164,12 @@ namespace Kinematics {
 
 		ClientSocket(std::string addr, uint32_t port)
 			: m_Timeout(0.0f), m_Addr(addr), m_Port(port), m_ConnectionTries(0)
-		{			
+		{
 			m_Mode = CLIENT_MODE;
 			m_State = CONNECTING;
 		}
 
-		~ClientSocket() { if(!m_SocketAPI->Closed()) Close(); }
+		~ClientSocket() { if (!m_SocketAPI->Closed()) Close(); }
 
 		void Update(Timestep ts) override;
 
@@ -181,7 +182,7 @@ namespace Kinematics {
 		bool Closed()
 		{
 			return m_SocketAPI->Closed();
-		}		
+		}
 	protected:
 		std::string m_Addr;
 		uint32_t m_Port;

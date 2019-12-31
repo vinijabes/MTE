@@ -35,8 +35,16 @@ namespace Kinematics {
 		OPacket(size_t size = 64)
 		{
 			m_Data = (char*)malloc(size);
+
+			if (!m_Data) KINEMATICS_TRACE("INVALID MEMORY");
+
 			m_Pos = sizeof(size_t);
 			m_Size = size;
+		}
+
+		~OPacket()
+		{
+			free(m_Data);
 		}
 
 		template<typename T>
@@ -51,30 +59,42 @@ namespace Kinematics {
 		void serialize(T& element, ...)
 		{
 			if (m_Size >= m_Pos + sizeof(T))
+			{
 				m_Data = (char*)realloc(m_Data, (m_Pos + sizeof(T)) * 2);
-			memcpy(m_Data + m_Pos, &element, sizeof(T));
-			m_Pos += sizeof(T);
-			m_Size = (m_Pos + sizeof(T)) * 2;
+			}
+
+			if (m_Data)
+			{
+				memcpy(m_Data + m_Pos, &element, sizeof(T));
+				m_Pos += sizeof(T);
+				m_Size = (m_Pos + sizeof(T)) * 2;
+			}
 		}
 
 		template<typename T>
-		OPacket operator&(T& element)
+		OPacket& operator&(T& element)
 		{
 			serialize(element, 0);
 			return *this;
 		}
 
-		OPacket operator&(std::string& element)
+		OPacket& operator&(std::string& element)
 		{
 			size_t size = element.size();
 			const char* cstr = element.c_str();
 			serialize(size, 0);
 
 			if (m_Size >= m_Pos + size * sizeof(char))
-				m_Data = (char*)realloc(m_Data, (m_Pos + +size * sizeof(char)) * 2);
-			memcpy(m_Data + m_Pos, cstr, size);
-			m_Pos += size;
-			m_Size = (m_Pos + sizeof(char)) * 2;
+			{
+				m_Data = (char*)realloc(m_Data, (m_Pos + size * sizeof(char)) * 2);
+			}
+
+			if (m_Data)
+			{
+				memcpy(m_Data + m_Pos, cstr, size);
+				m_Pos += size;
+				m_Size = (m_Pos + sizeof(char)) * 2;
+			}
 
 			return *this;
 		}
@@ -94,12 +114,12 @@ namespace Kinematics {
 	public:
 		IPacket(char* data, size_t len)
 		{
-			if (len <= sizeof(size_t))
+			if (len < sizeof(size_t))
 			{
 				m_Pos = m_PacketLen = m_Size = 0;
 				return;
 			}
-			
+
 			size_t size;
 			memcpy(&size, data, sizeof(size_t));
 			m_Data = (char*)malloc(size);
@@ -123,6 +143,15 @@ namespace Kinematics {
 				m_Pos = 0;
 			}
 		}
+
+		~IPacket()
+		{
+			if (m_Data) 
+			{
+				free(m_Data);
+			}
+		}
+
 		void Add(char* data, size_t len)
 		{
 			if (m_Data != nullptr)
@@ -143,28 +172,36 @@ namespace Kinematics {
 		template<typename T>
 		void serialize(T& element, ...)
 		{
-			memcpy(&element, m_Data + m_Pos, sizeof(T));
-			m_Pos += sizeof(element);
+			if (m_Pos + sizeof(element) <= m_Size)
+			{
+				memcpy(&element, m_Data + m_Pos, sizeof(T));
+				m_Pos += sizeof(element);
+			}
 		}
 
 		template<typename T>
-		IPacket operator&(T& element)
+		IPacket* operator&(T& element)
 		{
 			serialize(element, 0);
-			return *this;
+			return this;
 		}
 
-		IPacket operator&(std::string& element)
+		IPacket* operator&(std::string& element)
 		{
-			size_t size;
-			serialize(size);
+			if (m_Pos + sizeof(size_t) <= m_Size)
+			{
+				size_t size;
+				serialize(size);
+				if (m_Pos + size <= m_Size)
+				{
+					char* data = (char*)malloc(size);
+					memcpy(data, m_Data + m_Pos, size);
+					element = std::string(data, data + size);
 
-			char* data = (char*)malloc(size);
-			memcpy(data, m_Data + m_Pos, size);
-			element = std::string(data, data + size);
-
-			m_Pos += size;
-			return *this;
+					m_Pos += size;
+				}
+			}
+			return this;
 		}
 
 		operator bool() const {
@@ -173,6 +210,7 @@ namespace Kinematics {
 
 		size_t Remaining()
 		{
+			if (m_Size > m_PacketLen) return 0;
 			return m_PacketLen - m_Size;
 		}
 

@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/mnt/c/Unesp/MTE/bin/Debug-linux-x86_64/Sandbox/Sandbox",
+            "program": "/mnt/c/Unesp/MTE/bin/Debug-linux-x86_64/Server/Server",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

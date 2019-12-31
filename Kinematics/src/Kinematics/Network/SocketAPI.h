@@ -25,6 +25,8 @@ namespace Kinematics {
 
 		virtual bool Closed() = 0;
 
+		virtual uint32_t GetID() = 0;
+
 		void SetKinematicsSocket(Socket* socket) { m_KinematicsSocket = socket; };
 
 		std::list<Ref<ConnectionSocket>> & GetClients() { return m_Clients; }

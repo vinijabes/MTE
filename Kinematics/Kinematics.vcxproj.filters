@@ -1344,6 +1344,8 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Users\vinij\Desktop\Ava\Ava\src\Ava\Events\KeyEvent.h" />
+    <ClInclude Include="src\Kinematics\Framework\Events\KeyEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">

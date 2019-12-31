@@ -72,6 +72,6 @@ namespace Kinematics {
 		}
 	};
 
-#define CREATE_FACTORY(id, type) inline extern FactoryRegistrator<type> _##type##Factory(id);
-#define CREATE_MESSAGE_FACTORY(id, type) inline extern MessageFactoryRegistrator<type> _##type##Factory(id);
+#define CREATE_FACTORY(id, type) inline extern Kinematics::FactoryRegistrator<type> _##type##Factory(id);
+#define CREATE_MESSAGE_FACTORY(id, type) inline extern Kinematics::MessageFactoryRegistrator<type> _##type##Factory(id);
 }
