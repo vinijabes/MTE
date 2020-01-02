@@ -25,6 +25,9 @@ namespace Kinematics {
 		void Submit(int16_t x, int16_t y) { m_Objects.push_back(std::make_pair(x, y)); };
 		void ClearList() { m_Objects.clear(); }
 
+		virtual inline unsigned int GetWidth() const = 0;
+		virtual inline unsigned int GetHeight() const = 0;
+
 		static Ref<WindowSubSystemInterface> Create() { return std::static_pointer_cast<WindowSubSystemInterface>(s_WindowSubSystemInterfaceFactory()); };
 	private:
 		static SUBSYSTEM_CONSTRUCTOR s_WindowSubSystemInterfaceFactory;

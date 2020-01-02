@@ -4,6 +4,13 @@
 
 namespace Kinematics {
 
+	enum WrappingOption
+	{
+		KINEMATICS_REPEAT,
+		KINEMATICS_CLAMP_TO_EDGE,
+		KINEMATICS_CLAMP_TO_BORDER,
+	};
+
 	class Texture
 	{
 	public:
@@ -14,6 +21,8 @@ namespace Kinematics {
 
 		virtual void SetData(void* data, uint32_t size) = 0;
 
+		static int GetWrapping(WrappingOption opt);
+
 		virtual void Bind(uint32_t slot = 0) const = 0;
 	};
 
@@ -21,6 +30,6 @@ namespace Kinematics {
 	{
 	public:
 		static Ref<Texture2D> Create(uint32_t width, uint32_t height);
-		static Ref<Texture2D> Create(const std::string& path);
+		static Ref<Texture2D> Create(const std::string& path, WrappingOption s = WrappingOption::KINEMATICS_REPEAT, WrappingOption t = WrappingOption::KINEMATICS_REPEAT);
 	};
 }

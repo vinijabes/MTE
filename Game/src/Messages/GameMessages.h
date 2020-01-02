@@ -7,6 +7,29 @@
 
 namespace Game
 {
+	class GameConnectedMessage : public Kinematics::NetworkMessage
+	{
+	public:
+
+		GameConnectedMessage() : Kinematics::NetworkMessage("gameConnected")
+		{
+		}
+
+		GameConnectedMessage(uint32_t id) : Kinematics::NetworkMessage("gameConnected"), m_ID(id)
+		{
+		}
+
+		uint32_t GetID() const { return m_ID; }
+
+		virtual void Serialize(Kinematics::IPacket& p) { p& m_ID; };
+		virtual void Serialize(Kinematics::OPacket& p) { p& m_ID; };
+
+		NETWORK_MESSAGE_TYPE(GameConnectedMessage);
+
+	private:
+		uint32_t m_ID;
+	};
+
 	class InputMessage : public Kinematics::NetworkMessage
 	{
 	public:
@@ -72,6 +95,33 @@ namespace Game
 		std::vector<Creature> m_Objects;
 	};
 
+	class PlayerDisconnectMessage : public Kinematics::NetworkMessage
+	{
+	public:
+		PlayerDisconnectMessage() : Kinematics::NetworkMessage("playerDisconnection")
+		{
+		}
+
+		PlayerDisconnectMessage(uint32_t id) : Kinematics::NetworkMessage("playerDisconnection"), m_ID(id)
+		{
+		}
+
+		uint32_t GetID() { return m_ID; }
+
+		virtual void Serialize(Kinematics::IPacket& p) 
+		{
+			p& m_ID;
+		}
+		
+		virtual void Serialize(Kinematics::OPacket& p) 
+		{
+			p& m_ID;
+		}
+
+	private:
+		uint32_t m_ID;
+	};
+
 	class CreatureUpdateMessage : public Kinematics::NetworkMessage
 	{
 	public:
@@ -111,7 +161,9 @@ namespace Game
 		int16_t m_Y;
 	};
 
+	CREATE_MESSAGE_FACTORY("gameConnected", GameConnectedMessage);
 	CREATE_MESSAGE_FACTORY("input", InputMessage);
 	CREATE_MESSAGE_FACTORY("data", DataMessage);
 	CREATE_MESSAGE_FACTORY("creatureUpdate", CreatureUpdateMessage);
+	CREATE_MESSAGE_FACTORY("playerDisconnection", PlayerDisconnectMessage);
 }

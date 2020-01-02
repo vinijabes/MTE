@@ -38,6 +38,9 @@ namespace Kinematics {
 		virtual void SetVSync(bool enabled) override;
 		virtual bool IsVSync() const override;
 
+		virtual inline unsigned int GetWidth() const override { return m_Data.Width; }
+		virtual inline unsigned int GetHeight() const override { return m_Data.Height; }
+
 	private:
 		void OnEvent(Event& e);
 		bool OnWindowResize(WindowResizeEvent& e);
@@ -51,8 +54,6 @@ namespace Kinematics {
 			std::string Title;
 			unsigned int Width, Height;
 			bool VSync;
-			WindowInputCallback closeCb;
-			WindowInputCallback resizeCb;
 		};
 
 		WindowData m_Data;

@@ -49,7 +49,7 @@ namespace Kinematics {
 		auto end = m_SocketAPI->GetClients().end();
 		while (begin != end)
 		{
-			if (!(*begin)->Closed() || !(*begin)->GetState() == SocketState::DISCONNECTED)
+			if ((*begin)->GetState() == SocketState::CONNECTED|| (*begin)->GetState() == SocketState::DISCONNECTED ||!(*begin)->GetState() == SocketState::CLOSED )
 			{
 				(*begin)->Update(ts);
 				++begin;
@@ -166,6 +166,7 @@ namespace Kinematics {
 
 	void ConnectionSocket::Update(Timestep step)
 	{
+		if (m_SocketAPI->Closed()) Close();
 		Receive();
 	}
 	void ConnectionSocket::Close()

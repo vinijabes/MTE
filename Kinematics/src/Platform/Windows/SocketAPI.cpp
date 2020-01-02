@@ -116,9 +116,10 @@ namespace Kinematics {
 		serverAddr.sin_port = htons(port);
 
 		bind(m_Socket, (SOCKADDR*)&serverAddr, sizeof(serverAddr));
-		listen(m_Socket, 0);
-
-		KINEMATICS_CORE_INFO("Listening for incoming connections on port: {}", port);
+		if(listen(m_Socket, 0) == SOCKET_ERROR)
+			KINEMATICS_CORE_ERROR("Listen function failed with error: {}", port);
+		else
+			KINEMATICS_CORE_INFO("Listening for incoming connections on port: {}", port);
 	}
 
 	void WindowsSocketAPI::ServerClose()
@@ -239,8 +240,11 @@ namespace Kinematics {
 			if (ierr == WSAECONNRESET)
 			{
 				m_KinematicsSocket->SetState(SocketState::DISCONNECTED);
-				//m_Closed = true;
 				return nullptr;
+			}
+			if (ierr == WSAECONNABORTED)
+			{
+				m_Closed = true;
 			}
 
 			printf("recv failed: %d\n", ierr);

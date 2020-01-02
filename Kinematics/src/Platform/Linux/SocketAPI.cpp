@@ -161,7 +161,6 @@ namespace Kinematics {
 				message = FactoryManager::GetInstance()->CreateMessage(type);
 				packet&* message;
 
-				KINEMATICS_INFO("Receiving packet of type: {}", type);
 				return message;
 			}
 		}

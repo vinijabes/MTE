@@ -94,31 +94,7 @@ namespace Kinematics {
 		KINEMATICS_PROFILE_FUNCTION();
 
 		glfwPollEvents();
-		m_Context->SwapBuffers();
-
-		m_CameraController.OnUpdate(ts);
-
-		{
-			KINEMATICS_PROFILE_SCOPE("Prepare to Render");
-			Kinematics::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-			Kinematics::RenderCommand::Clear();
-		}
-
-		{
-			KINEMATICS_PROFILE_SCOPE("Rendering");
-			Renderer2D::BeginScene(m_CameraController.GetCamera());
-
-			float aspect = (float)m_Data.Width / m_Data.Height;
-			float tileSize = (aspect * 2) / (m_Data.Width/64);
-
-			float verticalSize = 2.0f / (m_Data.Height / 64);
-
-			for (auto obj : m_Objects)
-			{
-				Renderer2D::DrawQuad({ obj.first * tileSize - tileSize/2, obj.second * verticalSize }, { tileSize, verticalSize }, { 0.8f, 0.2f, 0.3f, 1.0f });				
-			}
-			Renderer2D::EndScene();
-		}
+		m_Context->SwapBuffers();		
 	}
 	void WindowSubSystem::SetVSync(bool enabled)
 	{

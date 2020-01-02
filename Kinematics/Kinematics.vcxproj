@@ -163,6 +163,8 @@
     <ClInclude Include="src\Kinematics\Core\EntryPoint.h" />
     <ClInclude Include="src\Kinematics\Core\Hash.h" />
     <ClInclude Include="src\Kinematics\Core\KeyCodes.h" />
+    <ClInclude Include="src\Kinematics\Core\Layer.h" />
+    <ClInclude Include="src\Kinematics\Core\LayerStack.h" />
     <ClInclude Include="src\Kinematics\Core\Log.h" />
     <ClInclude Include="src\Kinematics\Core\Timer.h" />
     <ClInclude Include="src\Kinematics\Core\Timestep.h" />
@@ -198,6 +200,7 @@
     <ClInclude Include="src\Kinematics\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Kinematics\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Kinematics\Renderer\Shader.h" />
+    <ClInclude Include="src\Kinematics\Renderer\Sprite.h" />
     <ClInclude Include="src\Kinematics\Renderer\Texture.h" />
     <ClInclude Include="src\Kinematics\Renderer\VertexArray.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
@@ -582,6 +585,8 @@
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp" />
     <ClCompile Include="src\Kinematics\Core\Application.cpp" />
+    <ClCompile Include="src\Kinematics\Core\Layer.cpp" />
+    <ClCompile Include="src\Kinematics\Core\LayerStack.cpp" />
     <ClCompile Include="src\Kinematics\Core\Log.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Async\Semaphore.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Async\WorkerThread.cpp" />

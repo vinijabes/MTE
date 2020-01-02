@@ -65,7 +65,7 @@ namespace Kinematics {
 
 			if (m_State == SocketState::CLOSED)
 			{
-				auto message = DisconnectionMessage();
+				auto message = DisconnectionMessage(this->GetID());
 				OnMessage(message);
 			}
 		}
@@ -132,12 +132,10 @@ namespace Kinematics {
 		ConnectionSocket(Scope<SocketAPI> api)
 			: Socket(api)
 		{
+			m_State = SocketState::CONNECTED;
 		}
 
-		~ConnectionSocket()
-		{
-			Close();
-		}
+		~ConnectionSocket(){ Close(); }
 
 		void SetServer(ServerSocket* server) { m_Server = server; }
 		ServerSocket* GetServer() { return m_Server; }

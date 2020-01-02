@@ -16,7 +16,7 @@ namespace Kinematics {
 		virtual void Initialize();
 		virtual void Shutdown();
 
-		virtual void Update();
+		virtual void Update(Timestep ts);
 
 		template <class T>
 		void AddSubSystem()

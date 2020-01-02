@@ -13,6 +13,7 @@ namespace Kinematics {
 	{
 		Ref<VertexArray> QuadVertexArray;
 		Ref<Shader> TextureShader;
+		Ref<Shader> AnimatedTextureShader;
 		Ref<Texture2D> WhiteTexture;
 	};
 
@@ -50,6 +51,11 @@ namespace Kinematics {
 		s_Data->TextureShader = Shader::Create("assets/shaders/Texture.glsl");
 		s_Data->TextureShader->Bind();
 		s_Data->TextureShader->SetInt("u_Texture", 0);
+
+		s_Data->AnimatedTextureShader = Shader::Create("assets/shaders/AnimatedTexture.glsl");
+		s_Data->AnimatedTextureShader->Bind();
+		s_Data->AnimatedTextureShader->SetInt("u_Texture", 0);
+		s_Data->TextureShader->SetFloat4("u_TexCoords", { 0.0f, 0.0f, 1.0f, 1.0f });
 	}
 
 	void Renderer2D::Shutdown()
@@ -60,7 +66,7 @@ namespace Kinematics {
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
 		s_Data->TextureShader->Bind();
-		s_Data->TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		s_Data->TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());		
 	}
 
 	void Renderer2D::EndScene()
@@ -79,6 +85,7 @@ namespace Kinematics {
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		s_Data->TextureShader->SetMat4("u_Transform", transform);
+		s_Data->TextureShader->SetFloat4("u_TexCoords", { 0.0f, 0.0f, 1.0f, 1.0f });
 
 		s_Data->QuadVertexArray->Bind();
 		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
@@ -96,8 +103,43 @@ namespace Kinematics {
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		s_Data->TextureShader->SetMat4("u_Transform", transform);
+		s_Data->TextureShader->SetFloat4("u_TexCoords", { 0.0f, 0.0f, 1.0f, 1.0f });
 
 		s_Data->QuadVertexArray->Bind();
 		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D> texture, const glm::vec4& srcRect)
+	{
+		DrawQuad({ position.x, position.y, 0.0f }, size, texture, srcRect);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture, const glm::vec4& srcRect)
+	{
+		s_Data->TextureShader->SetFloat4("u_Color", glm::vec4(1.0f));
+		texture->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		s_Data->TextureShader->SetMat4("u_Transform", transform);
+
+		glm::vec4 texCoords(srcRect.x/texture->GetWidth(), srcRect.y/texture->GetHeight(), srcRect.z / texture->GetWidth(), srcRect.w/texture->GetHeight());
+		s_Data->TextureShader->SetFloat4("u_TexCoords", texCoords);
+
+		s_Data->QuadVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Sprite>& sprite)
+	{
+		auto rectSize = sprite->GetSize();
+		auto currentFrame = sprite->GetCurrentFrame();
+		DrawQuad({ position.x, position.y, 0.0f }, size, sprite->GetTexture(), { rectSize.x * currentFrame, 0.0f, rectSize.x * (currentFrame + 1), rectSize.y});
+	}
+	
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Sprite>& sprite)
+	{
+		auto rectSize = sprite->GetSize();
+		auto currentFrame = sprite->GetCurrentFrame();
+		DrawQuad(position, size, sprite->GetTexture(), { rectSize.x * currentFrame, 0.0f, rectSize.x * (currentFrame + 1), rectSize.y });
 	}
 }

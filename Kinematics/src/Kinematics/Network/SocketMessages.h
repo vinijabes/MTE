@@ -32,7 +32,16 @@ namespace Kinematics {
 
 		}
 
+		DisconnectionMessage(uint32_t id) : NetworkMessage("disconnection"), m_ID(id)
+		{
+
+		}
+
+		uint32_t GetID() { return m_ID; }
+
 		NETWORK_MESSAGE_TYPE(DisconnectionMessage);
+	private:
+		uint32_t m_ID;
 	};
 
 	class PingMessage : public NetworkMessage

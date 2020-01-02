@@ -14,14 +14,9 @@ namespace Kinematics {
 		TaskManager::GetInstance()->Initialize();
 	}
 
-	void Framework::Update()
+	void Framework::Update(Timestep ts)
 	{
 		StateManager::GetInstance()->NotifyAll();
-
-		float time = (float)glfwGetTime();
-		Timestep timestep = time - m_LastFrameTime;
-		m_LastFrameTime = time;
-
 		{
 			/*READ PHASE*/
 			for (auto subSystem : m_SubSystems)
@@ -43,7 +38,7 @@ namespace Kinematics {
 		{
 			/*UPDATING ALL STATES AND DOING PROGRAM LOGIC*/
 			for (auto subSystem : m_SubSystems)
-				subSystem.second->Update(timestep);
+				subSystem.second->Update(ts);
 		}
 
 		{

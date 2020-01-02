@@ -1346,6 +1346,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Users\vinij\Desktop\Ava\Ava\src\Ava\Events\KeyEvent.h" />
     <ClInclude Include="src\Kinematics\Framework\Events\KeyEvent.h" />
+    <ClInclude Include="src\Kinematics\Core\Layer.h" />
+    <ClInclude Include="src\Kinematics\Core\LayerStack.h" />
+    <ClInclude Include="src\Kinematics\Renderer\Sprite.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
@@ -1441,5 +1444,7 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kinematics\Core\Layer.cpp" />
+    <ClCompile Include="src\Kinematics\Core\LayerStack.cpp" />
   </ItemGroup>
 </Project>

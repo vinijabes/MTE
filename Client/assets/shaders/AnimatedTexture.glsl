@@ -12,7 +12,7 @@ out vec2 v_TexCoord;
 
 void main()
 {
-	v_TexCoord = vec2(u_TexCoords.x + a_TexCoord.x * (u_TexCoords.z - u_TexCoords.x), u_TexCoords.y + a_TexCoord.y * (u_TexCoords.w - u_TexCoords.y));
+	v_TexCoord = vec2(u_TexCoords.x + a_TexCoord.x * u_TexCoords.z, u_TexCoords.y + a_TexCoord.y * u_TexCoords.w);
 	gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);	
 }
 
