@@ -28,6 +28,7 @@
 #include "Kinematics/Framework/Managers/TaskManager.h"
 #include "Kinematics/Framework/Managers/FactoryManager.h"
 #include "Kinematics/Framework/Managers/StateManager.h"
+#include "Kinematics/Framework/Managers/ResourceManager.h"
 
 #include "Kinematics/Framework/Interface/WindowSubSystemInterface.h"
 #include "Kinematics/Framework/Interface/NetworkSubSystemInterface.h"

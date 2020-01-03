@@ -102,6 +102,12 @@
     <ClInclude Include="src\Kinematics\Core\KeyCodes.h">
       <Filter>src\Kinematics\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Core\Layer.h">
+      <Filter>src\Kinematics\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Core\LayerStack.h">
+      <Filter>src\Kinematics\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kinematics\Core\Log.h">
       <Filter>src\Kinematics\Core</Filter>
     </ClInclude>
@@ -124,6 +130,9 @@
       <Filter>src\Kinematics\Framework\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Events\Event.h">
+      <Filter>src\Kinematics\Framework\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Framework\Events\KeyEvent.h">
       <Filter>src\Kinematics\Framework\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Events\MouseEvent.h">
@@ -202,6 +211,9 @@
       <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Renderer\Shader.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\Sprite.h">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Renderer\Texture.h">
@@ -1344,17 +1356,19 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Users\vinij\Desktop\Ava\Ava\src\Ava\Events\KeyEvent.h" />
-    <ClInclude Include="src\Kinematics\Framework\Events\KeyEvent.h" />
-    <ClInclude Include="src\Kinematics\Core\Layer.h" />
-    <ClInclude Include="src\Kinematics\Core\LayerStack.h" />
-    <ClInclude Include="src\Kinematics\Renderer\Sprite.h" />
+    <ClInclude Include="src\Kinematics\Framework\Managers\ResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
       <Filter>src\Kinematics\Bus</Filter>
     </ClCompile>
     <ClCompile Include="src\Kinematics\Core\Application.cpp">
+      <Filter>src\Kinematics\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Core\Layer.cpp">
+      <Filter>src\Kinematics\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Core\LayerStack.cpp">
       <Filter>src\Kinematics\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Kinematics\Core\Log.cpp">
@@ -1444,7 +1458,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kinematics\Core\Layer.cpp" />
-    <ClCompile Include="src\Kinematics\Core\LayerStack.cpp" />
+    <ClCompile Include="src\Kinematics\Framework\Managers\ResourceManager.cpp" />
   </ItemGroup>
 </Project>

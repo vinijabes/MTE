@@ -153,7 +153,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Users\vinij\Desktop\Ava\Ava\src\Ava\Events\KeyEvent.h" />
     <ClInclude Include="src\Kinematics.h" />
     <ClInclude Include="src\Kinematics\Bus\BusNode.h" />
     <ClInclude Include="src\Kinematics\Bus\Message.h" />
@@ -183,6 +182,7 @@
     <ClInclude Include="src\Kinematics\Framework\Interface\TaskInterface.h" />
     <ClInclude Include="src\Kinematics\Framework\Interface\WindowSubSystemInterface.h" />
     <ClInclude Include="src\Kinematics\Framework\Managers\FactoryManager.h" />
+    <ClInclude Include="src\Kinematics\Framework\Managers\ResourceManager.h" />
     <ClInclude Include="src\Kinematics\Framework\Managers\StateManager.h" />
     <ClInclude Include="src\Kinematics\Framework\Managers\TaskManager.h" />
     <ClInclude Include="src\Kinematics\Framework\Systems\NetworkSubSystem.h" />
@@ -592,6 +592,7 @@
     <ClCompile Include="src\Kinematics\Framework\Async\WorkerThread.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Framework.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Managers\FactoryManager.cpp" />
+    <ClCompile Include="src\Kinematics\Framework\Managers\ResourceManager.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Managers\StateManager.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Managers\TaskManager.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Systems\NetworkSubSystem.cpp" />

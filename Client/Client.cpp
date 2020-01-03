@@ -46,7 +46,9 @@ void GameLayer::OnAttach()
 
 	m_Window = Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::WindowSubSystemInterface>();
 	m_PlayerTexture = Kinematics::Texture2D::Create("assets/textures/fox-run.png", Kinematics::WrappingOption::KINEMATICS_CLAMP_TO_EDGE, Kinematics::WrappingOption::KINEMATICS_CLAMP_TO_EDGE);
-	m_PlayerSprite = Kinematics::CreateRef<Kinematics::Sprite>(m_PlayerTexture, 6, 500);
+	
+	Kinematics::Resources::Add("fox", m_PlayerTexture);
+	m_PlayerSprite = Kinematics::CreateRef<Kinematics::Sprite>(Kinematics::Resources::Get<Kinematics::Texture2D>("fox"), 6, 500);
 
 	Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::NetworkSubSystemInterface>()->Connect("127.0.0.1", DEFAULT_PORT);
 
