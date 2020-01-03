@@ -6,7 +6,6 @@
 #include <unordered_map>
 
 namespace Kinematics {
-
 	class ResourceListInterface
 	{
 		friend class Resources;
@@ -21,12 +20,12 @@ namespace Kinematics {
 	template <typename K, typename T>
 	class ResourceList : public ResourceListInterface
 	{
-	friend class Resources;
+		friend class Resources;
 	public:
 		ResourceList() : ResourceListInterface() {};
 		~ResourceList()
 		{
-			for(auto it = m_Resources.begin(); it != m_Resources.end(); it++)
+			for (auto it = m_Resources.begin(); it != m_Resources.end(); it++)
 				it->second.reset();
 			m_Resources.clear();
 		}
@@ -37,7 +36,7 @@ namespace Kinematics {
 		{
 			if (m_Resources.find(key) != m_Resources.end())
 				return false;
-			
+
 			for (auto it = m_Resources.begin(); it != m_Resources.end(); ++it)
 			{
 				if (it->second == resource) return false;
@@ -72,7 +71,6 @@ namespace Kinematics {
 	private:
 		std::unordered_map<K, Ref<T>> m_Resources;
 	};
-
 
 	class Resources
 	{
@@ -111,7 +109,6 @@ namespace Kinematics {
 		template<typename T>
 		static Ref<T> Get(std::string key)
 		{
-			// return early if the asset list isn't the type map
 			ResourceList<std::string, T>* resourceList = GetResourceList<T>();
 			if (!resourceList) return nullptr;
 			return resourceList->Get(key);
@@ -126,7 +123,7 @@ namespace Kinematics {
 		}
 
 	private:
-		Resources(){}
+		Resources() {}
 		~Resources() { Flush(); }
 
 		template <typename T>

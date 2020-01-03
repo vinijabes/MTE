@@ -77,6 +77,6 @@ namespace Kinematics {
 		return os << e.ToString();
 	}
 
-	typedef std::function<bool(Event&)> EventFn;
+	typedef std::function<void(Event&)> EventFn;
 
 }

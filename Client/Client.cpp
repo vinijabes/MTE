@@ -10,6 +10,8 @@
 #include <time.h>
 #include <functional>
 
+#include <tinyxml2/tinyxml2.h>
+
 
 class GameLayer : public Kinematics::Layer
 {
@@ -46,10 +48,37 @@ void GameLayer::OnAttach()
 
 	m_Window = Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::WindowSubSystemInterface>();
 	m_PlayerTexture = Kinematics::Texture2D::Create("assets/textures/fox-run.png", Kinematics::WrappingOption::KINEMATICS_CLAMP_TO_EDGE, Kinematics::WrappingOption::KINEMATICS_CLAMP_TO_EDGE);
-	
-	Kinematics::Resources::Add("fox", m_PlayerTexture);
-	m_PlayerSprite = Kinematics::CreateRef<Kinematics::Sprite>(Kinematics::Resources::Get<Kinematics::Texture2D>("fox"), 6, 500);
 
+
+	tinyxml2::XMLDocument doc;
+	if (doc.LoadFile("Resources.xml") != tinyxml2::XML_SUCCESS) KINEMATICS_ERROR("Error loading resources!");
+	else
+	{
+		auto textures = doc.FirstChildElement("Resources")->FirstChildElement("Textures");
+		for (auto texture = textures->FirstChildElement(); texture != NULL; texture = texture->NextSiblingElement())
+		{
+			Kinematics::Resources::Add(texture->Attribute("id"), Kinematics::Texture2D::Create(texture->Attribute("src"), Kinematics::WrappingOption::KINEMATICS_CLAMP_TO_EDGE, Kinematics::WrappingOption::KINEMATICS_CLAMP_TO_EDGE));
+		}
+
+		auto sprites = doc.FirstChildElement("Resources")->FirstChildElement("Sprites");
+		for (auto sprite = sprites->FirstChildElement(); sprite != NULL; sprite = sprite->NextSiblingElement())
+		{
+			const char* id = sprite->Attribute("id");
+			float animationTime;
+			int frameCount;
+
+			sprite->FirstChildElement("FrameCount")->QueryIntText(&frameCount);
+			sprite->FirstChildElement("AnimationTime")->QueryFloatText(&animationTime);
+			const char* textureId = sprite->FirstChildElement("TextureID")->GetText();
+
+			Kinematics::Resources::Add(id, Kinematics::CreateRef<Kinematics::Sprite>(Kinematics::Resources::Get<Kinematics::Texture2D>(textureId), frameCount, animationTime));
+		}
+	}
+
+	/*Kinematics::Resources::Add("fox", m_PlayerTexture);
+	Kinematics::Resources::Add("0", Kinematics::Texture2D::Create("assets/textures/0.png", Kinematics::WrappingOption::KINEMATICS_CLAMP_TO_EDGE, Kinematics::WrappingOption::KINEMATICS_CLAMP_TO_EDGE));*/
+
+	m_PlayerSprite = Kinematics::Resources::Get<Kinematics::Sprite>("player");
 	Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::NetworkSubSystemInterface>()->Connect("127.0.0.1", DEFAULT_PORT);
 
 	Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetClient()->On("disconnection", [](Kinematics::NetworkMessage& message) {
@@ -92,12 +121,10 @@ void GameLayer::OnAttach()
 
 	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::WindowResize, [=](Kinematics::Event& e) {
 		Kinematics::WindowResizeEvent* we = (Kinematics::WindowResizeEvent*) & e;
-		return false;
 		});
 
 	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::MouseMoved, [=](Kinematics::Event& e) {
 		Kinematics::MouseMovedEvent* me = (Kinematics::MouseMovedEvent*) & e;
-		return false;
 		});
 
 	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::KeyPressed, [=](Kinematics::Event& e) {
@@ -106,7 +133,6 @@ void GameLayer::OnAttach()
 		auto message = Game::InputMessage(ke->GetKeyCode());
 		Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetClient()->Emit("input", message);
 		KINEMATICS_TRACE("KeyPress: {}", ke->GetKeyCode());
-		return false;
 		});
 }
 
@@ -114,18 +140,16 @@ void GameLayer::OnDetach()
 {
 }
 
-int i = 0;
-float atime = 0;
 
 void GameLayer::OnUpdate(Kinematics::Timestep ts)
 {
 	float aspect = (float)m_Window->GetWidth() / m_Window->GetHeight();
-	float tileSize = (aspect * 2) / (m_Window->GetWidth() / 64);
+	float tileSize = (aspect * 2) / 15.0f;//(m_Window->GetWidth() / 64);
 
-	float verticalSize = 2.0f / (m_Window->GetHeight() / 64);
+	float verticalSize = 2.0f / 7;//(m_Window->GetHeight() / 64);
 
 	if (m_Player)
-		m_CameraController.MoveTo({ m_Player->x * tileSize - tileSize / 2, m_Player->y * verticalSize , 0 });
+		m_CameraController.MoveTo({ m_Player->x * tileSize, m_Player->y * verticalSize , 0 });
 	m_CameraController.OnUpdate(ts);
 	m_PlayerSprite->OnUpdate(ts);
 
@@ -133,20 +157,20 @@ void GameLayer::OnUpdate(Kinematics::Timestep ts)
 	Kinematics::RenderCommand::Clear();
 
 	Kinematics::Renderer2D::BeginScene(m_CameraController.GetCamera());
-	Kinematics::Renderer2D::BeginScene(m_CameraController.GetCamera());
+	for (int i = 0; i < 15; i++)
+	{
+		for (int j = 0; j < 7; j++)
+		{
+			Kinematics::Renderer2D::DrawQuad({ (i - 7) * tileSize, (j - 3) * verticalSize }, { tileSize,  verticalSize }, Kinematics::Resources::Get<Kinematics::Texture2D>("0"));
+		}
+	}
 
-
-	if (i > 5) i = 0;
 	for (auto obj : m_Game.GetCreatures())
 	{
-		Kinematics::Renderer2D::DrawQuad({ obj->x * tileSize - tileSize / 2, obj->y * verticalSize }, { tileSize, verticalSize }, m_PlayerSprite);
+		Kinematics::Renderer2D::DrawQuad({ obj->x * tileSize, obj->y * verticalSize, 1.0f }, { tileSize, verticalSize }, m_PlayerSprite);
 	}
 
-	atime = atime + ts.GetMilliseconds();
-	if (atime > 200) {
-		i++;
-		atime = 0;
-	}
+
 	Kinematics::Renderer2D::EndScene();
 }
 

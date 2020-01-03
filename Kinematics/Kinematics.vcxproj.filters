@@ -162,6 +162,9 @@
     <ClInclude Include="src\Kinematics\Framework\Managers\FactoryManager.h">
       <Filter>src\Kinematics\Framework\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Framework\Managers\ResourceManager.h">
+      <Filter>src\Kinematics\Framework\Managers</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Managers\StateManager.h">
       <Filter>src\Kinematics\Framework\Managers</Filter>
     </ClInclude>
@@ -1356,7 +1359,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kinematics\Framework\Managers\ResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
@@ -1384,6 +1386,9 @@
       <Filter>src\Kinematics\Framework</Filter>
     </ClCompile>
     <ClCompile Include="src\Kinematics\Framework\Managers\FactoryManager.cpp">
+      <Filter>src\Kinematics\Framework\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Framework\Managers\ResourceManager.cpp">
       <Filter>src\Kinematics\Framework\Managers</Filter>
     </ClCompile>
     <ClCompile Include="src\Kinematics\Framework\Managers\StateManager.cpp">
@@ -1458,6 +1463,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kinematics\Framework\Managers\ResourceManager.cpp" />
   </ItemGroup>
 </Project>

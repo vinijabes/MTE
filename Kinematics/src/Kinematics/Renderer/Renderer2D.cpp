@@ -13,7 +13,6 @@ namespace Kinematics {
 	{
 		Ref<VertexArray> QuadVertexArray;
 		Ref<Shader> TextureShader;
-		Ref<Shader> AnimatedTextureShader;
 		Ref<Texture2D> WhiteTexture;
 	};
 
@@ -52,9 +51,6 @@ namespace Kinematics {
 		s_Data->TextureShader->Bind();
 		s_Data->TextureShader->SetInt("u_Texture", 0);
 
-		s_Data->AnimatedTextureShader = Shader::Create("assets/shaders/AnimatedTexture.glsl");
-		s_Data->AnimatedTextureShader->Bind();
-		s_Data->AnimatedTextureShader->SetInt("u_Texture", 0);
 		s_Data->TextureShader->SetFloat4("u_TexCoords", { 0.0f, 0.0f, 1.0f, 1.0f });
 	}
 
@@ -120,9 +116,9 @@ namespace Kinematics {
 		texture->Bind();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		s_Data->TextureShader->SetMat4("u_Transform", transform);
-
 		glm::vec4 texCoords(srcRect.x/texture->GetWidth(), srcRect.y/texture->GetHeight(), srcRect.z / texture->GetWidth(), srcRect.w/texture->GetHeight());
+
+		s_Data->TextureShader->SetMat4("u_Transform", transform);
 		s_Data->TextureShader->SetFloat4("u_TexCoords", texCoords);
 
 		s_Data->QuadVertexArray->Bind();

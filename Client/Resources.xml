@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Resources>
+    <Textures>
+        <Texture2D id="0" src="./assets/textures/0.png"/>
+        <Texture2D id="rock" src="./assets/textures/rock.jpg"/>
+        <Texture2D id="fox" src="./assets/textures/fox-run.png"/>
+    </Textures>
+
+    <Sprites>
+        <Sprite id="player">
+            <AnimationTime>500</AnimationTime>
+            <FrameCount>6</FrameCount>
+            <TextureID>fox</TextureID>
+        </Sprite>
+    </Sprites>
+</Resources> 

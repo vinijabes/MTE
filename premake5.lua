@@ -22,10 +22,12 @@ IncludeDir["Glad"] = "Kinematics/vendor/Glad/include"
 IncludeDir["ImGui"] = "Kinematics/vendor/imgui"
 IncludeDir["glm"] = "Kinematics/vendor/glm"
 IncludeDir["stb_image"] = "Kinematics/vendor/stb_image"
+IncludeDir["tinyxml2"] = "Kinematics/vendor/tinyxml2"
 
 group "Dependencies"
     include "Kinematics/vendor/GLFW"
     include "Kinematics/vendor/Glad"
+    include "Kinematics/vendor/tinyxml2"
 
 group ""
 
@@ -64,13 +66,15 @@ project "Kinematics"
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
         "%{IncludeDir.glm}",
-        "%{IncludeDir.stb_image}"
+        "%{IncludeDir.stb_image}",
+        "%{IncludeDir.tinyxml2}"
     }
 
     links
     {
         "GLFW",
-        "Glad"
+        "Glad",
+        "tinyxml2"
     }    
 
     filter "system:linux"

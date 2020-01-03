@@ -9,7 +9,6 @@
 
 #include "Kinematics/Framework/Managers/StateManager.h"
 
-
 namespace Kinematics {
 
 	SUBSYSTEM_CONSTRUCTOR WindowSubSystemInterface::s_WindowSubSystemInterfaceFactory = [] {return CreateRef<WindowSubSystem>(); };
