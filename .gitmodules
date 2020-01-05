@@ -13,3 +13,6 @@
 [submodule "Kinematics/vendor/tinyxml2"]
 	path = Kinematics/vendor/tinyxml2
 	url = https://github.com/leethomason/tinyxml2
+[submodule "Kinematics/vendor/lua"]
+	path = Kinematics/vendor/lua
+	url = https://github.com/lua/lua

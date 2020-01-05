@@ -40,8 +40,72 @@ GameLayer::GameLayer()
 {
 }
 
+int testef(Kinematics::ScriptState& state)
+{
+	KINEMATICS_TRACE("C FUNCTION");
+	return 0;
+}
+
+class MyObject
+{
+private:
+	double x;
+public:
+	MyObject(double x) : x(x) {}
+	void set(double x) { this->x = x; }
+	double get() const { return this->x; }
+};
+
+int MyObjNew(Kinematics::ScriptState& state)
+{
+	float x = state.Get().GetParameter<float>(1);
+	*reinterpret_cast<MyObject**>(state.Get().CreateUserData<MyObject>()) = new MyObject(x);
+	state.Get().SetMetaTable("MyObject");
+
+	KINEMATICS_TRACE("MyObject instantiated in LUA!");
+
+	return 1;
+}
+
+int MyObjDelete(Kinematics::ScriptState& state)
+{
+	delete* reinterpret_cast<MyObject**>(state.Get().GetUserData<MyObject>(1));
+
+	KINEMATICS_TRACE("MyObject deleted in LUA!");
+
+	return 0;
+}
+
+int MyObjSet(Kinematics::ScriptState& state)
+{
+	(*reinterpret_cast<MyObject**>(state.Get().GetUserDataParameter<MyObject>(1, "MyObject")))->set(state.Get().GetParameter<float>(2));
+	return 0;
+}
+
+int MyObjGet(Kinematics::ScriptState& state)
+{
+	state.Get().Push<float>((*reinterpret_cast<MyObject**>(state.Get().GetUserDataParameter<MyObject>(1, "MyObject")))->get());
+	return 1;
+}
+
 void GameLayer::OnAttach()
 {
+	auto teste = Kinematics::Script::Create("test.lua");
+	auto x = Kinematics::LuaScript::Wrap<testef>("Testando");
+	teste->RegisterCFunc(x);
+	
+	std::vector<Kinematics::Ref<Kinematics::ScriptWrapperContainer>> methods;
+	methods.push_back(Kinematics::Ref<Kinematics::ScriptWrapperContainer>(Kinematics::LuaScript::WrapPointer<MyObjSet>("set")));
+	methods.push_back(Kinematics::Ref<Kinematics::ScriptWrapperContainer>(Kinematics::LuaScript::WrapPointer<MyObjGet>("get")));
+	teste->CreateMetaTable("MyObject", 
+		Kinematics::LuaScript::Wrap<MyObjNew>(), 
+		Kinematics::LuaScript::Wrap<MyObjDelete>(),
+		methods);
+	teste->Run();
+	teste->Call<void>("teste");
+
+	auto table = teste->Call<Kinematics::ScriptTable>("teste", 0);
+	KINEMATICS_TRACE("{}", teste->Call<int>("sum", 1, 2));
 
 	Kinematics::Application::Get().GetFramework()->AddSubSystem("WindowSubSystem");
 	Kinematics::Application::Get().GetFramework()->AddSubSystem("NetworkSubSystem");
@@ -83,17 +147,17 @@ void GameLayer::OnAttach()
 
 	Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetClient()->On("disconnection", [](Kinematics::NetworkMessage& message) {
 		KINEMATICS_TRACE("Client Disconnected!");
-		});
+	});
 
 	Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetClient()->On("connection", [](Kinematics::NetworkMessage& message) {
 		KINEMATICS_TRACE("Connected!");
-		});
+	});
 
 	Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetClient()->On("gameConnected", [&](Kinematics::NetworkMessage& message) {
 		Game::GameConnectedMessage* gcm = (Game::GameConnectedMessage*) & message;
 
 		m_Player = m_Game.GetCreature(gcm->GetID());
-		});
+	});
 
 	Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetClient()->On("data", [&](Kinematics::NetworkMessage& message) {
 		Game::DataMessage* dm = (Game::DataMessage*) & message;
@@ -103,7 +167,7 @@ void GameLayer::OnAttach()
 			if (!m_Game.GetCreature(obj.id))
 				m_Game.PushCreature(obj);
 		}
-		});
+	});
 
 	Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetClient()->On("creatureUpdate", [=](Kinematics::NetworkMessage& message) {
 		Game::CreatureUpdateMessage* dm = (Game::CreatureUpdateMessage*) & message;
@@ -112,20 +176,20 @@ void GameLayer::OnAttach()
 		creature->y = dm->GetY();
 
 		auto id = Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetClient()->GetID();
-		});
+	});
 
 	Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetClient()->On("playerDisconnection", [=](Kinematics::NetworkMessage& message) {
 		Game::PlayerDisconnectMessage* pdm = (Game::PlayerDisconnectMessage*) & message;
 		m_Game.RemoveCreature(pdm->GetID());
-		});
+	});
 
 	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::WindowResize, [=](Kinematics::Event& e) {
 		Kinematics::WindowResizeEvent* we = (Kinematics::WindowResizeEvent*) & e;
-		});
+	});
 
 	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::MouseMoved, [=](Kinematics::Event& e) {
 		Kinematics::MouseMovedEvent* me = (Kinematics::MouseMovedEvent*) & e;
-		});
+	});
 
 	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::KeyPressed, [=](Kinematics::Event& e) {
 		Kinematics::KeyPressedEvent* ke = (Kinematics::KeyPressedEvent*) & e;
@@ -133,7 +197,7 @@ void GameLayer::OnAttach()
 		auto message = Game::InputMessage(ke->GetKeyCode());
 		Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetClient()->Emit("input", message);
 		KINEMATICS_TRACE("KeyPress: {}", ke->GetKeyCode());
-		});
+	});
 }
 
 void GameLayer::OnDetach()
