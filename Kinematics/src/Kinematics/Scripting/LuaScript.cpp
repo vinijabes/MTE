@@ -1,12 +1,20 @@
 #include "mtepch.h"
 #include "LuaScript.h"
 
+#if defined KINEMATICS_PLATFORM_WINDOWS
 extern "C"
 {
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
 }
+#elif defined KINEMATICS_PLATFORM_LINUX
+extern "C" {
+#include <lua5.3/lua.h>
+#include <lua5.3/lualib.h>
+#include <lua5.3/lauxlib.h>
+}
+#endif
 
 namespace Kinematics {
 	LuaScript::LuaScript(const std::string& path)
@@ -272,13 +280,38 @@ namespace Kinematics {
 	void LuaScript::PushInt(const int& var)
 	{
 		lua_pushnumber(L, var);
-		++m_Push;
 	}
 
 	void LuaScript::PushFloat(const float& var)
 	{
 		lua_pushnumber(L, var);
-		++m_Push;
+	}
+
+	void LuaScript::PushTable(const ScriptTable& var)
+	{
+		lua_newtable(L);
+
+		int pos = 1;
+		for (auto it = var.begin(); it != var.end(); it++)
+		{
+			if (it->second->GetType() == ScriptVarType::TABLE)
+			{
+				PushTable(std::static_pointer_cast<const ScriptValue<ScriptTable>>(it->second)->Get());
+			}
+
+			if (it->second->GetType() == ScriptVarType::INT)
+			{
+				PushInt(std::static_pointer_cast<const ScriptValue<int>>(it->second)->Get());
+			}
+
+			if (it->second->GetType() == ScriptVarType::FLOAT)
+			{
+				PushFloat(std::static_pointer_cast<const ScriptValue<float>>(it->second)->Get());
+			}
+
+			lua_setfield(L, -2, it->first.c_str());
+		}
+
 	}
 
 	void LuaScript::SetFunc(const std::string& var)
@@ -286,30 +319,27 @@ namespace Kinematics {
 		lua_getglobal(L, var.c_str());
 	}
 
-	int LuaScript::InternalCallInt()
+	int LuaScript::InternalCallInt(const int& push)
 	{
-		lua_pcall(L, m_Push, LUA_MULTRET, 0);
+		lua_pcall(L, push, LUA_MULTRET, 0);
 
 		int result = (int)lua_tonumber(L, -1);
 		lua_pop(L, 1);
 
-		m_Push = 0;
 		return result;
 	}
 
-	void LuaScript::InternalCallVoid()
+	void LuaScript::InternalCallVoid(const int& push)
 	{
-		lua_pcall(L, m_Push, 0, 0);
-		m_Push = 0;
+		lua_pcall(L, push, 0, 0);
 	}
 
-	ScriptTable LuaScript::InternalCallTable()
+	ScriptTable LuaScript::InternalCallTable(const int& push)
 	{
-		lua_pcall(L, m_Push, LUA_MULTRET, 0);
+		lua_pcall(L, push, LUA_MULTRET, 0);
 
 		ScriptTable result = GetTable();
 
-		m_Push = 0;
 		return result;
 	}
 

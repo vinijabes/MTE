@@ -31,8 +31,13 @@ GameLayer::GameLayer()
 {
 }
 
+
 void GameLayer::OnAttach()
 {	
+	Kinematics::Ref<Kinematics::Script> mainScript = Kinematics::Script::Create("Scripts/main.lua");
+	mainScript->Run();
+
+	Kinematics::Resources::Add("MainScript", mainScript);
 
 	Kinematics::Application::Get().GetFramework()->AddSubSystem("NetworkSubSystem");
 	Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::NetworkSubSystemInterface>()->Listen(DEFAULT_PORT);
@@ -40,7 +45,12 @@ void GameLayer::OnAttach()
 		Kinematics::ConnectionMessage* cm = (Kinematics::ConnectionMessage*) & message;
 		auto socket = cm->GetSocket();
 
-		m_Game.PushCreature(Game::Creature(socket->GetID(), 0, 0));
+		auto OnMoveLua = Kinematics::ScriptCallable<void, int>(Kinematics::Resources::Get<Kinematics::Script>("MainScript"), "OnMove");
+		auto OnMoveLuaCallback = Kinematics::CreateRef<Kinematics::LuaCallback<void, int>>(OnMoveLua);
+
+		auto creature = Game::Creature(socket->GetID(), Game::Position(0, 0, 0));
+		creature.AddCallback(Game::CreatureEvent::CREATURE_MOVE, OnMoveLuaCallback);
+		m_Game.PushCreature(creature);
 
 		auto m_X = new int(0);
 		auto m_Y = new int(0);
@@ -53,26 +63,29 @@ void GameLayer::OnAttach()
 
 			if (im->GetKey() == KINEMATICS_KEY_LEFT)
 			{
-				;
-				auto dm = Game::CreatureUpdateMessage(m_Creature->id, --m_Creature->x, m_Creature->y);
+				m_Creature->Move(Game::Position(-1, 0, 0));
+				auto dm = Game::CreatureUpdateMessage(m_Creature->GetID(), m_Creature->GetPosition().GetX(), m_Creature->GetPosition().GetY());
 				socket->GetServer()->Emit("creatureUpdate", dm);
 			}
 
 			if (im->GetKey() == KINEMATICS_KEY_RIGHT)
 			{
-				auto dm = Game::CreatureUpdateMessage(m_Creature->id, ++m_Creature->x, m_Creature->y);
+				m_Creature->Move(Game::Position(1, 0, 0));
+				auto dm = Game::CreatureUpdateMessage(m_Creature->GetID(), m_Creature->GetPosition().GetX(), m_Creature->GetPosition().GetY());
 				socket->GetServer()->Emit("creatureUpdate", dm);
 			}
 
 			if (im->GetKey() == KINEMATICS_KEY_UP)
 			{
-				auto dm = Game::CreatureUpdateMessage(m_Creature->id, m_Creature->x, ++m_Creature->y);
+				m_Creature->Move(Game::Position(0, 1, 0));
+				auto dm = Game::CreatureUpdateMessage(m_Creature->GetID(), m_Creature->GetPosition().GetX(), m_Creature->GetPosition().GetY());
 				socket->GetServer()->Emit("creatureUpdate", dm);
 			}
 
 			if (im->GetKey() == KINEMATICS_KEY_DOWN)
 			{
-				auto dm = Game::CreatureUpdateMessage(m_Creature->id, m_Creature->x, --m_Creature->y);
+				m_Creature->Move(Game::Position(0, -1, 0));
+				auto dm = Game::CreatureUpdateMessage(m_Creature->GetID(), m_Creature->GetPosition().GetX(), m_Creature->GetPosition().GetY());
 				socket->GetServer()->Emit("creatureUpdate", dm);
 			}
 		});

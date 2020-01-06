@@ -5,3 +5,4 @@ LINUX HEADERS
 - `libxinerama`
 - `libxi`
 - `libglew`
+- `lua5.3`

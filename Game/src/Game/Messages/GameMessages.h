@@ -3,7 +3,7 @@
 #include <Kinematics.h>
 #include <vector>
 
-#include "../Creature.h"
+#include "Game/Creatures/Creature.h"
 
 namespace Game
 {
@@ -71,7 +71,12 @@ namespace Game
 
 			for (int i = 0; i < size; i++)
 			{
-				p& m_Objects[i];
+				uint32_t id;
+				Position pos;
+				p& id;
+				p& pos;
+
+				m_Objects[i] = Creature(id, pos);
 			}
 		};
 
@@ -83,7 +88,10 @@ namespace Game
 
 			for (auto obj : m_Objects)
 			{
-				p& obj;
+				uint32_t id = obj.GetID();
+				Position pos = obj.GetPosition();
+				p& id;
+				p& pos;
 			}
 		};
 

@@ -231,7 +231,16 @@
     <ClInclude Include="src\Kinematics\Renderer\VertexArray.h">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Scripting\Callback.h">
+      <Filter>src\Kinematics\Scripting</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kinematics\Scripting\LuaScript.h">
+      <Filter>src\Kinematics\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Scripting\Script.h">
+      <Filter>src\Kinematics\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Scripting\ScriptCallable.h">
       <Filter>src\Kinematics\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
@@ -1368,9 +1377,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kinematics\Scripting\Script.h">
-      <Filter>src\Kinematics\Scripting</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
@@ -1448,6 +1454,9 @@
     <ClCompile Include="src\Kinematics\Scripting\LuaScript.cpp">
       <Filter>src\Kinematics\Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kinematics\Scripting\Script.cpp">
+      <Filter>src\Kinematics\Scripting</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
@@ -1477,9 +1486,6 @@
     </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kinematics\Scripting\Script.cpp">
-      <Filter>src\Kinematics\Scripting</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

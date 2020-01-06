@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Messages/GameMessages.h"
-#include "Creature.h"
+#include "Game/Messages/GameMessages.h"
+#include "Game/Creatures/Creature.h"
 #include <vector>
 #include <memory>
 
@@ -16,7 +16,7 @@ namespace Game {
 
 			while (begin != end)
 			{
-				if ((*begin)->id == id) {
+				if ((*begin)->GetID() == id) {
 					m_Creatures.erase(begin);
 					return;
 				}
@@ -29,7 +29,7 @@ namespace Game {
 
 		std::shared_ptr<Creature> GetCreature(uint32_t id)
 		{
-			for (auto c : m_Creatures) if (c->id == id) return c;
+			for (auto c : m_Creatures) if (c->GetID() == id) return c;
 			return nullptr;
 		}
 

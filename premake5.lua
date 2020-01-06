@@ -168,6 +168,7 @@ project "Game"
 
     includedirs
     {
+        "%{prj.name}/src",
         "Kinematics/vendor/spdlog/include",
         "Kinematics/src",
         "Kinematics/vendor",
@@ -279,7 +280,7 @@ project "Client"
         "%{prj.name}/**.h",
         "%{prj.name}/**.cpp",
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"        
+        "%{prj.name}/src/**.cpp",   
     }
 
     includedirs
@@ -288,7 +289,7 @@ project "Client"
         "Kinematics/src",
         "Kinematics/vendor",
         "Game/src",
-        "%{IncludeDir.glm}",
+        "%{IncludeDir.glm}"
     }
 
     links
@@ -309,7 +310,9 @@ project "Client"
 			"X11",
 			"dl",
 			"pthread",
-			"stdc++fs"
+            "stdc++fs",
+            "tinyxml2",
+            "lua5.3"
         }
         
 		defines
@@ -379,7 +382,8 @@ project "Server"
 			"X11",
 			"dl",
 			"pthread",
-			"stdc++fs"
+			"stdc++fs",
+            "lua5.3"
         }
         
 		defines

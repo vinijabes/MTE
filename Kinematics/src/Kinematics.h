@@ -31,6 +31,7 @@
 #include "Kinematics/Framework/Managers/ResourceManager.h"
 
 #include "Kinematics/Scripting/LuaScript.h"
+#include "Kinematics/Scripting/Callback.h"
 
 #include "Kinematics/Framework/Interface/WindowSubSystemInterface.h"
 #include "Kinematics/Framework/Interface/NetworkSubSystemInterface.h"

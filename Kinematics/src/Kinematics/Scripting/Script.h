@@ -5,6 +5,9 @@
 
 namespace Kinematics {
 
+	class LuaScript;
+	class ScriptState;
+
 	enum class ScriptVarType
 	{
 		STRING,
@@ -23,6 +26,8 @@ namespace Kinematics {
 	{
 	public:
 		ScriptValueInterface(ScriptVarType type) : m_Type(type) {}
+		ScriptVarType GetType() const { return m_Type; }
+
 	private:
 		ScriptVarType m_Type;
 	};
@@ -42,6 +47,11 @@ namespace Kinematics {
 			return m_Value;
 		}
 
+		T Get() const
+		{
+			return m_Value;
+		}
+
 	private:
 		T m_Value;
 	};
@@ -57,7 +67,7 @@ namespace Kinematics {
 
 		void Push(std::string key, const float& value)
 		{
-			m_KeyPairs[key] = std::static_pointer_cast<ScriptValueInterface>(CreateRef<ScriptValue<float>>(ScriptValue(ScriptVarType::TABLE, value)));
+			m_KeyPairs[key] = std::static_pointer_cast<ScriptValueInterface>(CreateRef<ScriptValue<float>>(ScriptValue(ScriptVarType::FLOAT, value)));
 		}
 
 		void Push(std::string key, const ScriptTable& value)
@@ -76,15 +86,18 @@ namespace Kinematics {
 			return (std::static_pointer_cast<ScriptValue<T>>(m_KeyPairs[key]))->Get();
 		}
 
+		auto begin() const { return m_KeyPairs.begin(); }
+		auto end() const { return m_KeyPairs.end(); }
+
 	private:
 		std::unordered_map<std::string, Ref<ScriptValueInterface>> m_KeyPairs;
 	};
 
-
-	class ScriptState;
 	struct ScriptWrapperContainer
 	{
 	};
+
+	typedef std::vector<ScriptWrapperContainer> ScriptLib;
 
 	class Script
 	{
@@ -104,9 +117,9 @@ namespace Kinematics {
 		T GetParameter(int pos);
 
 		template <typename T>
-		T* GetUserDataParameter(int pos, const std::string& meta)
+		T** GetUserDataParameter(int pos, const std::string& meta)
 		{
-			return (T*) GetUserDataParameter(pos, meta);
+			return reinterpret_cast<T**>(GetUserDataParameter(pos, meta));
 		}
 
 		virtual void* GetUserDataParameter(int pos, const std::string& meta) = 0;
@@ -126,15 +139,21 @@ namespace Kinematics {
 		{
 			SetFunc(func);
 			PushCallArgument(args...);
-			return Call<T>();
+			return Call<T>(sizeof...(Types));
 		}
 
 		template <typename T>
-		T Call();
+		T Call(int push = 0);
 
 		virtual void Run() = 0;
 		virtual void RegisterCFunc(ScriptWrapperContainer& func, const std::string& name) = 0;
 		virtual void RegisterCFunc(ScriptWrapperContainer& func) = 0;
+
+		void RegisterLib(ScriptLib lib)
+		{
+			for (auto m : lib)
+				RegisterCFunc(m);
+		}
 
 		/*METADATA HANDLING*/
 		virtual void CreateMetaTable(const std::string& name,
@@ -144,18 +163,21 @@ namespace Kinematics {
 		virtual void SetMetaTable(const std::string& name) = 0;
 
 		template <typename T>
-		void* CreateUserData()
+		T** CreateUserData()
 		{
-			return CreateUserData(sizeof(T));
+			return reinterpret_cast<T**>(CreateUserData(sizeof(T)));
 		}
 		virtual void* CreateUserData(size_t size) = 0;
 
 		template <typename T>
-		T* GetUserData(int index)
+		T** GetUserData(int index)
 		{
-			return (T*) GetUserData(index);
+			return reinterpret_cast<T**>(GetUserData(index));
 		}
 		virtual void* GetUserData(int index) = 0;
+
+		template <typename C>
+		constexpr void RegisterObject();
 
 	protected:
 		template <typename T, typename ... Types>
@@ -187,10 +209,11 @@ namespace Kinematics {
 		/*FUNCTION HANDLING*/
 		virtual void PushInt(const int& var) = 0;
 		virtual void PushFloat(const float& var) = 0;
+		virtual void PushTable(const ScriptTable& var) = 0;
 
-		virtual int InternalCallInt() = 0;
-		virtual void InternalCallVoid() = 0;
-		virtual ScriptTable InternalCallTable() = 0;
+		virtual int InternalCallInt(const int& push) = 0;
+		virtual void InternalCallVoid(const int& push) = 0;
+		virtual ScriptTable InternalCallTable(const int& push) = 0;
 
 		virtual int GetIntParameter(int pos) = 0;
 		virtual float GetFloatParameter(int pos) = 0;
@@ -270,22 +293,35 @@ namespace Kinematics {
 		PushFloat(var);
 	}
 
-	template <>
-	inline int Script::Call()
+	template<>
+	inline void Script::Push(const ScriptTable& var)
 	{
-		return InternalCallInt();
+		PushTable(var);
 	}
 
 	template <>
-	inline ScriptTable Script::Call()
+	inline int Script::Call(int push)
 	{
-		return InternalCallTable();
+		return InternalCallInt(push);
+	}
+
+	template<typename C>
+	inline constexpr void Script::RegisterObject()
+	{
+		if (m_Lang == ScriptLang::LUA)
+			static_cast<LuaScript*>(this)->template RegisterObject<C>();
 	}
 
 	template <>
-	inline void Script::Call()
+	inline ScriptTable Script::Call(int push)
 	{
-		return InternalCallVoid();
+		return InternalCallTable(push);
+	}
+
+	template <>
+	inline void Script::Call(int push)
+	{
+		return InternalCallVoid(push);
 	}
 
 }

@@ -7,6 +7,7 @@ struct lua_State;
 namespace Kinematics {
 
 	typedef int (*LuaCPPF)(ScriptState&);
+	class LuaScript;
 
 	template< LuaCPPF Function >
 	int LuaWrapper(lua_State* state)
@@ -43,6 +44,12 @@ namespace Kinematics {
 		static Ref<LuaScript> Create(std::string path) { return CreateRef<LuaScript>(path); }
 
 		virtual void Run() override;
+
+		template <typename C>
+		void RegisterObject()
+		{
+			C::RegisterScriptConstructor(*this);
+		}
 
 		template<LuaCPPF Func>
 		static LuaScriptWrapper* WrapPointer(const std::string& name)
@@ -84,11 +91,12 @@ namespace Kinematics {
 
 		virtual void PushInt(const int& var) override;
 		virtual void PushFloat(const float& var) override;
+		virtual void PushTable(const ScriptTable& var) override;
 
 		virtual void SetFunc(const std::string& var);
-		virtual int InternalCallInt() override;
-		virtual void InternalCallVoid() override;
-		virtual ScriptTable InternalCallTable() override;
+		virtual int InternalCallInt(const int& push) override;
+		virtual void InternalCallVoid(const int& push) override;
+		virtual ScriptTable InternalCallTable(const int& push) override;
 
 		virtual void RegisterCFunc(ScriptWrapperContainer& func, const std::string& name) override;
 		virtual void RegisterCFunc(ScriptWrapperContainer& func) override;

@@ -1,8 +1,4 @@
-local obj = MyObject(42)
-print(obj:get())    -- 42
-obj:set(-1.5)
-print(obj:get())    -- -1.5
-
-function teste()
-    print(obj:get())
+function teste(a)
+    print(a.x)
+    return 0
 end

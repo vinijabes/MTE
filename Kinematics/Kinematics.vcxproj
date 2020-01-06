@@ -204,8 +204,10 @@
     <ClInclude Include="src\Kinematics\Renderer\Sprite.h" />
     <ClInclude Include="src\Kinematics\Renderer\Texture.h" />
     <ClInclude Include="src\Kinematics\Renderer\VertexArray.h" />
+    <ClInclude Include="src\Kinematics\Scripting\Callback.h" />
     <ClInclude Include="src\Kinematics\Scripting\LuaScript.h" />
     <ClInclude Include="src\Kinematics\Scripting\Script.h" />
+    <ClInclude Include="src\Kinematics\Scripting\ScriptCallable.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />

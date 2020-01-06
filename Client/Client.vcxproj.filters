@@ -1,25 +1,238 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Arquivos de Origem">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Kinematics">
+      <UniqueIdentifier>{6D2B3314-59E3-7461-C2EA-4DBDAEC10F52}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Arquivos de Cabeçalho">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Kinematics\vendor">
+      <UniqueIdentifier>{2A0530E0-961B-2E76-DF92-B9974BE8FEFD}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Arquivos de Recurso">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Kinematics\vendor\lua">
+      <UniqueIdentifier>{DB2ABED5-4797-79D0-108B-112E7CB69B38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kinematics\vendor\lua\testes">
+      <UniqueIdentifier>{424C2855-2E07-1801-D7BE-904BC3586291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kinematics\vendor\lua\testes\libs">
+      <UniqueIdentifier>{DBC9BBB3-4738-1133-9021-CC32FCCE06CF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kinematics\vendor\tinyxml2">
+      <UniqueIdentifier>{204A7A01-0C5A-26D2-7513-8BF06142156B}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Client.cpp">
-      <Filter>Arquivos de Origem</Filter>
+    <ClInclude Include="..\Kinematics\vendor\lua\lapi.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lauxlib.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lcode.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lctype.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\ldebug.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\ldo.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lfunc.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lgc.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\ljumptab.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\llex.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\llimits.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lmem.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lobject.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lopcodes.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lopnames.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lparser.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lprefix.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lstate.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lstring.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\ltable.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\ltests.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\ltm.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lua.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\luaconf.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lualib.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lundump.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lvm.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\lua\lzio.h">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Kinematics\vendor\tinyxml2\tinyxml2.h">
+      <Filter>Kinematics\vendor\tinyxml2</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Kinematics\vendor\lua\lapi.c">
+      <Filter>Kinematics\vendor\lua</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="assets\shaders\AnimatedTexture.glsl" />
+    <ClCompile Include="..\Kinematics\vendor\lua\lauxlib.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lbaselib.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lcode.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lcorolib.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lctype.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\ldblib.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\ldebug.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\ldo.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\ldump.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lfunc.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lgc.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\linit.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\liolib.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\llex.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lmathlib.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lmem.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\loadlib.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lobject.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lopcodes.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\loslib.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lparser.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lstate.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lstring.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lstrlib.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\ltable.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\ltablib.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\ltests.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\ltm.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lua.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lundump.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lutf8lib.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lvm.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\lzio.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\onelua.c">
+      <Filter>Kinematics\vendor\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\testes\libs\lib1.c">
+      <Filter>Kinematics\vendor\lua\testes\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\testes\libs\lib11.c">
+      <Filter>Kinematics\vendor\lua\testes\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\testes\libs\lib2.c">
+      <Filter>Kinematics\vendor\lua\testes\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\testes\libs\lib21.c">
+      <Filter>Kinematics\vendor\lua\testes\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\lua\testes\libs\lib22.c">
+      <Filter>Kinematics\vendor\lua\testes\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Kinematics\vendor\tinyxml2\tinyxml2.cpp">
+      <Filter>Kinematics\vendor\tinyxml2</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp" />
   </ItemGroup>
 </Project>
