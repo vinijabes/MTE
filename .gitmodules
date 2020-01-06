@@ -12,7 +12,7 @@
 	url = https://github.com/g-truc/glm
 [submodule "Kinematics/vendor/tinyxml2"]
 	path = Kinematics/vendor/tinyxml2
-	url = https://github.com/leethomason/tinyxml2
+	url = https://github.com/vinijabes/tinyxml2
 [submodule "Kinematics/vendor/lua"]
 	path = Kinematics/vendor/lua
-	url = https://github.com/lua/lua
+	url = https://github.com/vinijabes/lua
