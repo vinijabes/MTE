@@ -2,6 +2,7 @@
 <Resources>
     <Textures>
         <Texture2D id="0" src="./assets/textures/0.png"/>
+        <Texture2D id="1" src="./assets/textures/1.png"/>
         <Texture2D id="rock" src="./assets/textures/rock.jpg"/>
         <Texture2D id="fox" src="./assets/textures/fox-run.png"/>
     </Textures>

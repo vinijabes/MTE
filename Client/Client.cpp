@@ -195,7 +195,7 @@ void GameLayer::OnAttach()
 		auto message = Game::InputMessage(ke->GetKeyCode());
 		Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::NetworkSubSystemInterface>()->GetClient()->Emit("input", message);
 		KINEMATICS_TRACE("KeyPress: {}", ke->GetKeyCode());
-		});
+	});
 }
 
 void GameLayer::OnDetach()
@@ -206,9 +206,9 @@ void GameLayer::OnDetach()
 void GameLayer::OnUpdate(Kinematics::Timestep ts)
 {
 	float aspect = (float)m_Window->GetWidth() / m_Window->GetHeight();
-	float tileSize = (aspect * 2) / 15.0f;//(m_Window->GetWidth() / 64);
+	float tileSize = (aspect * 2) / (m_Window->GetWidth() / 64);
 
-	float verticalSize = 2.0f / 7;//(m_Window->GetHeight() / 64);
+	float verticalSize = 2.0f / (m_Window->GetHeight() / 64);
 
 	if (m_Player)
 		m_CameraController.MoveTo({ m_Player->GetPosition().GetX() * tileSize, m_Player->GetPosition().GetY() * verticalSize , 0 });
@@ -226,6 +226,8 @@ void GameLayer::OnUpdate(Kinematics::Timestep ts)
 			Kinematics::Renderer2D::DrawQuad({ (i - 7) * tileSize, (j - 3) * verticalSize }, { tileSize,  verticalSize }, Kinematics::Resources::Get<Kinematics::Texture2D>("0"));
 		}
 	}
+
+	Kinematics::Renderer2D::DrawQuad({ 0 * tileSize, 2 * verticalSize, 0.1f }, { tileSize,  verticalSize }, Kinematics::Resources::Get<Kinematics::Texture2D>("1"));
 
 	for (auto obj : m_Game.GetCreatures())
 	{		

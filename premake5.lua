@@ -312,7 +312,7 @@ project "Client"
 			"pthread",
             "stdc++fs",
             "tinyxml2",
-            "lua5.3"
+            "lua"
         }
         
 		defines
@@ -383,7 +383,8 @@ project "Server"
 			"dl",
 			"pthread",
 			"stdc++fs",
-            "lua5.3"
+            "tinyxml2",
+            "lua"
         }
         
 		defines

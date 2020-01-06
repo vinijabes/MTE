@@ -1,20 +1,12 @@
 #include "mtepch.h"
 #include "LuaScript.h"
 
-#if defined KINEMATICS_PLATFORM_WINDOWS
 extern "C"
 {
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
 }
-#elif defined KINEMATICS_PLATFORM_LINUX
-extern "C" {
-#include <lua5.3/lua.h>
-#include <lua5.3/lualib.h>
-#include <lua5.3/lauxlib.h>
-}
-#endif
 
 namespace Kinematics {
 	LuaScript::LuaScript(const std::string& path)
