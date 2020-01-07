@@ -31,7 +31,6 @@ GameLayer::GameLayer()
 {
 }
 
-
 void GameLayer::OnAttach()
 {	
 	Kinematics::Ref<Kinematics::Script> mainScript = Kinematics::Script::Create("Scripts/main.lua");
@@ -45,8 +44,8 @@ void GameLayer::OnAttach()
 		Kinematics::ConnectionMessage* cm = (Kinematics::ConnectionMessage*) & message;
 		auto socket = cm->GetSocket();
 
-		auto OnMoveLua = Kinematics::ScriptCallable<void, int>(Kinematics::Resources::Get<Kinematics::Script>("MainScript"), "OnMove");
-		auto OnMoveLuaCallback = Kinematics::CreateRef<Kinematics::LuaCallback<void, int>>(OnMoveLua);
+		auto OnMoveLua = Game::OnMoveCallable(Kinematics::Resources::Get<Kinematics::Script>("MainScript"), "OnMove");
+		auto OnMoveLuaCallback = Kinematics::CreateRef<Game::OnMoveLuaCallback>(OnMoveLua);
 
 		auto creature = Game::Creature(socket->GetID(), Game::Position(0, 0, 0));
 		creature.AddCallback(Game::CreatureEvent::CREATURE_MOVE, OnMoveLuaCallback);

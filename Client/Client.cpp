@@ -46,66 +46,6 @@ int testef(Kinematics::ScriptState& state)
 	return 0;
 }
 
-class MyObject
-{
-private:
-	double x;
-public:
-	MyObject(double x) : x(x) {}
-	void set(double x) { this->x = x; }
-	double get() const { return this->x; }
-
-
-	static int MyObjNew(Kinematics::ScriptState& state);
-	static int MyObjDelete(Kinematics::ScriptState& state);
-
-	static int MyObjSet(Kinematics::ScriptState& state);
-	static int MyObjGet(Kinematics::ScriptState& state);
-
-	static void RegisterScriptConstructor(Kinematics::Script& state)
-	{
-		std::vector<Kinematics::Ref<Kinematics::ScriptWrapperContainer>> methods;
-		methods.push_back(Kinematics::Ref<Kinematics::ScriptWrapperContainer>(Kinematics::LuaScript::WrapPointer<MyObject::MyObjSet>("set")));
-		methods.push_back(Kinematics::Ref<Kinematics::ScriptWrapperContainer>(Kinematics::LuaScript::WrapPointer<MyObject::MyObjGet>("get")));
-		auto newRef = Kinematics::LuaScript::Wrap<MyObject::MyObjNew>();
-		auto deleteRef = Kinematics::LuaScript::Wrap<MyObject::MyObjDelete>();
-
-		state.CreateMetaTable("MyObject",
-			newRef,
-			deleteRef,
-			methods);
-	}
-};
-
-int MyObject::MyObjNew(Kinematics::ScriptState& state)
-{
-	float x = state.Get().GetParameter<float>(1);
-	*state.Get().CreateUserData<MyObject>() = new MyObject(x);
-	state.Get().SetMetaTable("MyObject");
-
-	return 1;
-}
-
-int MyObject::MyObjDelete(Kinematics::ScriptState& state)
-{
-	delete* state.Get().GetUserData<MyObject>(1);
-
-	return 0;
-}
-
-int MyObject::MyObjSet(Kinematics::ScriptState& state)
-{
-	(*state.Get().GetUserDataParameter<MyObject>(1, "MyObject"))->set(state.Get().GetParameter<float>(2));
-
-	return 0;
-}
-
-int MyObject::MyObjGet(Kinematics::ScriptState& state)
-{
-	state.Get().Push<float>((*state.Get().GetUserDataParameter<MyObject>(1, "MyObject"))->get());
-	return 1;
-}
-
 void GameLayer::OnAttach()
 {
 	Kinematics::Application::Get().GetFramework()->AddSubSystem("WindowSubSystem");

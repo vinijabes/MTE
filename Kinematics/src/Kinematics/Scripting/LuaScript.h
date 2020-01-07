@@ -24,7 +24,7 @@ namespace Kinematics {
 	{
 		LuaScriptWrapper(lua_CFunction f) : m_Function(f), m_Name("") {}
 		LuaScriptWrapper(lua_CFunction f, std::string name) : m_Function(f), m_Name(name) {}
-		
+
 		lua_CFunction m_Function;
 		std::string m_Name;
 	};
@@ -46,15 +46,39 @@ namespace Kinematics {
 		virtual void Run() override;
 
 		template <typename C>
-		void RegisterObject()
+		std::string RegisterObject()
 		{
-			C::RegisterScriptConstructor(*this);
+			return C::RegisterScriptConstructor(*this);
+		}
+
+		template <typename C>
+		void PushUserObject(const C& var)
+		{
+			return C::PushScriptInstance(*this, var);
 		}
 
 		template<LuaCPPF Func>
 		static LuaScriptWrapper* WrapPointer(const std::string& name)
 		{
 			return new LuaScriptWrapper(LuaWrapper<Func>, name);
+		}
+
+		template<LuaCPPF Func>
+		static LuaScriptWrapper* WrapPointer()
+		{
+			return new LuaScriptWrapper(LuaWrapper<Func>);
+		}
+
+		template<LuaCPPF Func>
+		static Ref<LuaScriptWrapper> WrapRef(const std::string& name)
+		{
+			return CreateRef<LuaScriptWrapper>(LuaWrapper<Func>, name);
+		}
+
+		template<LuaCPPF Func>
+		static Ref<LuaScriptWrapper> WrapRef()
+		{
+			return CreateRef<LuaScriptWrapper>(LuaWrapper<Func>);
 		}
 
 		template<LuaCPPF Func>
@@ -69,6 +93,7 @@ namespace Kinematics {
 			return LuaScriptWrapper(LuaWrapper<Func>);
 		}
 
+
 	private:
 		lua_State* L;
 		bool m_Cp;
@@ -82,6 +107,8 @@ namespace Kinematics {
 
 		virtual int GetInt(const std::string& var) override;
 		virtual float GetFloat(const std::string& var) override;
+		virtual int64_t GetField(int arg, const std::string& key) override;
+
 
 		virtual ScriptTable GetTable(const std::string& var) override;
 		ScriptTable GetTable();
@@ -90,7 +117,9 @@ namespace Kinematics {
 		virtual std::vector<int> GetIntVector(const std::string& var) override;
 
 		virtual void PushInt(const int& var) override;
+		void PushInt64(const int64_t& var);
 		virtual void PushFloat(const float& var) override;
+		virtual void PushBoolean(const bool& var) override;
 		virtual void PushTable(const ScriptTable& var) override;
 
 		virtual void SetFunc(const std::string& var);
@@ -103,11 +132,11 @@ namespace Kinematics {
 
 		virtual int GetIntParameter(int pos) override;
 		virtual float GetFloatParameter(int pos) override;
-		virtual bool GetBoolParameter(int pos) override;
+		ScriptTable GetTableParameter(int pos) override;
 
 		virtual void CreateMetaTable(const std::string& name,
-			ScriptWrapperContainer& newObj,
-			ScriptWrapperContainer& deleteObj,
+			Ref<ScriptWrapperContainer> newObj,
+			Ref<ScriptWrapperContainer> deleteObj,
 			const std::vector<Ref<ScriptWrapperContainer>>& methods) override;
 		virtual void SetMetaTable(const std::string& name) override;
 		virtual void* GetUserDataParameter(int pos, const std::string& meta) override;

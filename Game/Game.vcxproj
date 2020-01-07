@@ -132,15 +132,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Creature.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Game\Creatures\Creature.h" />
     <ClInclude Include="src\Game\Map\Position.h" />
     <ClInclude Include="src\Game\Map\Tile.h" />
     <ClInclude Include="src\Game\Messages\GameMessages.h" />
+    <ClInclude Include="src\Game\Objects\Item.h" />
+    <ClInclude Include="src\Game\Objects\Object.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\Game\Creatures\Creature.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kinematics\Kinematics.vcxproj">
@@ -150,4 +152,4 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-</Project>
+</Project> 

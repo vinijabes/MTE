@@ -209,7 +209,7 @@ namespace Kinematics {
 					switch (lua_type(L, -1))
 					{
 						case LUA_TNUMBER:
-							table.Push(lua_tostring(L, -2), (float)lua_tonumber(L, -1));
+							table.Push(lua_tostring(L, -2), (int64_t)lua_tonumber(L, -1));
 							break;
 						case LUA_TTABLE:
 							table.Push(lua_tostring(L, -2), GetTable());
@@ -219,7 +219,7 @@ namespace Kinematics {
 					switch (lua_type(L, -1))
 					{
 						case LUA_TNUMBER:
-							table.Push(std::to_string((int)lua_tonumber(L, -2)), (float)lua_tonumber(L, -1));
+							table.Push(std::to_string((int)lua_tonumber(L, -2)), (int64_t)lua_tonumber(L, -1));
 							break;
 						case LUA_TTABLE:
 							table.Push(std::to_string((int)lua_tonumber(L, -2)), GetTable());
@@ -249,6 +249,7 @@ namespace Kinematics {
 		Pop(level + 1);
 		return result;
 	}
+
 	std::vector<int> LuaScript::GetIntVector(const std::string& var)
 	{
 		std::vector<int> v;
@@ -269,7 +270,18 @@ namespace Kinematics {
 		return v;
 	}
 
+	int64_t LuaScript::GetField(int arg, const std::string& key)
+	{
+		lua_getfield(L, arg, key.c_str());
+		return lua_tonumber(L, -1);
+	}
+
 	void LuaScript::PushInt(const int& var)
+	{
+		lua_pushnumber(L, var);
+	}
+
+	void LuaScript::PushInt64(const int64_t& var)
 	{
 		lua_pushnumber(L, var);
 	}
@@ -277,6 +289,11 @@ namespace Kinematics {
 	void LuaScript::PushFloat(const float& var)
 	{
 		lua_pushnumber(L, var);
+	}
+
+	void LuaScript::PushBoolean(const bool& var)
+	{
+		lua_pushboolean(L, var);
 	}
 
 	void LuaScript::PushTable(const ScriptTable& var)
@@ -299,6 +316,11 @@ namespace Kinematics {
 			if (it->second->GetType() == ScriptVarType::FLOAT)
 			{
 				PushFloat(std::static_pointer_cast<const ScriptValue<float>>(it->second)->Get());
+			}
+
+			if (it->second->GetType() == ScriptVarType::NUMBER)
+			{
+				PushInt64(std::static_pointer_cast<const ScriptValue<int64_t>>(it->second)->Get());
 			}
 
 			lua_setfield(L, -2, it->first.c_str());
@@ -359,9 +381,13 @@ namespace Kinematics {
 		return (float)luaL_checknumber(L, pos);
 	}
 
-	bool LuaScript::GetBoolParameter(int pos)
+	ScriptTable LuaScript::GetTableParameter(int pos)
 	{
-		return false;
+		lua_pushvalue(L, pos);
+		luaL_checktype(L, pos, LUA_TTABLE);
+		auto table = GetTable();
+		lua_pop(L, 1);
+		return table;
 	}
 
 	void* LuaScript::GetUserDataParameter(int pos, const std::string& meta)
@@ -370,17 +396,26 @@ namespace Kinematics {
 	}
 
 	void LuaScript::CreateMetaTable(const std::string& name,
-		ScriptWrapperContainer& newObj,
-		ScriptWrapperContainer& deleteObj,
+		Ref<ScriptWrapperContainer> newObj,
+		Ref<ScriptWrapperContainer> deleteObj,
 		const std::vector<Ref<ScriptWrapperContainer>>& methods)
 	{
-		lua_register(L, name.c_str(), static_cast<LuaScriptWrapper*>(&newObj)->m_Function);
+		if(newObj)
+			lua_register(L, name.c_str(), std::static_pointer_cast<LuaScriptWrapper>(newObj)->m_Function);
+
 		luaL_newmetatable(L, name.c_str());
-		lua_pushcfunction(L, static_cast<LuaScriptWrapper*>(&deleteObj)->m_Function); lua_setfield(L, -2, "__gc");
+		
+		if(deleteObj)
+			lua_pushcfunction(L, std::static_pointer_cast<LuaScriptWrapper>(deleteObj)->m_Function); lua_setfield(L, -2, "__gc");
+
 		lua_pushvalue(L, -1); lua_setfield(L, -2, "__index");
 		for (auto m : methods)
 		{
 			auto f = static_cast<LuaScriptWrapper*>(m.get());
+			if (f->m_Name == "__gc")
+			{
+
+			}
 			lua_pushcfunction(L, f->m_Function); 
 			lua_setfield(L, -2, f->m_Name.c_str());
 		}

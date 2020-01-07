@@ -2,6 +2,9 @@
 
 #include <stdint.h>
 #include <cstdlib>
+#include <string>
+
+#include <Kinematics.h>
 
 namespace Game {
 
@@ -39,6 +42,80 @@ namespace Game {
 		void SetX(uint32_t x) { m_X = x; }
 		void SetY(uint32_t y) { m_Y = y; }
 		void SetZ(uint16_t z) { m_Z = z; }
+
+
+	public:
+
+		static std::string RegisterScriptConstructor(Kinematics::Script& script)
+		{
+			auto constructor = Kinematics::LuaScript::WrapRef<Position::LuaPositionCreate>();
+			auto destructor = Kinematics::LuaScript::WrapRef<Position::LuaPositionDelete>();
+			auto add = Kinematics::LuaScript::WrapRef<Position::LuaPositionAdd>("__add");
+			auto comparator = Kinematics::LuaScript::WrapRef<Position::LuaPositionCompare>("__eq");
+
+			script.CreateMetaTable("Position",
+				constructor,
+				destructor,
+				{add, comparator}
+			);
+
+			return "Position";
+		}
+
+		static void PushScriptInstance(Kinematics::Script& script, const Position& position)
+		{
+			Kinematics::ScriptTable positionTable;
+			positionTable.Push("x", (int64_t)position.m_X);
+			positionTable.Push("y", (int64_t)position.m_Y);
+			positionTable.Push("z", (int64_t)position.m_Z);
+
+			script.Push(positionTable);
+			script.SetMetaTable("Position");
+		}
+
+		static Position GetPosition(Kinematics::ScriptState& script, int32_t arg)
+		{
+			Kinematics::ScriptTable positionTable = script.Get().GetParameter<Kinematics::ScriptTable>(arg);
+			Position p(positionTable.Get<int64_t>("x"), positionTable.Get<int64_t>("y"), positionTable.Get<int64_t>("z"));
+
+			return p;
+		}
+
+	protected:
+		static int LuaPositionAdd(Kinematics::ScriptState& script)
+		{
+			Position positionA = GetPosition(script, 1);
+			Position positionB = GetPosition(script, 2);
+
+			script.Get().Push<Position>(positionA + positionB);
+			return 1;
+		}
+
+		static int LuaPositionCompare(Kinematics::ScriptState& script)
+		{
+			Position positionA = GetPosition(script, 1);
+			Position positionB = GetPosition(script, 2);
+
+			script.Get().Push<bool>(positionA == positionB);
+			return 1;
+		}
+
+		static int LuaPositionCreate(Kinematics::ScriptState& script)
+		{
+			uint16_t x = script.Get().GetParameter<int>(1);
+			uint16_t y = script.Get().GetParameter<int>(2);
+			uint8_t z = script.Get().GetParameter<int>(3);
+
+			Position position(x, y, z);
+			PushScriptInstance(script.Get(), position);
+
+			return 1;
+		}
+
+		static int LuaPositionDelete(Kinematics::ScriptState& script)
+		{
+			return 0;
+		}
 
 	public:
 		static int32_t GetOffsetX(const Position& p1, const Position& p2)

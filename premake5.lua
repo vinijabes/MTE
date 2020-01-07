@@ -366,7 +366,8 @@ project "Server"
 
     links
     {
-        "Kinematics"
+        "Kinematics",
+        "Game"
     }
 
     filter "system:linux"

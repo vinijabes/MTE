@@ -1,16 +1,24 @@
 #pragma once
 
 #include "Game/Map/Position.h"
+#include "Game/Objects/Object.h"
+
 #include <Kinematics.h>
 
 namespace Game {
 
-	enum CreatureEvent : uint16_t
+	enum class CreatureEvent : uint16_t
 	{
-		CREATURE_MOVE
+		CREATURE_MOVE,
+		CREATURE_PLACED
 	};
 
-	class Creature
+	typedef Kinematics::Callback<void, int, Position, Position> OnMoveCallback;
+	typedef Kinematics::LuaCallback<void, int, Position, Position> OnMoveLuaCallback;
+	typedef Kinematics::ScriptCallable<void, int, Position, Position> OnMoveCallable;
+	typedef Kinematics::CallbackInterface<void, int, Position, Position> OnMoveCallbackInterface;
+
+	class Creature : public virtual Object
 	{
 	public:
 		Creature() : m_ID(-1) {}
@@ -21,27 +29,27 @@ namespace Game {
 			SetPosition(m_Position + pos);
 		}
 
-		void SetPosition(const Position& newPos) 
-		{ 
-			m_Position = newPos; 
-			OnCreatureMove();
+		void SetPosition(const Position& newPos)
+		{
+			OnCreatureMoved(m_ID, m_Position, newPos);
+			m_Position = newPos;
 		}
 		Position GetPosition() const { return m_Position; }
-
 		uint32_t GetID() const { return m_ID; }
 
 		/*SCRIPTING METHODS*/
 		virtual void OnPlacedCreature() {};
-		virtual void OnCreatureMove() { m_OnMoveCallback(m_ID); };
+		virtual void OnCreatureMoved(const uint32_t& id, const Position& oldPos, const Position& newPos)
+		{
+			m_OnMoveCallback(m_ID, oldPos, newPos);
+		}
 
-		void AddCallback(const CreatureEvent& event, Kinematics::Ref<Kinematics::Callable> cb) {
-			m_OnMoveCallback = m_OnMoveCallback + std::static_pointer_cast<Kinematics::CallbackInterface<void, int>>(cb);
-		};
+		void AddCallback(const CreatureEvent& event, Kinematics::Ref<Kinematics::Callable> cb);
 
 	private:
 		uint32_t m_ID;
 		Position m_Position;
 
-		Kinematics::Callback<void, int> m_OnMoveCallback;
+		OnMoveCallback m_OnMoveCallback;
 	};
 }

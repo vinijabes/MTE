@@ -13,6 +13,7 @@ namespace Kinematics {
 		STRING,
 		FLOAT,
 		INT,
+		NUMBER,
 		BOOL,
 		TABLE
 	};
@@ -70,6 +71,11 @@ namespace Kinematics {
 			m_KeyPairs[key] = std::static_pointer_cast<ScriptValueInterface>(CreateRef<ScriptValue<float>>(ScriptValue(ScriptVarType::FLOAT, value)));
 		}
 
+		void Push(std::string key, const int64_t& value)
+		{
+			m_KeyPairs[key] = std::static_pointer_cast<ScriptValueInterface>(CreateRef<ScriptValue<int64_t>>(ScriptValue(ScriptVarType::NUMBER, value)));
+		}
+
 		void Push(std::string key, const ScriptTable& value)
 		{
 			m_KeyPairs[key] = std::static_pointer_cast<ScriptValueInterface>(CreateRef<ScriptValue<ScriptTable>>(ScriptValue(ScriptVarType::TABLE, value)));
@@ -112,6 +118,8 @@ namespace Kinematics {
 
 		template <typename T>
 		T Get(const std::string& var);
+		
+		virtual int64_t GetField(int arg, const std::string& key) = 0;
 
 		template <typename T>
 		T GetParameter(int pos);
@@ -157,8 +165,8 @@ namespace Kinematics {
 
 		/*METADATA HANDLING*/
 		virtual void CreateMetaTable(const std::string& name,
-			ScriptWrapperContainer& newObj,
-			ScriptWrapperContainer& deleteObj,
+			Ref<ScriptWrapperContainer> newObj,
+			Ref<ScriptWrapperContainer> deleteObj,
 			const std::vector<Ref<ScriptWrapperContainer>>& methods) = 0;
 		virtual void SetMetaTable(const std::string& name) = 0;
 
@@ -193,6 +201,12 @@ namespace Kinematics {
 			PushCallArgument(args...);
 		}
 
+		template<typename T>
+		bool IsTypeRegistered()
+		{
+			return m_RegisteredTypes.find(typeid(T).hash_code()) != m_RegisteredTypes.end();
+		}
+
 	protected:
 		/*VAR HANDLING*/
 		virtual bool GetBool(const std::string& var) = 0;
@@ -209,6 +223,7 @@ namespace Kinematics {
 		/*FUNCTION HANDLING*/
 		virtual void PushInt(const int& var) = 0;
 		virtual void PushFloat(const float& var) = 0;
+		virtual void PushBoolean(const bool& var) = 0;
 		virtual void PushTable(const ScriptTable& var) = 0;
 
 		virtual int InternalCallInt(const int& push) = 0;
@@ -217,8 +232,9 @@ namespace Kinematics {
 
 		virtual int GetIntParameter(int pos) = 0;
 		virtual float GetFloatParameter(int pos) = 0;
-		virtual bool GetBoolParameter(int pos) = 0;
-
+		virtual ScriptTable GetTableParameter(int pos) = 0;
+	protected:
+		std::unordered_map<size_t, std::string> m_RegisteredTypes;
 	private:
 		ScriptLang m_Lang;
 	};
@@ -282,6 +298,12 @@ namespace Kinematics {
 	}
 
 	template<>
+	inline ScriptTable Script::GetParameter(int pos)
+	{
+		return GetTableParameter(pos);
+	}
+
+	template<>
 	inline void Script::Push(const int& var)
 	{
 		PushInt(var);
@@ -292,11 +314,30 @@ namespace Kinematics {
 	{
 		PushFloat(var);
 	}
+	
+	template<>
+	inline void Script::Push(const bool& var)
+	{
+		PushBoolean(var);
+	}
 
 	template<>
 	inline void Script::Push(const ScriptTable& var)
 	{
 		PushTable(var);
+	}
+
+
+	template<typename T>
+	inline void Script::Push(const T& var)
+	{
+		if (!IsTypeRegistered<T>())
+		{
+			RegisterObject<T>();
+		}
+
+		if (m_Lang == ScriptLang::LUA)
+			static_cast<LuaScript*>(this)->template PushUserObject<T>(var);
 	}
 
 	template <>
@@ -308,8 +349,14 @@ namespace Kinematics {
 	template<typename C>
 	inline constexpr void Script::RegisterObject()
 	{
+		if (IsTypeRegistered<C>())
+		{
+			KINEMATICS_CORE_TRACE("Script::RegisterObject: {} already registered", typeid(C).name());
+			return;
+		}
+
 		if (m_Lang == ScriptLang::LUA)
-			static_cast<LuaScript*>(this)->template RegisterObject<C>();
+			m_RegisteredTypes[typeid(C).hash_code()] = static_cast<LuaScript*>(this)->template RegisterObject<C>();
 	}
 
 	template <>
