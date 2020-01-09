@@ -57,6 +57,12 @@ namespace Kinematics {
 			return C::PushScriptInstance(*this, var);
 		}
 
+		template <typename C>
+		void PushUserObject(C* var)
+		{
+			return C::PushScriptInstance(*this, var);
+		}
+
 		template<LuaCPPF Func>
 		static LuaScriptWrapper* WrapPointer(const std::string& name)
 		{

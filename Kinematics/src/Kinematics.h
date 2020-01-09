@@ -21,6 +21,7 @@
 
 #include "Kinematics/Renderer/OrthographicCamera.h"
 #include "Kinematics/Renderer/OrthographicCameraController.h"
+#include "Kinematics/Renderer/PerspectiveCamera.h"
 
 //Framework
 #include "Kinematics/Framework/Framework.h"

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Kinematics.h>
 #include "Game/Messages/GameMessages.h"
 #include "Game/Creatures/Creature.h"
 #include "Game/Objects/Item.h"

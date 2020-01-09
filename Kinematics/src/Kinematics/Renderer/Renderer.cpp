@@ -19,7 +19,7 @@ namespace Kinematics {
 		RenderCommand::SetViewport(0, 0, width, height);
 	}
 
-	void Renderer::BeginScene(OrthographicCamera& camera)
+	void Renderer::BeginScene(Camera& camera)
 	{
 		m_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
 	}
@@ -31,10 +31,25 @@ namespace Kinematics {
 	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform)
 	{
 		shader->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_Transform", transform);
+		shader->SetMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
+		shader->SetMat4("u_Transform", transform);
 
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);
+	}
+
+	void Renderer::Submit(const Ref<Mesh>& mesh, const Ref<Shader>& shader, uint32_t amount)
+	{	
+		if (shader)
+		{
+			shader->Bind();
+			shader->SetMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
+		}
+
+		mesh->Bind();
+		if (amount == 1)
+			RenderCommand::DrawIndexed(mesh->GetVertexArray());
+		else
+			RenderCommand::DrawInstanced(mesh->GetVertexArray(), amount);
 	}
 }

@@ -134,6 +134,9 @@ namespace Kinematics {
 
 		template <typename T>
 		void Push(const T& var);
+		
+		template <typename T>
+		void Push(T* var);
 
 		template <typename T>
 		T Call(const std::string& func)
@@ -330,6 +333,18 @@ namespace Kinematics {
 
 	template<typename T>
 	inline void Script::Push(const T& var)
+	{
+		if (!IsTypeRegistered<T>())
+		{
+			RegisterObject<T>();
+		}
+
+		if (m_Lang == ScriptLang::LUA)
+			static_cast<LuaScript*>(this)->template PushUserObject<T>(var);
+	}
+
+	template<typename T>
+	inline void Script::Push(T* var)
 	{
 		if (!IsTypeRegistered<T>())
 		{

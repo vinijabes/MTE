@@ -32,6 +32,11 @@ namespace Kinematics {
 			s_RendererAPI->DrawIndexed(vertexArray);
 		}
 
+		inline static void DrawInstanced(const Ref<VertexArray>& vertexArray, uint32_t amount)
+		{
+			s_RendererAPI->DrawInstanced(vertexArray, amount);
+		}
+
 	private:
 		static Scope<RendererAPI> s_RendererAPI;
 	};

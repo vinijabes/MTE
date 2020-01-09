@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Game/Map/Position.h"
+#include "Game/Map/Tile.h"
 #include "Game/Objects/Object.h"
 
 #include <Kinematics.h>

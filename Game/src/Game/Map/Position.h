@@ -8,7 +8,6 @@
 
 namespace Game {
 
-
 	class Position
 	{
 	public:
@@ -42,10 +41,8 @@ namespace Game {
 		void SetX(uint32_t x) { m_X = x; }
 		void SetY(uint32_t y) { m_Y = y; }
 		void SetZ(uint16_t z) { m_Z = z; }
-
-
+	
 	public:
-
 		static std::string RegisterScriptConstructor(Kinematics::Script& script)
 		{
 			auto constructor = Kinematics::LuaScript::WrapRef<Position::LuaPositionCreate>();
@@ -56,7 +53,7 @@ namespace Game {
 			script.CreateMetaTable("Position",
 				constructor,
 				destructor,
-				{add, comparator}
+				{ add, comparator }
 			);
 
 			return "Position";
@@ -116,6 +113,7 @@ namespace Game {
 		{
 			return 0;
 		}
+
 
 	public:
 		static int32_t GetOffsetX(const Position& p1, const Position& p2)

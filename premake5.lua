@@ -24,11 +24,13 @@ IncludeDir["glm"] = "Kinematics/vendor/glm"
 IncludeDir["lua"] = "Kinematics/vendor/lua"
 IncludeDir["stb_image"] = "Kinematics/vendor/stb_image"
 IncludeDir["tinyxml2"] = "Kinematics/vendor/tinyxml2"
+IncludeDir["tinyobj"] = "Kinematics/vendor/tinyobj"
 
 group "Dependencies"
     include "Kinematics/vendor/GLFW"
     include "Kinematics/vendor/Glad"
     include "Kinematics/vendor/tinyxml2"
+    include "Kinematics/vendor/tinyobj"
     include "Kinematics/vendor/lua"
 
 group ""
@@ -70,7 +72,8 @@ project "Kinematics"
         "%{IncludeDir.glm}",
         "%{IncludeDir.lua}",
         "%{IncludeDir.stb_image}",
-        "%{IncludeDir.tinyxml2}"
+        "%{IncludeDir.tinyxml2}",
+        "%{IncludeDir.tinyobj}",
     }
 
     links
@@ -78,6 +81,7 @@ project "Kinematics"
         "GLFW",
         "Glad",
         "tinyxml2",
+        "tinyobj",
         "lua"
     }    
 
@@ -294,7 +298,8 @@ project "Client"
 
     links
     {
-        "Kinematics"
+        "Kinematics",
+        "Game"
     }
 
     filter "system:linux"

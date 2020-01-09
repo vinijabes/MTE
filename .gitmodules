@@ -16,3 +16,6 @@
 [submodule "Kinematics/vendor/lua"]
 	path = Kinematics/vendor/lua
 	url = https://github.com/vinijabes/lua
+[submodule "Kinematics/vendor/tinyobj"]
+	path = Kinematics/vendor/tinyobj
+	url = https://github.com/vinijabes/tinyobjloader
