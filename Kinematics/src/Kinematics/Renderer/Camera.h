@@ -8,7 +8,7 @@ namespace Kinematics
 	class Camera
 	{
 	public:
-		Camera(const glm::mat4& m_ProjectionMatrix) : m_ProjectionMatrix(m_ProjectionMatrix), m_ViewMatrix(1.0f)
+		Camera(const glm::mat4& m_ProjectionMatrix) : m_ProjectionMatrix(m_ProjectionMatrix), m_ViewMatrix(1.0f), m_Rotation(glm::vec3(0.0f, 0.0f, 0.0f))
 		{
 
 		}

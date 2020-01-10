@@ -6,7 +6,7 @@
 namespace Kinematics {
 
 	PerspectiveCamera::PerspectiveCamera(float fov, float aspect, float nearZ, float farZ)
-		:Camera(glm::perspective(fov, aspect, nearZ, farZ))
+		:Camera(glm::perspective(glm::radians(fov), aspect, nearZ, farZ))
 	{
 		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
 	}

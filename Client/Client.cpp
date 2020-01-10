@@ -27,16 +27,18 @@ public:
 
 private:
 	Kinematics::OrthographicCameraController m_CameraController;
+	Kinematics::PerspectiveCamera m_Camera;
 	Kinematics::Ref<Kinematics::WindowSubSystemInterface> m_Window;
 	Game::Game m_Game;
 	std::shared_ptr<Game::Creature> m_Player;
 
 	Kinematics::Ref<Kinematics::Texture2D> m_PlayerTexture;
 	Kinematics::Ref<Kinematics::Sprite> m_PlayerSprite;
+	Kinematics::Ref<Kinematics::Shader> m_Shader;
 };
 
 GameLayer::GameLayer()
-	: Layer("GameLayer"), m_CameraController(640.0f / 480.0f, true)
+	: Layer("GameLayer"), m_CameraController(640.0f / 480.0f, true), m_Camera(60.0f, 16.0f / 9.0f, 0.001f, 3.2f)
 {
 }
 
@@ -79,6 +81,9 @@ void GameLayer::OnAttach()
 			Kinematics::Resources::Add(id, Kinematics::CreateRef<Kinematics::Sprite>(Kinematics::Resources::Get<Kinematics::Texture2D>(textureId), frameCount, animationTime));
 		}
 	}
+
+	Kinematics::Resources::Add("chair", Kinematics::Model::Load("assets/models/chair.obj")->GetMeshes()[0]);
+	m_Shader = Kinematics::Shader::Create("assets/shaders/Object.glsl");
 
 	m_PlayerSprite = Kinematics::Resources::Get<Kinematics::Sprite>("player");
 	Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::NetworkSubSystemInterface>()->Connect("127.0.0.1", DEFAULT_PORT);
@@ -145,37 +150,8 @@ void GameLayer::OnDetach()
 
 void GameLayer::OnUpdate(Kinematics::Timestep ts)
 {
-	float aspect = (float)m_Window->GetWidth() / m_Window->GetHeight();
-	float tileSize = (aspect * 2) / (m_Window->GetWidth() / 64);
-
-	float verticalSize = 2.0f / (m_Window->GetHeight() / 64);
-
-	if (m_Player)
-		m_CameraController.MoveTo({ m_Player->GetPosition().GetX() * tileSize, m_Player->GetPosition().GetY() * verticalSize , 0 });
-	m_CameraController.OnUpdate(ts);
-	m_PlayerSprite->OnUpdate(ts);
-
 	Kinematics::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 	Kinematics::RenderCommand::Clear();
-
-	Kinematics::Renderer2D::BeginScene(m_CameraController.GetCamera());
-	for (int i = 0; i < 15; i++)
-	{
-		for (int j = 0; j < 7; j++)
-		{
-			Kinematics::Renderer2D::DrawQuad({ (i - 7) * tileSize, (j - 3) * verticalSize }, { tileSize,  verticalSize }, Kinematics::Resources::Get<Kinematics::Texture2D>("0"));
-		}
-	}
-
-	Kinematics::Renderer2D::DrawQuad({ 0 * tileSize, 2 * verticalSize, 0.1f }, { tileSize,  verticalSize }, Kinematics::Resources::Get<Kinematics::Texture2D>("1"));
-
-	for (auto obj : m_Game.GetCreatures())
-	{		
-		Kinematics::Renderer2D::DrawQuad({ obj->GetPosition().GetX() * tileSize, obj->GetPosition().GetY() * verticalSize, 1.0f }, { tileSize, verticalSize }, m_PlayerSprite);
-	}
-
-
-	Kinematics::Renderer2D::EndScene();
 }
 
 void GameLayer::OnEvent(Kinematics::Event& e)

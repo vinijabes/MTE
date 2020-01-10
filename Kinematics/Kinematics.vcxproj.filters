@@ -198,16 +198,28 @@
     <ClInclude Include="src\Kinematics\Renderer\Buffer.h">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\Camera.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kinematics\Renderer\GraphicsContext.h">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\Material.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kinematics\Renderer\Mesh.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\Model.h">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Renderer\OrthographicCamera.h">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Renderer\OrthographicCameraController.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\PerspectiveCamera.h">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Renderer\RenderCommand.h">
@@ -1380,10 +1392,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kinematics\Renderer\Material.h" />
-    <ClInclude Include="src\Kinematics\Renderer\Model.h" />
-    <ClInclude Include="src\Kinematics\Renderer\PerspectiveCamera.h" />
-    <ClInclude Include="src\Kinematics\Renderer\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
@@ -1431,10 +1439,19 @@
     <ClCompile Include="src\Kinematics\Renderer\Buffer.cpp">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kinematics\Renderer\Camera.cpp">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Renderer\Model.cpp">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Kinematics\Renderer\OrthographicCamera.cpp">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Kinematics\Renderer\OrthographicCameraController.cpp">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Renderer\PerspectiveCamera.cpp">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Kinematics\Renderer\RenderCommand.cpp">
@@ -1494,8 +1511,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kinematics\Renderer\Model.cpp" />
-    <ClCompile Include="src\Kinematics\Renderer\PerspectiveCamera.cpp" />
-    <ClCompile Include="src\Kinematics\Renderer\Camera.cpp" />
   </ItemGroup>
 </Project>

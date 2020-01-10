@@ -59,7 +59,7 @@ namespace Kinematics {
 		delete s_Data;
 	}
 
-	void Renderer2D::BeginScene(const OrthographicCamera& camera)
+	void Renderer2D::BeginScene(const Camera& camera)
 	{
 		s_Data->TextureShader->Bind();
 		s_Data->TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());		
@@ -67,6 +67,7 @@ namespace Kinematics {
 
 	void Renderer2D::EndScene()
 	{
+		s_Data->TextureShader->Unbind();
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
