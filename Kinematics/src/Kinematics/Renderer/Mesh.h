@@ -4,6 +4,7 @@
 #include "Kinematics/Core/Log.h"
 #include "VertexArray.h"
 #include "Buffer.h"
+#include "Material.h"
 
 namespace Kinematics
 {
@@ -68,6 +69,11 @@ namespace Kinematics
 			if (pos < 2) KINEMATICS_CORE_WARN("Mesh::SetBuffer: OVERWRITING MESH VERTEX ARRAY BUFFER ({})", pos);
 			m_VertexArray->AddVertexBuffer(buffer, pos, divisor);
 		}
+		
+		void SetMaterial(Ref<Material> material)
+		{
+			m_Material = material;
+		}
 
 		Ref<VertexArray> GetVertexArray() { return m_VertexArray; }
 		Ref<VertexArray> GetVertexArray() const { return m_VertexArray; }
@@ -78,5 +84,6 @@ namespace Kinematics
 		Ref<VertexBuffer> m_NormalVertexBuffer;
 		Ref<VertexBuffer> m_TextureCoordinatesVertexBuffer;
 		Ref<IndexBuffer> m_IndexBuffer;
+		Ref<Material> m_Material;
 	};
 }
