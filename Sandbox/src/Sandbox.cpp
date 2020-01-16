@@ -105,6 +105,7 @@ void GameLayer::OnUpdate(Kinematics::Timestep ts)
 	Kinematics::Renderer2D::EndScene();
 
 	Kinematics::Renderer::BeginScene(m_Camera);
+	Kinematics::Resources::Get<Kinematics::Texture2D>("0")->Bind(0U);
 	Kinematics::Renderer::Submit(m_Mesh, m_Shader, 1);
 	Kinematics::Renderer::EndScene();
 }

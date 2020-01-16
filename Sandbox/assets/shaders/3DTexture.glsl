@@ -3,7 +3,7 @@
 			
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec3 a_Normal;
-layout(location = 2) in vec2 a_TexCoord;
+layout(location = 2) in vec3 a_TexCoord;
 layout(location = 3) in vec4 a_Color;
 layout(location = 4) in vec3 a_Offset;
 
@@ -13,10 +13,10 @@ uniform mat4 u_Transform;
 uniform mat4 u_NormalMatrix;
 uniform vec3 u_Eye;
 
-out vec2 v_TexCoord;
+out vec3 v_TexCoord;
 out vec4 v_Color;
-flat out vec3 v_Normal;
 out vec3 v_FragPosition;
+flat out vec3 v_Normal;
 
 void main()
 {
@@ -34,10 +34,10 @@ void main()
 			
 layout(location = 0) out vec4 color;
 
-in vec2 v_TexCoord;
+in vec3 v_TexCoord;
 in vec4 v_Color;
-flat in vec3 v_Normal;
 in vec3 v_FragPosition;
+flat in vec3 v_Normal;
 
 struct Light 
 {
@@ -50,7 +50,7 @@ struct Light
 uniform Light u_Lights[12];
 uniform int   u_LightCount;
 uniform vec3  u_ViewerPos;
-uniform sampler2D u_Texture;
+uniform sampler2D[32] u_Textures;
 
 vec3 CalcLight(Light l, vec3 normal);
 
@@ -60,7 +60,8 @@ void main()
 	for(int i = 0; i < u_LightCount; i++)
 		result += CalcLight(u_Lights[i], v_Normal);
 
-	color = v_Color * vec4(result, 1.f);
+	color = texture(u_Textures[int(v_TexCoord.z)], v_TexCoord.xy) * vec4(result, 1.f);
+	//color = v_Color * vec4(result, 1.f);
 }
 
 vec3 CalcLight(Light l, vec3 normal)

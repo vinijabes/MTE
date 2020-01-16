@@ -16,6 +16,7 @@ namespace Kinematics {
 	{
 		glfwMakeContextCurrent(m_WindowHandle);
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+
 		KINEMATICS_CORE_ASSERT(status, "Failed to initialize Glad!");
 
 		KINEMATICS_CORE_INFO("OpenGL Info:");

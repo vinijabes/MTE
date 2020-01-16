@@ -34,6 +34,30 @@ namespace Kinematics
 			mesh->m_IndexBuffer = indexBuffer;
 		}
 
+		void SetVertices(const std::vector<float> vertices)
+		{
+			m_Vertices = vertices;
+			SetPositionVertexBuffer(&m_Vertices[0], sizeof(float) * m_Vertices.size());
+		}
+
+		void SetNormals(const std::vector<float> normals)
+		{
+			m_Normals = normals;
+			SetNormalVertexBuffer(&m_Normals[0], sizeof(float) * m_Normals.size());
+		}
+
+		void SetTextureCoords(const std::vector<float> tc, bool includeMaterial = false)
+		{
+			m_TextureCoords = tc;
+			SetTextureVertexBuffer(&m_TextureCoords[0], sizeof(float) * m_TextureCoords.size(), includeMaterial);
+		}
+
+		void SetIndices(const std::vector<uint32_t> indices)
+		{
+			m_Indices = indices;
+			SetIndexBuffer(&m_Indices[0], m_Indices.size());
+		}
+
 		void SetPositionVertexBuffer(float* vertices, uint32_t size)
 		{
 			if (m_PositionVertexBuffer != nullptr) KINEMATICS_CORE_WARN("OVERWRITING VERTEX ARRAY BUFFER");
@@ -50,11 +74,15 @@ namespace Kinematics
 			m_VertexArray->AddVertexBuffer(m_NormalVertexBuffer, 1);
 		}
 
-		void SetTextureVertexBuffer(float* vertices, uint32_t size)
+		void SetTextureVertexBuffer(float* vertices, uint32_t size, bool includeMaterial)
 		{
 			if (m_TextureCoordinatesVertexBuffer != nullptr) KINEMATICS_CORE_WARN("OVERWRITING VERTEX ARRAY BUFFER");
 			m_TextureCoordinatesVertexBuffer.reset(VertexBuffer::Create(vertices, size));
-			m_TextureCoordinatesVertexBuffer->SetLayout({ {ShaderDataType::Float2, "a_TexCoord"} });
+
+			if(includeMaterial)
+				m_TextureCoordinatesVertexBuffer->SetLayout({ {ShaderDataType::Float3, "a_TexCoord"} });
+			else
+				m_TextureCoordinatesVertexBuffer->SetLayout({ {ShaderDataType::Float2, "a_TexCoord"} });
 			m_VertexArray->AddVertexBuffer(m_TextureCoordinatesVertexBuffer, 2);
 		}
 
@@ -70,9 +98,9 @@ namespace Kinematics
 			m_VertexArray->AddVertexBuffer(buffer, pos, divisor);
 		}
 		
-		void SetMaterial(Ref<Material> material)
+		void PushMaterial(Ref<Material> material)
 		{
-			m_Material = material;
+			m_Materials.push_back(material);
 		}
 
 		Ref<VertexArray> GetVertexArray() { return m_VertexArray; }
@@ -84,6 +112,12 @@ namespace Kinematics
 		Ref<VertexBuffer> m_NormalVertexBuffer;
 		Ref<VertexBuffer> m_TextureCoordinatesVertexBuffer;
 		Ref<IndexBuffer> m_IndexBuffer;
-		Ref<Material> m_Material;
+		
+		std::vector<float> m_Vertices;
+		std::vector<float> m_Normals;
+		std::vector<float> m_TextureCoords;
+		std::vector<uint32_t> m_Indices;
+
+		std::vector<Ref<Material>> m_Materials;
 	};
 }

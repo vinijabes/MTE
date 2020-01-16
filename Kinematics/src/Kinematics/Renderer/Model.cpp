@@ -20,6 +20,7 @@ namespace Kinematics {
 		size_t position;
 		size_t textureCoord;
 		size_t normal;
+		uint16_t material;
 	};
 
 	struct ObjFace
@@ -95,6 +96,7 @@ namespace Kinematics {
 						objVerticesData[idx.vertex_index].position = idx.vertex_index;
 						objVerticesData[idx.vertex_index].normal = idx.normal_index;
 						objVerticesData[idx.vertex_index].textureCoord = idx.texcoord_index;
+						objVerticesData[idx.vertex_index].material = shapes[s].mesh.material_ids[f];
 
 						face.vertices[v] = idx.vertex_index;
 						objVertices[idx.vertex_index].normals[idx.normal_index] = face.vertices[v];
@@ -105,6 +107,7 @@ namespace Kinematics {
 						data.position = idx.vertex_index;
 						data.normal = idx.normal_index;
 						data.textureCoord = idx.texcoord_index;
+						data.material = shapes[s].mesh.material_ids[f];
 						objVerticesData.push_back(data);
 
 						face.vertices[v] = objVerticesData.size() - 1;
@@ -121,7 +124,6 @@ namespace Kinematics {
 				index_offset += fv;
 
 				// per-face material
-				shapes[s].mesh.material_ids[f];
 			}
 
 			for (size_t i = 0; i < objVerticesData.size(); ++i)
@@ -139,6 +141,7 @@ namespace Kinematics {
 				auto p_TC = objVerticesData[i].textureCoord * 2;
 				textureCoords.push_back(attrib.texcoords[p_TC]);
 				textureCoords.push_back(attrib.texcoords[p_TC + 1]);
+				textureCoords.push_back(objVerticesData[i].material);
 			}
 
 			for (size_t i = 0; i < objFaces.size(); i++)
@@ -149,10 +152,10 @@ namespace Kinematics {
 			}
 
 
-			mesh->SetPositionVertexBuffer(&vertices[0], sizeof(float) * vertices.size());
-			mesh->SetNormalVertexBuffer(&normal[0], sizeof(float) * normal.size());
-			mesh->SetTextureVertexBuffer(&textureCoords[0], sizeof(float) * textureCoords.size());
-			mesh->SetIndexBuffer(&index[0], index.size());
+			mesh->SetVertices(vertices);
+			mesh->SetNormals(normal);
+			mesh->SetTextureCoords(textureCoords, true);
+			mesh->SetIndices(index);
 			model->PushMesh(mesh);
 		}
 
