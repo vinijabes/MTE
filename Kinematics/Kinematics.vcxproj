@@ -182,6 +182,7 @@
     <ClInclude Include="src\Kinematics\Framework\Interface\SubSystemInterface.h" />
     <ClInclude Include="src\Kinematics\Framework\Interface\TaskInterface.h" />
     <ClInclude Include="src\Kinematics\Framework\Interface\WindowSubSystemInterface.h" />
+    <ClInclude Include="src\Kinematics\Framework\Managers\EnviromentManager.h" />
     <ClInclude Include="src\Kinematics\Framework\Managers\FactoryManager.h" />
     <ClInclude Include="src\Kinematics\Framework\Managers\ResourceManager.h" />
     <ClInclude Include="src\Kinematics\Framework\Managers\StateManager.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="src\Kinematics\Network\Socket.h" />
     <ClInclude Include="src\Kinematics\Network\SocketAPI.h" />
     <ClInclude Include="src\Kinematics\Network\SocketMessages.h" />
+    <ClInclude Include="src\Kinematics\Renderer\Batch.h" />
     <ClInclude Include="src\Kinematics\Renderer\Buffer.h" />
     <ClInclude Include="src\Kinematics\Renderer\Camera.h" />
     <ClInclude Include="src\Kinematics\Renderer\GraphicsContext.h" />
@@ -601,6 +603,7 @@
     <ClCompile Include="src\Kinematics\Framework\Async\Semaphore.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Async\WorkerThread.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Framework.cpp" />
+    <ClCompile Include="src\Kinematics\Framework\Managers\EnviromentManager.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Managers\FactoryManager.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Managers\ResourceManager.cpp" />
     <ClCompile Include="src\Kinematics\Framework\Managers\StateManager.cpp" />

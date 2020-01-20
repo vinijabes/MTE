@@ -1,5 +1,6 @@
 #include "mtepch.h"
 #include "OpenGLVertexArray.h"
+#include "Kinematics/Framework/Managers/EnviromentManager.h"
 
 #include <glad/glad.h>
 
@@ -28,7 +29,15 @@ namespace Kinematics {
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
-		glCreateVertexArrays(1, &m_RendererID);
+		if (EnviromentManager::Get(KINEMATICS_OPENGL_MAJOR) == 4 && EnviromentManager::Get(KINEMATICS_OPENGL_MINOR) == 5)
+		{
+			glCreateVertexArrays(1, &m_RendererID);
+		}
+		else
+		{
+			glGenVertexArrays(1, &m_RendererID);
+			glBindVertexArray(m_RendererID);
+		}
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()

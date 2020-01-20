@@ -24,6 +24,7 @@ namespace Kinematics {
 		KINEMATICS_CORE_ASSERT(success, "Could not initialiaze GLFW!");
 		glfwSetErrorCallback(GLFWErrorCallback);
 
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_FALSE);
 		m_Window = glfwCreateWindow(m_Data.Width, m_Data.Height, m_Data.Title.c_str(), NULL, NULL);
 
 		m_Context = CreateScope<OpenGLContext>(m_Window);

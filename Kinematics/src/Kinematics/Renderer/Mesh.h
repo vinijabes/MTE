@@ -4,14 +4,15 @@
 #include "Kinematics/Core/Log.h"
 #include "VertexArray.h"
 #include "Buffer.h"
-#include "Material.h"
 
 namespace Kinematics
 {
 	class Mesh
 	{
 	public:
-		void Bind() const { m_VertexArray->Bind(); }
+		void Bind() const { 
+			m_VertexArray->Bind(); 
+		}
 		void Unbind() const { m_VertexArray->Unbind(); }
 
 		static Ref<Mesh> Create()
@@ -97,11 +98,6 @@ namespace Kinematics
 			if (pos < 2) KINEMATICS_CORE_WARN("Mesh::SetBuffer: OVERWRITING MESH VERTEX ARRAY BUFFER ({})", pos);
 			m_VertexArray->AddVertexBuffer(buffer, pos, divisor);
 		}
-		
-		void PushMaterial(Ref<Material> material)
-		{
-			m_Materials.push_back(material);
-		}
 
 		Ref<VertexArray> GetVertexArray() { return m_VertexArray; }
 		Ref<VertexArray> GetVertexArray() const { return m_VertexArray; }
@@ -117,7 +113,5 @@ namespace Kinematics
 		std::vector<float> m_Normals;
 		std::vector<float> m_TextureCoords;
 		std::vector<uint32_t> m_Indices;
-
-		std::vector<Ref<Material>> m_Materials;
 	};
 }

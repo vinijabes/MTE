@@ -1,5 +1,6 @@
 #include "mtepch.h"
 #include "OpenGLContext.h"
+#include "Kinematics/Framework/Managers/EnviromentManager.h"
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
@@ -24,13 +25,16 @@ namespace Kinematics {
 		KINEMATICS_CORE_INFO(" Renderer: {0}", glGetString(GL_RENDERER));
 		KINEMATICS_CORE_INFO(" Version: {0}", glGetString(GL_VERSION));
 
-#ifdef KINEMATICS_ENABLE_ASSERTS
 		int versionMajor;
 		int versionMinor;
 		glGetIntegerv(GL_MAJOR_VERSION, &versionMajor);
 		glGetIntegerv(GL_MINOR_VERSION, &versionMinor);
 
-		KINEMATICS_CORE_ASSERT(versionMajor > 4 || (versionMajor == 4 && versionMinor >= 5), "Ava requires at least OpenGL version 4.5!");
+		EnviromentManager::Set(KINEMATICS_OPENGL_MAJOR, versionMajor);
+		EnviromentManager::Set(KINEMATICS_OPENGL_MINOR, versionMinor);
+
+#ifdef KINEMATICS_ENABLE_ASSERTS
+		KINEMATICS_CORE_ASSERT(versionMajor > 3 || (versionMajor == 3 && versionMinor >= 3), "Ava requires at least OpenGL version 3.3!");
 #endif
 	}
 

@@ -5,6 +5,8 @@
 #include <tiny_obj_loader.h>
 
 #include <glm/glm.hpp>
+#include <filesystem>
+#include "Kinematics/Framework/Managers/ResourceManager.h"
 
 namespace Kinematics {
 
@@ -44,6 +46,7 @@ namespace Kinematics {
 		std::vector<ObjVertex> objVertices;
 		std::vector<FaceVertexData> objVerticesData;
 		std::vector<ObjFace> objFaces;
+		std::vector<Ref<Material>> objMaterials;
 
 
 		bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, path.c_str());
@@ -52,7 +55,7 @@ namespace Kinematics {
 		objVerticesData.resize(attrib.vertices.size() / 3);
 
 		for (int i = 0; i < attrib.vertices.size() / 3; ++i)
-		{			
+		{
 			objVertices[i].position = i;
 			objVerticesData[i].position = i;
 		}
@@ -65,6 +68,29 @@ namespace Kinematics {
 		if (!err.empty())
 		{
 			KINEMATICS_CORE_ERROR("{}", err);
+		}
+
+		for (size_t i = 0; i < materials.size(); i++)
+		{
+			Ref<Material> m = CreateRef<Material>();
+			auto material = materials[i];
+
+			m->SetKa(glm::vec3(material.ambient[0], material.ambient[1], material.ambient[2]));
+			m->SetKd(glm::vec3(material.diffuse[0], material.diffuse[1], material.diffuse[2]));
+			m->SetKs(glm::vec3(material.specular[0], material.specular[1], material.specular[2]));
+			m->SetKe(glm::vec3(material.emission[0], material.emission[1], material.emission[2]));
+		
+			m->SetNs(material.shininess);
+			m->SetIllum(material.illum);
+		
+			if (material.diffuse_texname != "")
+			{
+				auto tex = Texture2D::Create(material.diffuse_texname, WrappingOption::KINEMATICS_REPEAT, WrappingOption::KINEMATICS_REPEAT);
+				m->PushTexture(MaterialTypes::DIFFUSE_TEXTURE, tex);
+				Kinematics::Resources::Add(std::filesystem::path(material.diffuse_texname).stem().string(), tex);
+			}
+
+			objMaterials.push_back(m);
 		}
 
 		auto model = CreateRef<Model>();
@@ -156,7 +182,13 @@ namespace Kinematics {
 			mesh->SetNormals(normal);
 			mesh->SetTextureCoords(textureCoords, true);
 			mesh->SetIndices(index);
+
 			model->PushMesh(mesh);
+		}
+
+		for (auto m : objMaterials)
+		{
+			model->PushMaterial(m);
 		}
 
 		return model;

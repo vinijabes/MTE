@@ -24,6 +24,7 @@ public:
 
 protected:
 	Kinematics::Ref<Kinematics::Mesh> m_Mesh;
+	Kinematics::Ref<Kinematics::Model> m_Model;
 	Kinematics::Ref<Kinematics::Shader> m_Shader;
 	Kinematics::PerspectiveCamera m_Camera;
 };
@@ -70,7 +71,15 @@ void GameLayer::OnAttach()
 	};
 
 	m_Shader = Kinematics::Shader::Create("assets/shaders/3DTexture.glsl");
-	m_Mesh = Kinematics::Model::Load("assets/models/cube.obj")->GetMeshes()[0];
+	m_Shader->Bind();
+	for (int i = 0; i < 32; i++)
+	{
+		m_Shader->SetInt("u_Textures["+ std::to_string(i)+"]", i);
+	}
+
+	m_Model = Kinematics::Model::Load("assets/models/MultipleTextureCube.obj");
+	m_Mesh = m_Model->GetMeshes()[0];
+
 
 	Kinematics::Resources::Add("0", Kinematics::Texture2D::Create("assets/textures/0.png", Kinematics::WrappingOption::KINEMATICS_CLAMP_TO_EDGE, Kinematics::WrappingOption::KINEMATICS_CLAMP_TO_EDGE));
 }
@@ -84,29 +93,33 @@ float sum = 0;
 void GameLayer::OnUpdate(Kinematics::Timestep ts)
 {
 	sum += ts.GetSeconds();
-	auto model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 5.0f, -20.0f)) * glm::rotate(glm::mat4(1.0f), glm::radians(180.f + sum * 15), glm::vec3(1, 0, 0));
-	m_Shader->SetMat4("u_Transform", model);
-	m_Shader->SetMat4("u_NormalMatrix", glm::transpose(glm::inverse(model)));
 	m_Shader->SetInt("u_LightCount", 1);
 	m_Shader->SetFloat3("u_ViewerPos", m_Camera.GetPosition());
-	m_Shader->SetFloat3("u_Lights[0].direction", glm::vec3(-1, 0, -1));
-	m_Shader->SetFloat3("u_Lights[0].ambient", glm::vec3(0.2f));
+	m_Shader->SetFloat3("u_Lights[0].direction", glm::vec3(1, 1, -1));
+	m_Shader->SetFloat3("u_Lights[0].ambient", glm::vec3(0.7f));
 	m_Shader->SetFloat3("u_Lights[0].diffuse", glm::vec3(0.8f));
 	m_Shader->SetFloat3("u_Lights[0].specular", glm::vec3(0.8f));
+
 
 	Kinematics::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 	Kinematics::RenderCommand::Clear();
 
-	Kinematics::Renderer2D::BeginScene(m_Camera);
+	/*Kinematics::Renderer2D::BeginScene(m_Camera);
 	for (int i = 0; i < 17; i++)
 	{
 		Kinematics::Renderer2D::DrawQuad(glm::vec3(i - 8, 0.0f, -20.0f), { 1.0f, 1.0f }, Kinematics::Resources::Get<Kinematics::Texture2D>("0"));
 	}
-	Kinematics::Renderer2D::EndScene();
+	Kinematics::Renderer2D::EndScene();*/
 
 	Kinematics::Renderer::BeginScene(m_Camera);
-	Kinematics::Resources::Get<Kinematics::Texture2D>("0")->Bind(0U);
-	Kinematics::Renderer::Submit(m_Mesh, m_Shader, 1);
+	Kinematics::Renderer::Submit(m_Model, glm::vec3(0, 5.0f, -20.0f), m_Shader);
+	for (int i = 0; i < 17; i++)
+	{
+		for (int j = 0; j < 11; j++)
+		{
+			Kinematics::Renderer::Submit(m_Model, glm::vec3(i - 8, j - 5, -20.0f), m_Shader);
+		}
+	}
 	Kinematics::Renderer::EndScene();
 }
 

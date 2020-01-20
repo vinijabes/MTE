@@ -60,8 +60,8 @@ void main()
 	for(int i = 0; i < u_LightCount; i++)
 		result += CalcLight(u_Lights[i], v_Normal);
 
-	color = texture(u_Textures[int(v_TexCoord.z)], v_TexCoord.xy) * vec4(result, 1.f);
-	//color = v_Color * vec4(result, 1.f);
+	color = texture(u_Textures[int(ceil(v_TexCoord.z))], v_TexCoord.xy) * vec4(result, 1.f);
+	//color = vec4(v_TexCoord.z, 0.f, 0.f, 1.f);//v_Color * vec4(result, 1.f);
 }
 
 vec3 CalcLight(Light l, vec3 normal)

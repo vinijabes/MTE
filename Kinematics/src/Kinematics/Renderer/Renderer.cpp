@@ -52,4 +52,23 @@ namespace Kinematics {
 		else
 			RenderCommand::DrawInstanced(mesh->GetVertexArray(), amount);
 	}
+
+	void Renderer::Submit(const Ref<Model>& model, glm::vec3 position, const Ref<Shader>& shader)
+	{
+		if (shader)
+		{
+			shader->Bind();
+			shader->SetMat4("u_ViewProjection", m_SceneData->ViewProjectionMatrix);
+			auto model = glm::translate(glm::mat4(1.0f), position);
+			shader->SetMat4("u_Transform", model);
+			shader->SetMat4("u_NormalMatrix", glm::transpose(glm::inverse(model)));
+		}
+
+		model->Bind();
+		for (auto mesh : model->GetMeshes())
+		{
+			mesh->Bind();
+			RenderCommand::DrawIndexed(mesh->GetVertexArray());
+		}
+	}
 }
