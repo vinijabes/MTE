@@ -134,6 +134,7 @@
   <ItemGroup>
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Game\Creatures\Creature.h" />
+    <ClInclude Include="src\Game\Map\Map.h" />
     <ClInclude Include="src\Game\Map\Position.h" />
     <ClInclude Include="src\Game\Map\Tile.h" />
     <ClInclude Include="src\Game\Messages\GameMessages.h" />

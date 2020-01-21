@@ -111,6 +111,12 @@ void GameLayer::OnAttach()
 		auto gcm = Game::GameConnectedMessage(socket->GetID());
 		socket->Emit("gameConnected", gcm);
 	});
+
+	Game::Map map(512, 512);
+	map.Load(43, 27);
+	map.Load(43, 28);
+	map.Load(43, 29);
+	map.Load(320, 476);
 }
 
 void GameLayer::OnDetach()

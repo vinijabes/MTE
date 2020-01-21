@@ -4,6 +4,7 @@
 #include "Game/Messages/GameMessages.h"
 #include "Game/Creatures/Creature.h"
 #include "Game/Objects/Item.h"
+#include "Game/Map/Map.h"
 
 #include <vector>
 #include <memory>
