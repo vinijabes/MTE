@@ -33,6 +33,12 @@ namespace Kinematics {
 
 				return true;
 			}
+
+			void Wait()
+			{
+				while (!m_Task->m_Completed) std::this_thread::yield();
+			}
+
 		private:
 			friend class TaskManager;
 

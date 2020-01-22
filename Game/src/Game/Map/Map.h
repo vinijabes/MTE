@@ -2,6 +2,8 @@
 
 #include "Tile.h"
 
+#include <fstream>
+
 namespace Game
 {
 	enum ChunkFlags
@@ -12,6 +14,7 @@ namespace Game
 
 	template <uint32_t chunkWidth, uint32_t chunkHeight>
 	class Chunk;
+	class MapLoaderAdapter;
 
 	template <uint32_t chunkWidth, uint32_t chunkHeight>
 	class ChunkNode
@@ -45,9 +48,12 @@ namespace Game
 			if (m_Size.x / 2 <= chunkWidth || m_Size.x / 2 <= chunkHeight)
 			{
 				if (m_Childs[index]) return (Chunk<chunkWidth, chunkHeight>*)m_Childs[index];
-				m_Childs[index] = new Chunk<chunkWidth, chunkHeight>(m_Size.x / 2, m_Size.y / 2, m_Position.x + (index % 2) * m_Size.x / 2, m_Position.y + (index / 2) * m_Size.y / 2);
+
+				auto chunkX = m_Position.x + (index % 2) * m_Size.x / 2;
+				auto chunkY = m_Position.y + (index / 2) * m_Size.y / 2;
+				m_Childs[index] = new Chunk<chunkWidth, chunkHeight>(m_Size.x / 2, m_Size.y / 2, chunkX, chunkY, chunkX/chunkWidth + chunkY/chunkHeight * 512/chunkWidth);
 				SetFlags(CHUNK_ACTIVE | CHUNK_LOADED);
-			
+
 				return (Chunk<chunkWidth, chunkHeight>*)m_Childs[index];
 			}
 			else
@@ -75,7 +81,7 @@ namespace Game
 		unsigned char GetFlags() const { return m_Flags; }
 		void SetFlags(unsigned char flags) { m_Flags = flags; }
 
-	private:
+	protected:
 		ChunkNode* m_Childs[4];
 
 		glm::uvec2 m_Position;
@@ -88,9 +94,16 @@ namespace Game
 	class Chunk : public ChunkNode<chunkWidth, chunkHeight>
 	{
 	public:
-		Chunk(uint32_t width, uint32_t height, uint32_t x, uint32_t y)
-			: ChunkNode(width, height, x, y)
-		{}
+		Chunk(uint32_t width, uint32_t height, uint32_t x, uint32_t y, uint32_t chunkId)
+			: ChunkNode(width, height, x, y), m_ChunkID(chunkId)
+		{
+			m_Tiles = new Tile * [width];
+
+			for (int i = 0; i < width; i++)
+			{
+				m_Tiles[i] = new Tile[height];
+			}
+		}
 
 		Chunk(Tile** tiles, uint32_t width, uint32_t height, uint32_t x, uint32_t y)
 			: ChunkNode(width, height, x, y)
@@ -109,8 +122,22 @@ namespace Game
 			SetFlags(CHUNK_ACTIVE | CHUNK_LOADED);
 		}
 
+		void SetTiles(Tile* tiles)
+		{
+			for (int i = 0; i < m_Size.x; i++)
+			{
+				for (int j = 0; j < m_Size.y; j++)
+				{
+					m_Tiles[i][j] = tiles[i * m_Size.x + j];
+				}
+			}
+		}
+
+		uint32_t GetID() const { return m_ChunkID; }
+
 	private:
 		Tile** m_Tiles;
+		uint32_t m_ChunkID;
 	};
 
 	template <uint32_t chunkWidth, uint32_t chunkHeight>
@@ -128,19 +155,94 @@ namespace Game
 		ChunkNode<chunkWidth, chunkHeight>* m_Root;
 	};
 
+	class FileMapLoaderAdapter;
+
 	class Map
 	{
+		friend class MapLoaderAdapter;
+
 	public:
-		Map(uint32_t width, uint32_t height)
-			: m_MapTree(width, height)
+		Map(uint32_t width, uint32_t height);
+		~Map()
+		{
+			delete m_Loader;
+		}
+
+		void Load(uint32_t x, uint32_t y);
+		void Load(uint32_t x, uint32_t y, std::function<void(Chunk<8,8>*)> cb);
+
+
+	private:
+		ChunkTree<8, 8> m_MapTree;
+		MapLoaderAdapter* m_Loader;
+	};
+
+	class MapLoaderAdapter
+	{
+	public:
+		MapLoaderAdapter(Map* map)
+			: m_Map(map)
+		{
+
+		}
+
+		virtual void Load(uint32_t x, uint32_t y, std::function<void(Chunk<8, 8>*)> cb) = 0;
+
+	protected:
+		Chunk<8, 8>* InternalLoad(uint32_t x, uint32_t y)
+		{
+			return m_Map->m_MapTree.Load(x, y);
+		}
+
+	protected:
+		Map* m_Map;
+	};
+
+	class FileMapLoaderAdapter : public MapLoaderAdapter
+	{
+	public:
+		FileMapLoaderAdapter(Map* map, std::string mapFilePath)
+			: MapLoaderAdapter(map), m_FilePath(mapFilePath)
 		{
 		}
 
-		Chunk<8, 8>* Load(uint32_t x, uint32_t y)
+		virtual void Load(uint32_t x, uint32_t y, std::function<void(Chunk<8, 8>*)> cb) override
 		{
-			return m_MapTree.Load(x, y);
+			auto chunk = MapLoaderAdapter::InternalLoad(x, y);
+			if (chunk->IsFlag(CHUNK_LOADED)) 
+			{
+				cb(chunk);
+				return;
+			}
+
+			auto width = chunk->GetSize().x;
+			auto height = chunk->GetSize().y;
+			auto size = width * height;
+			auto filePos = sizeof(TileData) * size * chunk->GetID();
+
+			m_File.open(m_FilePath, std::ios::in | std::ios::binary);
+			if (!m_File.fail())
+			{
+				TileData* tileData = new TileData[size];
+				Tile* tiles = new Tile[size];
+				m_File.seekg(filePos, std::ios_base::beg);
+				m_File.getline((char *)tileData, sizeof(TileData) * size);
+
+				for (int i = 0; i < 64; i++)
+				{
+					tiles[i].SetPosition(tileData[i]);
+				}
+				chunk->SetTiles(tiles);
+				
+				m_File.close();
+				delete tileData;
+
+				cb(chunk);
+			}
 		}
+
 	private:
-		ChunkTree<8, 8> m_MapTree;
+		std::string m_FilePath;
+		std::fstream m_File;
 	};
 }

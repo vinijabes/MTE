@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Game\Creatures\Creature.cpp" />
+    <ClCompile Include="src\Game\Map\Map.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kinematics\Kinematics.vcxproj">
@@ -153,4 +154,4 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-</Project>
+</Project> 

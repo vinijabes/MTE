@@ -165,6 +165,9 @@
     <ClInclude Include="src\Kinematics\Framework\Interface\WindowSubSystemInterface.h">
       <Filter>src\Kinematics\Framework\Interface</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Framework\Managers\EnviromentManager.h">
+      <Filter>src\Kinematics\Framework\Managers</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kinematics\Framework\Managers\FactoryManager.h">
       <Filter>src\Kinematics\Framework\Managers</Filter>
     </ClInclude>
@@ -194,6 +197,9 @@
     </ClInclude>
     <ClInclude Include="src\Kinematics\Network\SocketMessages.h">
       <Filter>src\Kinematics\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\Batch.h">
+      <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Kinematics\Renderer\Buffer.h">
       <Filter>src\Kinematics\Renderer</Filter>
@@ -1392,8 +1398,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Kinematics\Renderer\Batch.h" />
-    <ClInclude Include="src\Kinematics\Framework\Managers\EnviromentManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
@@ -1419,6 +1423,9 @@
     </ClCompile>
     <ClCompile Include="src\Kinematics\Framework\Framework.cpp">
       <Filter>src\Kinematics\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\Framework\Managers\EnviromentManager.cpp">
+      <Filter>src\Kinematics\Framework\Managers</Filter>
     </ClCompile>
     <ClCompile Include="src\Kinematics\Framework\Managers\FactoryManager.cpp">
       <Filter>src\Kinematics\Framework\Managers</Filter>
@@ -1513,6 +1520,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Kinematics\Framework\Managers\EnviromentManager.cpp" />
   </ItemGroup>
 </Project>

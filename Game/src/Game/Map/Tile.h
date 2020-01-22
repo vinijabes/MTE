@@ -5,17 +5,29 @@
 #include <list>
 
 namespace Game {
+
+	struct TileData
+	{
+		Position position;
+	};
+
 	class Tile
 	{
+	public:
+		Tile() = default;
+		Tile(const TileData & data)
+			: m_Data(data)
+		{}
 		//TODO Return/Add items on tile
 		//TODO Return/Add creatures on tile
 
-		const Position& GetPosition() { return m_Position; }
+		const Position& GetPosition() { return m_Data.position; }
+		void SetPosition(const Position& position) { m_Data.position = position; }
+		void SetPosition(const TileData& data) { m_Data.position = data.position; }
 
 	public:
-
 		static std::string RegisterScriptConstructor(Kinematics::Script& script)
-		{			
+		{
 			return "Tile";
 		}
 
@@ -46,6 +58,6 @@ namespace Game {
 		}
 
 	private:
-		Position m_Position;
+		TileData m_Data;
 	};
 }
