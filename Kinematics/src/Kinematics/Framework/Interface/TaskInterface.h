@@ -29,18 +29,37 @@ namespace Kinematics {
 		virtual void OnCompleted() {};
 		virtual void Run() = 0;
 
-
 		/*TASK SPLITING*/
-		virtual bool Splittable() { return false; }
-		virtual void Split(WorkerThread worker) {};
+		virtual uint32_t Splittable() { return 0; }
+		virtual std::list<Ref<TaskInterface>> Split(uint32_t count)
+		{
+			return std::list<Ref<TaskInterface>>();
+		};
+
+		bool IsRoot() { return m_RootTask; }
 	private:
 		void PushChild(Ref<TaskInterface> child)
 		{
+			if(m_Child.empty())
+				m_Next.push_back(child);
+			else
+				for (auto c : m_Child)
+				{
+					c->PushChild(child);
+				}
+		}
+
+		void PushSubTask(Ref<TaskInterface> child)
+		{
+			m_RootTask = true;
+			m_Child.push_back(child);
 			m_Next.push_back(child);
 		}
 	private:
 		friend class TaskManager;
 		std::vector<Ref<TaskInterface>> m_Next;
+		std::vector<Ref<TaskInterface>> m_Child;
 		std::atomic<bool> m_Completed;
+		std::atomic<bool> m_RootTask = false;
 	};
 }

@@ -20,8 +20,8 @@ namespace Game
 	class ChunkNode
 	{
 	public:
-		ChunkNode(uint32_t width, uint32_t height, uint32_t x, uint32_t y)
-			: m_Size(width, height), m_Position(x, y), m_Childs{ nullptr }, m_Flags(0)
+		ChunkNode(uint32_t width, uint32_t height, uint32_t x, uint32_t y, uint32_t chunkId)
+			: m_Size(width, height), m_Position(x, y), m_Childs{ nullptr }, m_ChunkID(chunkId), m_Flags(0)
 		{
 			KINEMATICS_TRACE("CHUNK NODE LOADED (x: {}, y: {}, w: {}, z: {})", m_Position.x, m_Position.y, m_Size.x, m_Size.y);
 		}
@@ -51,7 +51,7 @@ namespace Game
 
 				auto chunkX = m_Position.x + (index % 2) * m_Size.x / 2;
 				auto chunkY = m_Position.y + (index / 2) * m_Size.y / 2;
-				m_Childs[index] = new Chunk<chunkWidth, chunkHeight>(m_Size.x / 2, m_Size.y / 2, chunkX, chunkY, chunkX/chunkWidth + chunkY/chunkHeight * 512/chunkWidth);
+				m_Childs[index] = new Chunk<chunkWidth, chunkHeight>(m_Size.x / 2, m_Size.y / 2, chunkX, chunkY, index * m_Size.x/chunkWidth * m_Size.y/chunkHeight + m_ChunkID);
 				SetFlags(CHUNK_ACTIVE | CHUNK_LOADED);
 
 				return (Chunk<chunkWidth, chunkHeight>*)m_Childs[index];
@@ -63,7 +63,7 @@ namespace Game
 				else
 				{
 
-					m_Childs[index] = new ChunkNode(m_Size.x / 2, m_Size.y / 2, m_Position.x + (index % 2) * m_Size.x / 2, m_Position.y + (index / 2) * m_Size.y / 2);
+					m_Childs[index] = new ChunkNode(m_Size.x / 2, m_Size.y / 2, m_Position.x + (index % 2) * m_Size.x / 2, m_Position.y + (index / 2) * m_Size.y / 2, index * m_Size.x / chunkWidth * m_Size.y / chunkHeight + m_ChunkID);
 					SetFlags(CHUNK_ACTIVE | CHUNK_LOADED);
 
 					return m_Childs[index]->Load(x, y);
@@ -87,6 +87,8 @@ namespace Game
 		glm::uvec2 m_Position;
 		glm::uvec2 m_Size;
 
+		uint32_t m_ChunkID;
+
 		unsigned char m_Flags;
 	};
 
@@ -95,7 +97,7 @@ namespace Game
 	{
 	public:
 		Chunk(uint32_t width, uint32_t height, uint32_t x, uint32_t y, uint32_t chunkId)
-			: ChunkNode(width, height, x, y), m_ChunkID(chunkId)
+			: ChunkNode(width, height, x, y, chunkId)
 		{
 			m_Tiles = new Tile * [width];
 
@@ -137,7 +139,6 @@ namespace Game
 
 	private:
 		Tile** m_Tiles;
-		uint32_t m_ChunkID;
 	};
 
 	template <uint32_t chunkWidth, uint32_t chunkHeight>
@@ -146,7 +147,7 @@ namespace Game
 	public:
 		ChunkTree(const uint32_t width, const uint32_t height)
 		{
-			m_Root = new ChunkNode<chunkWidth, chunkHeight>(width, height, 0, 0);
+			m_Root = new ChunkNode<chunkWidth, chunkHeight>(width, height, 0, 0, 0);
 		}
 
 		Chunk<chunkWidth, chunkHeight>* Load(uint32_t x, uint32_t y) { return m_Root->Load(x, y); }

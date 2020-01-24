@@ -39,7 +39,8 @@ namespace Kinematics {
 	void WorkerThread::RunTask()
 	{
 		KINEMATICS_ASSERT(m_Task != nullptr, "Worker must have an task to execute!");
-		m_Task->Run();
+		if(!m_Task->IsRoot())
+			m_Task->Run();
 		CompleteTask();
 	}
 

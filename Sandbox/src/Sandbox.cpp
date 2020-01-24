@@ -34,6 +34,62 @@ GameLayer::GameLayer()
 {
 }
 
+class ParallelFor : public Kinematics::TaskInterface
+{
+public:
+	ParallelFor(size_t count, size_t offset = 0)
+		: m_Offset(offset), m_Count(count)
+	{
+		KINEMATICS_TRACE("PARALLEL FOR Index: {}, Count: {}", m_Offset, m_Count);
+	}
+
+	virtual void Run() override
+	{
+		auto end = m_Offset + m_Count;
+		for (size_t i = m_Offset; i < end; ++i)
+		{
+			KINEMATICS_TRACE("{}", i);
+		}
+	}
+
+	virtual uint32_t Splittable() override
+	{
+		return m_Count / 125;
+	}
+
+	virtual std::list<Kinematics::Ref<Kinematics::TaskInterface>> Split(uint32_t subTasks)
+	{
+		std::list< Kinematics::Ref<Kinematics::TaskInterface>> tasks;
+
+		if (m_Count % subTasks == 0)
+		{
+			for (int i = 0; i < subTasks; i++)
+			{
+				tasks.push_back(Kinematics::CreateRef<ParallelFor>(m_Count / subTasks, m_Count / subTasks * i));
+			}
+		}
+		else
+		{
+			tasks.push_back(Kinematics::CreateRef<ParallelFor>(m_Count / subTasks + 1, 0));
+			for (int i = 1; i < subTasks; i++)
+			{
+				tasks.push_back(Kinematics::CreateRef<ParallelFor>(m_Count / subTasks, m_Count / subTasks * i + 1));
+			}
+		}
+
+		return tasks;
+	}
+
+private:
+	size_t m_Offset;
+	size_t m_Count;
+};
+
+class PrintTask : public Kinematics::TaskInterface
+{
+	virtual void Run() override { KINEMATICS_TRACE("Teste"); }
+};
+
 void GameLayer::OnAttach()
 {
 	Kinematics::Application::Get().GetFramework()->AddSubSystem("WindowSubSystem");
@@ -74,7 +130,7 @@ void GameLayer::OnAttach()
 	m_Shader->Bind();
 	for (int i = 0; i < 32; i++)
 	{
-		m_Shader->SetInt("u_Textures["+ std::to_string(i)+"]", i);
+		m_Shader->SetInt("u_Textures[" + std::to_string(i) + "]", i);
 	}
 
 	m_Model = Kinematics::Model::Load("assets/models/MultipleTextureCube.obj");
@@ -82,6 +138,9 @@ void GameLayer::OnAttach()
 
 
 	Kinematics::Resources::Add("0", Kinematics::Texture2D::Create("assets/textures/0.png", Kinematics::WrappingOption::KINEMATICS_CLAMP_TO_EDGE, Kinematics::WrappingOption::KINEMATICS_CLAMP_TO_EDGE));
+	auto handle = Kinematics::TaskManager::GetInstance()->Schedule(Kinematics::CreateRef<ParallelFor>(1000));
+	Kinematics::TaskManager::GetInstance()->Schedule(Kinematics::CreateRef<PrintTask>(), handle);
+	Kinematics::TaskManager::GetInstance()->WaitRunningTaskComplete();
 }
 
 void GameLayer::OnDetach()
@@ -99,7 +158,6 @@ void GameLayer::OnUpdate(Kinematics::Timestep ts)
 	m_Shader->SetFloat3("u_Lights[0].ambient", glm::vec3(0.7f));
 	m_Shader->SetFloat3("u_Lights[0].diffuse", glm::vec3(0.8f));
 	m_Shader->SetFloat3("u_Lights[0].specular", glm::vec3(0.8f));
-
 
 	Kinematics::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 	Kinematics::RenderCommand::Clear();
@@ -131,27 +189,27 @@ void GameLayer::OnEvent(Kinematics::Event& e)
 
 		switch (e.GetKeyCode())
 		{
-			case KINEMATICS_KEY_UP:
-				m_Camera.SetPosition(m_Camera.GetPosition() + glm::vec3(0.f, -1.f, 0.f));
-				break;
-			case KINEMATICS_KEY_DOWN:
-				m_Camera.SetPosition(m_Camera.GetPosition() + glm::vec3(0.f, 1.f, 0.f));
-				break;
-			case KINEMATICS_KEY_LEFT:
-				m_Camera.SetPosition(m_Camera.GetPosition() + glm::vec3(1.f, 0.f, 0.f));
-				break;
-			case KINEMATICS_KEY_RIGHT:
-				m_Camera.SetPosition(m_Camera.GetPosition() + glm::vec3(-1.f, 0.f, 0.f));
-				break;
-			case KINEMATICS_KEY_LEFT_SHIFT:
-				m_Camera.SetPosition(m_Camera.GetPosition() + glm::vec3(0.f, 0.f, 1.f));
-				break;
-			case KINEMATICS_KEY_LEFT_CONTROL:
-				m_Camera.SetPosition(m_Camera.GetPosition() + glm::vec3(0.f, 0.f, -1.f));
-				break;
+		case KINEMATICS_KEY_UP:
+			m_Camera.SetPosition(m_Camera.GetPosition() + glm::vec3(0.f, -1.f, 0.f));
+			break;
+		case KINEMATICS_KEY_DOWN:
+			m_Camera.SetPosition(m_Camera.GetPosition() + glm::vec3(0.f, 1.f, 0.f));
+			break;
+		case KINEMATICS_KEY_LEFT:
+			m_Camera.SetPosition(m_Camera.GetPosition() + glm::vec3(1.f, 0.f, 0.f));
+			break;
+		case KINEMATICS_KEY_RIGHT:
+			m_Camera.SetPosition(m_Camera.GetPosition() + glm::vec3(-1.f, 0.f, 0.f));
+			break;
+		case KINEMATICS_KEY_LEFT_SHIFT:
+			m_Camera.SetPosition(m_Camera.GetPosition() + glm::vec3(0.f, 0.f, 1.f));
+			break;
+		case KINEMATICS_KEY_LEFT_CONTROL:
+			m_Camera.SetPosition(m_Camera.GetPosition() + glm::vec3(0.f, 0.f, -1.f));
+			break;
 		}
 
-		return false; 
+		return false;
 		});
 }
 

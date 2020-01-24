@@ -87,8 +87,15 @@ namespace Kinematics {
 
 		void WaitRunningTaskComplete()
 		{
-			while (m_TaskDeque.size() || m_RunningCount > 0);
+			while (m_TaskCount || m_RunningCount > 0);
 
+			KINEMATICS_ASSERT(m_TaskDeque.size() == 0, "Deque of tasks should be empty!");
+			m_TaskDeque.clear();
+			m_HandleMap.clear();
+		}
+
+		void Clear()
+		{
 			KINEMATICS_ASSERT(m_TaskDeque.size() == 0, "Deque of tasks should be empty!");
 			m_TaskDeque.clear();
 			m_HandleMap.clear();
@@ -118,6 +125,7 @@ namespace Kinematics {
 		std::vector<std::thread> m_Pool;
 		std::vector<WorkerThread*> m_Workers;
 		std::deque<Ref<TaskHandle>> m_TaskDeque;
+		std::atomic<int> m_TaskCount = 0;
 		std::unordered_map<Ref<TaskInterface>, Ref<TaskHandle>> m_HandleMap;
 
 		std::mutex m_QueueMutex;

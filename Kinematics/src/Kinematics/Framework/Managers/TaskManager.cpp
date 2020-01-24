@@ -67,6 +67,7 @@ namespace Kinematics {
 			if (handle)
 			{
 				m_RunningCount += 1;
+				m_TaskCount -= 1;
 				return handle->GetTask();
 			}
 		}
@@ -76,17 +77,25 @@ namespace Kinematics {
 
 	void TaskManager::CompleteTask(Ref<TaskInterface> task)
 	{
-		task->m_Completed = true;
-		m_RunningCount -= 1;
-		
 		if (task->m_Next.size() > 0)
 		{
+			std::unique_lock<std::mutex> lock(m_QueueMutex);
+
 			for (auto nextTask : task->m_Next)
 			{
 				KINEMATICS_ASSERT(m_HandleMap.find(nextTask) != m_HandleMap.end(), "Children task don't have a Handler!");
-				if (m_HandleMap[nextTask]->IsReady())  ReSchedule(m_HandleMap[nextTask]);
+				if (m_HandleMap[nextTask]->IsReady()) 
+				{				
+					m_TaskDeque.push_front(m_HandleMap[nextTask]);
+					++m_TaskCount;
+					
+					m_Condition.notify_one();
+				}
 			}
 		}
+
+		task->m_Completed = true;
+		m_RunningCount -= 1;
 	}
 
 	Ref<TaskManager::TaskHandle> TaskManager::Schedule(Ref<TaskInterface> task)
@@ -108,7 +117,21 @@ namespace Kinematics {
 		{
 			std::unique_lock<std::mutex> lock(m_QueueMutex);
 			m_TaskDeque.push_back(handle);
+			++m_TaskCount;
+
 			m_HandleMap[task] = handle;
+
+			int countSplit = task->Splittable();
+			if (countSplit)
+			{
+				countSplit = std::max(std::min(countSplit, m_ThreadCount - m_RunningCount), 1);
+				auto subTasks = handle->GetTask()->Split(countSplit);
+				for (auto s : subTasks)
+				{
+					task->PushSubTask(s);
+					m_HandleMap[s] = CreateRef<TaskHandle>(s);
+				}
+			}
 		}
 
 		m_Condition.notify_one();
@@ -120,6 +143,7 @@ namespace Kinematics {
 		{
 			std::unique_lock<std::mutex> lock(m_QueueMutex);
 			m_TaskDeque.push_front(task);
+			++m_TaskCount;
 		}
 
 		m_Condition.notify_one();
@@ -130,6 +154,7 @@ namespace Kinematics {
 		{
 			std::unique_lock<std::mutex> lock(m_QueueMutex);
 			m_TaskDeque.push_back(task);
+			++m_TaskCount;
 		}
 
 		m_Condition.notify_one();
