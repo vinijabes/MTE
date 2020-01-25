@@ -1,6 +1,6 @@
 # Blender v2.81 (sub 16) OBJ File: 'Character.blend'
 # www.blender.org
-mtllib Character.mtl
+mtllib assets/models/Character.mtl
 o Cube
 v 0.074009 0.081900 -0.086056
 v 0.066707 -0.142637 -0.066780
