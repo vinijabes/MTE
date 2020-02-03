@@ -77,9 +77,9 @@ namespace Kinematics {
 
 	void TaskManager::CompleteTask(Ref<TaskInterface> task)
 	{
+		std::unique_lock<std::mutex> lock(m_QueueMutex);
 		if (task->m_Next.size() > 0)
 		{
-			std::unique_lock<std::mutex> lock(m_QueueMutex);
 
 			for (auto nextTask : task->m_Next)
 			{
@@ -95,7 +95,9 @@ namespace Kinematics {
 		}
 
 		task->m_Completed = true;
-		m_RunningCount -= 1;
+		--m_RunningCount;
+
+		m_Finished.notify_one();
 	}
 
 	Ref<TaskManager::TaskHandle> TaskManager::Schedule(Ref<TaskInterface> task)

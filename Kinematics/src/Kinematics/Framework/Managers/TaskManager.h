@@ -87,11 +87,14 @@ namespace Kinematics {
 
 		void WaitRunningTaskComplete()
 		{
-			while (m_TaskCount || m_RunningCount > 0);
+			std::unique_lock<std::mutex> lock(m_QueueMutex);
+			m_Finished.wait(lock, [this]() {
+				return m_TaskDeque.empty() && m_RunningCount == 0;
+				});
 
 			KINEMATICS_ASSERT(m_TaskDeque.size() == 0, "Deque of tasks should be empty!");
-			m_TaskDeque.clear();
-			m_HandleMap.clear();
+
+			m_HandleMap.clear();	
 		}
 
 		void Clear()
@@ -130,6 +133,6 @@ namespace Kinematics {
 
 		std::mutex m_QueueMutex;
 		std::condition_variable m_Condition;
-
+		std::condition_variable m_Finished;
 	};
 }
