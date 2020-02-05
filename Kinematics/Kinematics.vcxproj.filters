@@ -43,6 +43,9 @@
     <Filter Include="src\Kinematics\Scripting">
       <UniqueIdentifier>{26BA64B9-12DF-B339-3B2A-99C927AEB257}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Kinematics\UI">
+      <UniqueIdentifier>{D158591A-3D6F-57B0-86E6-E2D1F23B2838}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
     </Filter>
@@ -207,6 +210,9 @@
     <ClInclude Include="src\Kinematics\Renderer\Camera.h">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\FontFace.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kinematics\Renderer\GraphicsContext.h">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
@@ -246,6 +252,9 @@
     <ClInclude Include="src\Kinematics\Renderer\Sprite.h">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Renderer\Text.h">
+      <Filter>src\Kinematics\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Kinematics\Renderer\Texture.h">
       <Filter>src\Kinematics\Renderer</Filter>
     </ClInclude>
@@ -263,6 +272,30 @@
     </ClInclude>
     <ClInclude Include="src\Kinematics\Scripting\ScriptCallable.h">
       <Filter>src\Kinematics\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\UI\Canvas.h">
+      <Filter>src\Kinematics\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\UI\Container.h">
+      <Filter>src\Kinematics\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\UI\Layout.h">
+      <Filter>src\Kinematics\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\UI\Panel.h">
+      <Filter>src\Kinematics\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\UI\UI.h">
+      <Filter>src\Kinematics\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\UI\UIConstraint.h">
+      <Filter>src\Kinematics\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\UI\UIElementInterface.h">
+      <Filter>src\Kinematics\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Kinematics\UI\Window.h">
+      <Filter>src\Kinematics\UI</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
@@ -1398,6 +1431,9 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Kinematics\Framework\Managers\FontManager.h" />
+    <ClInclude Include="src\Kinematics\Renderer\FontLibrary.h" />
+    <ClInclude Include="src\Platform\FreeType\FreeTypeFontLibrary.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">
@@ -1490,6 +1526,15 @@
     <ClCompile Include="src\Kinematics\Scripting\Script.cpp">
       <Filter>src\Kinematics\Scripting</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kinematics\UI\Layout.cpp">
+      <Filter>src\Kinematics\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\UI\Panel.cpp">
+      <Filter>src\Kinematics\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematics\UI\Window.cpp">
+      <Filter>src\Kinematics\UI</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
@@ -1520,5 +1565,8 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Kinematics\Framework\Managers\FontManager.cpp" />
+    <ClCompile Include="src\Kinematics\Renderer\FontLibrary.cpp" />
+    <ClCompile Include="src\Platform\FreeType\FreeTypeFontLibrary.cpp" />
   </ItemGroup>
 </Project>

@@ -38,4 +38,13 @@ namespace Kinematics {
 		glDrawElementsInstanced(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr, amount);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+	void OpenGLRendererAPI::EnableDepthTest()
+	{
+		glEnable(GL_DEPTH_TEST);
+	}
+
+	void OpenGLRendererAPI::DisableDepthTest()
+	{
+		glDisable(GL_DEPTH_TEST);
+	}
 }

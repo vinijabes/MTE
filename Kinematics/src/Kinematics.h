@@ -36,3 +36,5 @@
 
 #include "Kinematics/Framework/Interface/WindowSubSystemInterface.h"
 #include "Kinematics/Framework/Interface/NetworkSubSystemInterface.h"
+
+#include "Kinematics/UI/UI.h"

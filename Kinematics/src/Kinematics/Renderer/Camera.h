@@ -33,6 +33,11 @@ namespace Kinematics
 		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 		const glm::mat4& GetViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
 
+		glm::vec2 ToWindowPosition(glm::vec2 pos) const { return ToWindowPosition(pos.x, pos.y); }
+		virtual glm::vec2 ToWindowPosition(int x, int y) const = 0;
+
+		glm::vec2 PixelToWindowSize(glm::vec2 pos) const { return PixelToWindowSize(pos.x, pos.y); }
+		virtual glm::vec2 PixelToWindowSize(int x, int y) const = 0;
 	protected:
 		glm::mat4 m_ProjectionMatrix;
 		glm::mat4 m_ViewMatrix;

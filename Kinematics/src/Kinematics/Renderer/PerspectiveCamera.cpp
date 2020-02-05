@@ -15,5 +15,10 @@ namespace Kinematics {
 	{
 		m_ProjectionMatrix = glm::perspective(fov, aspect, nearZ, farZ);
 		m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
-	}	
+	}
+	glm::vec2 PerspectiveCamera::PixelToWindowSize(int x, int y) const
+	{
+		return glm::vec2();
+	}
+
 }

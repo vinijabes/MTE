@@ -14,5 +14,8 @@ namespace Kinematics {
 
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) override;
 		virtual void DrawInstanced(const Ref<VertexArray>& vertexArray, uint32_t amount) override;
+
+		virtual void EnableDepthTest() override;
+		virtual void DisableDepthTest() override;
 	};
 }

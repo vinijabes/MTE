@@ -11,6 +11,7 @@
 #include "Kinematics/Framework/Events/KeyEvent.h"
 
 #include <list>
+#include <glm/glm.hpp>
 
 namespace Kinematics {
 
@@ -27,6 +28,8 @@ namespace Kinematics {
 
 		virtual inline unsigned int GetWidth() const = 0;
 		virtual inline unsigned int GetHeight() const = 0;
+
+		virtual inline glm::vec2 GetMousePos() const = 0;
 
 		static Ref<WindowSubSystemInterface> Create() { return std::static_pointer_cast<WindowSubSystemInterface>(s_WindowSubSystemInterfaceFactory()); };
 	private:

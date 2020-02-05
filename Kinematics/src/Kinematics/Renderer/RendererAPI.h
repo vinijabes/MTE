@@ -22,6 +22,9 @@ namespace Kinematics {
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) = 0;
 		virtual void DrawInstanced(const Ref<VertexArray>& vertexArray, uint32_t amount) = 0;
 
+		virtual void EnableDepthTest() = 0;
+		virtual void DisableDepthTest() = 0;
+
 		inline static API GetAPI() { return s_API; }
 	private:
 		static API s_API;

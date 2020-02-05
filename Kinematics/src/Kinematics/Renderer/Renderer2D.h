@@ -25,6 +25,5 @@ namespace Kinematics {
 
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Sprite>& sprite);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Sprite>& sprite);
-
 	};
 }

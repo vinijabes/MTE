@@ -8,7 +8,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace Kinematics {
-
 	struct Renderer2DStorage
 	{
 		Ref<VertexArray> QuadVertexArray;

@@ -23,7 +23,7 @@ namespace Kinematics {
 		EventCategoryMouseButton = BIT(4)
 	};
 
-#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::type; }\
+#define EVENT_CLASS_TYPE(type)  static EventType GetStaticType() { return EventType::type; }\
 								virtual EventType GetEventType() const override { return GetStaticType(); }\
 								virtual const char* GetName() const override { return #type; }
 
@@ -39,6 +39,8 @@ namespace Kinematics {
 		virtual const char* GetName() const = 0;
 		virtual int GetCategoryFlags() const = 0;
 		virtual std::string ToString() const { return GetName(); }
+
+		void StopPropagation() { Handled = true; }
 
 		inline bool IsInCategory(EventCategory category)
 		{

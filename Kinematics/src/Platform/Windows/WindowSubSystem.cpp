@@ -50,7 +50,19 @@ namespace Kinematics {
 
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double x, double y) {
 			StateManager::GetInstance()->Emit(new MouseMovedEvent(x, y));
-			});
+		});
+
+		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
+			switch (action)
+			{
+			case GLFW_PRESS:
+				StateManager::GetInstance()->Emit(new MouseButtonPressedEvent(button));
+				break;
+			case GLFW_RELEASE:
+				StateManager::GetInstance()->Emit(new MouseButtonReleasedEvent(button));
+				break;
+			}
+		});
 
 		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
@@ -121,6 +133,13 @@ namespace Kinematics {
 	{
 		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
 		return true;
+	}
+
+	glm::vec2 WindowSubSystem::GetMousePos() const
+	{
+		double x_pos(0), y_pos(0); 
+		glfwGetCursorPos(m_Window, &x_pos, &y_pos);
+		return glm::vec2(x_pos, y_pos);
 	}
 
 }

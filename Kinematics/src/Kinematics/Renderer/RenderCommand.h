@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RendererAPI.h"
+#include "Kinematics/Framework/Interface/WindowSubSystemInterface.h"
 
 namespace Kinematics {
 
@@ -37,7 +38,21 @@ namespace Kinematics {
 			s_RendererAPI->DrawInstanced(vertexArray, amount);
 		}
 
+		inline static void EnableDepthTest()
+		{
+			s_RendererAPI->EnableDepthTest();
+		}
+
+		inline static void DisableDepthTest()
+		{
+			s_RendererAPI->DisableDepthTest();
+		}
+
+		static WindowSubSystemInterface* GetWindow() { return m_Window; }
+		static void SetWindow(WindowSubSystemInterface* window) { m_Window = window; }
+
 	private:
 		static Scope<RendererAPI> s_RendererAPI;
+		static WindowSubSystemInterface* m_Window;
 	};
 }

@@ -25,6 +25,7 @@ IncludeDir["lua"] = "Kinematics/vendor/lua"
 IncludeDir["stb_image"] = "Kinematics/vendor/stb_image"
 IncludeDir["tinyxml2"] = "Kinematics/vendor/tinyxml2"
 IncludeDir["tinyobj"] = "Kinematics/vendor/tinyobj"
+IncludeDir["freetype"] = "Kinematics/vendor/freetype/include"
 
 group "Dependencies"
     include "Kinematics/vendor/GLFW"
@@ -32,6 +33,7 @@ group "Dependencies"
     include "Kinematics/vendor/tinyxml2"
     include "Kinematics/vendor/tinyobj"
     include "Kinematics/vendor/lua"
+    include "Kinematics/vendor/freetype"
 
 group ""
 
@@ -74,6 +76,7 @@ project "Kinematics"
         "%{IncludeDir.stb_image}",
         "%{IncludeDir.tinyxml2}",
         "%{IncludeDir.tinyobj}",
+        "%{IncludeDir.freetype}",
     }
 
     links
@@ -82,7 +85,8 @@ project "Kinematics"
         "Glad",
         "tinyxml2",
         "tinyobj",
-        "lua"
+        "lua",
+        "freetype"
     }    
 
     filter "system:linux"

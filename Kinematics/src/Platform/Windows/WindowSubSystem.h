@@ -62,6 +62,9 @@ namespace Kinematics {
 		GLuint vertexbuffer;
 
 		OrthographicCameraController m_CameraController;		
+
+		// Herdado por meio de WindowSubSystemInterface
+		virtual glm::vec2 GetMousePos() const override;
 	};
 
 	//CREATE_FACTORY("WindowSubSystem", WindowSubSystem);

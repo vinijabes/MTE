@@ -36,6 +36,30 @@ namespace Kinematics {
 	};
 
 	template<typename R, typename ... Types>
+	class FunctionCallback : public CallbackInterface<R, Types...>
+	{
+	public:
+		FunctionCallback(std::function<R(Types...)> callable) : m_Callable(callable)
+		{
+
+		}
+
+		template <typename Func>
+		FunctionCallback(Func callable) : m_Callable(std::function<R(Types...)> (callable))
+		{
+
+		}
+
+		virtual R operator()(Types ...args) override
+		{
+			return m_Callable(args...);
+		}
+
+	private:
+		std::function<R(Types...)> m_Callable;
+	};
+
+	template<typename R, typename ... Types>
 	class Callback
 	{
 	public:

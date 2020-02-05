@@ -22,12 +22,16 @@ namespace Kinematics {
 		void SetZoomLevel(float level) { m_ZoomLevel = level; }
 
 		void MoveTo(glm::vec3 position) { m_CameraPosition = position; }
+
+		void LockAspect() { m_AspectLocked = true; }
+		void UnlockAspect() { m_AspectLocked = false; }
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);
 		bool OnWindowResized(WindowResizeEvent& e);
 
 	private:
 		bool m_Rotation;
+		bool m_AspectLocked = false;
 		float m_AspectRatio;
 		float m_ZoomLevel = 1.0f;
 		OrthographicCamera m_Camera;
