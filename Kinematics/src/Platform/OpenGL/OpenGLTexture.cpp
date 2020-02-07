@@ -5,12 +5,45 @@
 #include "stb_image.h"
 
 namespace Kinematics {
-	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
+
+	int ConvertToOpenGLFormat(DataType format)
+	{
+		switch (format)
+		{
+		case Kinematics::DataType::RGBA:
+			return GL_RGBA;
+			break;
+		case Kinematics::DataType::RGBA8:
+			return GL_RGBA8;
+			break;
+		case Kinematics::DataType::RED:
+			return GL_RED;
+			break;
+		default:
+			break;
+		}
+	}
+
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, GLint s, GLint t)
 		: m_Width(width), m_Height(height)
 	{
 		m_InternalFormat = GL_RGBA8;
 		m_DataFormat = GL_RGBA;
 
+		GenerateTexture(width, height, s, t);
+	}
+
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height, DataType format, GLint s, GLint t)
+		: m_Width(width), m_Height(height)
+	{
+		m_InternalFormat = ConvertToOpenGLFormat(format);
+		m_DataFormat = ConvertToOpenGLFormat(format);
+
+		GenerateTexture(width, height, s, t);
+	}
+
+	void OpenGLTexture2D::GenerateTexture(uint32_t width, uint32_t height, GLint s, GLint t)
+	{
 		if (EnviromentManager::Get(KINEMATICS_OPENGL_MAJOR) == 4 && EnviromentManager::Get(KINEMATICS_OPENGL_MINOR) == 5)
 		{
 			glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
@@ -19,19 +52,19 @@ namespace Kinematics {
 			glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, s);
+			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, t);
 		}
 		else
 		{
 			glGenTextures(1, &m_RendererID);
 			glBindTexture(GL_TEXTURE_2D, m_RendererID);
-			
+
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, s);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, t);
 
 			glTexImage2D(GL_TEXTURE_2D, 0, m_InternalFormat, m_Width, m_Height, 0, m_DataFormat, GL_UNSIGNED_BYTE, NULL);
 		}
@@ -104,7 +137,7 @@ namespace Kinematics {
 
 	void OpenGLTexture2D::SetData(void* data, uint32_t size)
 	{
-		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;
+		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : m_DataFormat == GL_RGB8 ? 3 : 1;
 		KINEMATICS_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must be entire texture!");
 
 		if (EnviromentManager::Get(KINEMATICS_OPENGL_MAJOR) == 4 && EnviromentManager::Get(KINEMATICS_OPENGL_MINOR) >= 5)
@@ -130,5 +163,13 @@ namespace Kinematics {
 			glActiveTexture(GL_TEXTURE0 + slot);
 			glBindTexture(GL_TEXTURE_2D, m_RendererID);
 		}
+	}
+	void OpenGLTexture2D::SetMagFilter(TextureFilter filter)
+	{
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, filter == TextureFilter::LINEAR ? GL_LINEAR : GL_NEAREST );
+	}
+	void OpenGLTexture2D::SetMinFilter(TextureFilter filter)
+	{
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, filter == TextureFilter::LINEAR ? GL_LINEAR : GL_NEAREST);
 	}
 }

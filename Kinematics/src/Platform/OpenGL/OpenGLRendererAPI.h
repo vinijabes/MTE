@@ -17,5 +17,11 @@ namespace Kinematics {
 
 		virtual void EnableDepthTest() override;
 		virtual void DisableDepthTest() override;
+
+		virtual void EnableByteAlignment() override;
+		virtual void DisableByteAlignment() override;
+
+		virtual void EnableAlphaBlending() override;
+		virtual void DisableAlphaBlending() override;
 	};
 }

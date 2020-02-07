@@ -19,4 +19,9 @@ namespace Kinematics
 
 		return m_Instance;
 	}
+
+	Ref<FontFace> FontManager::Load(const std::string& path)
+	{
+		return m_Library->CreateFontFace(path);
+	}
 }

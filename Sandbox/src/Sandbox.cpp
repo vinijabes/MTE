@@ -30,6 +30,10 @@ protected:
 	Kinematics::PerspectiveCamera m_Camera;
 	Kinematics::OrthographicCameraController m_UICamera;
 	Kinematics::UI::Window m_UIWindow;
+
+	Kinematics::Ref<Kinematics::FrameBuffer> m_FrameBuffer;
+	Kinematics::Ref<Kinematics::Text> m_Text;
+	Kinematics::Ref<Kinematics::Texture2D> m_Texture;
 };
 
 GameLayer::GameLayer()
@@ -99,21 +103,35 @@ void GameLayer::OnAttach()
 	box->SetFixedSize({ 200, 200 });
 	box2->SetFixedSize({ 50, 20 });
 
-	box->SetColor(glm::vec4(1.0f, 1.0f, 0.0f, 0.0f));
-	box->SetHighlightColor(glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
-	box->SetClickColor(glm::vec4(0.0f, 1.0f, 1.0f, 0.0f));
+	box->SetColor(glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
+	box->SetHighlightColor(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+	box->SetClickColor(glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
 
-	box2->SetColor(glm::vec4(1.0f, 1.0f, 1.0f, 0.0f));
-	box2->SetHighlightColor(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
-	box2->SetClickColor(glm::vec4(1.0f, 0.0f, 1.0f, 0.0f));
+	box2->SetColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	box2->SetHighlightColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	box2->SetClickColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 
 	layout->SetPadding(4);
-	
-	m_UIWindow.SetLayout(layout);
-	m_UIWindow.SetBodyLayout(layout);
+	layout->SetOrientation(Kinematics::Orientation::Vertical);
+
+	auto roboto = Kinematics::FontManager::GetInstance()->Load("assets/fonts/Roboto-Regular.ttf");
+	Kinematics::Resources::Add("Roboto", roboto);
+
+	m_UIWindow.SetTitle("Teste");
+	m_UIWindow.SetTheme(Kinematics::Theme::DARK_THEME);
 	m_UIWindow.PushChild(box);
 	m_UIWindow.PushChild(box2);
 	m_UIWindow.SetWeight({ 1.f, 1.f });
+
+	auto text = Kinematics::CreateRef<Kinematics::UI::TextBox>();
+	text->SetText("Teste 2");
+
+	auto text2 = Kinematics::CreateRef<Kinematics::UI::TextBox>();
+	text2->SetText("Teste 3");
+	m_UIWindow.PushHeaderChild(text);
+	m_UIWindow.PushHeaderChild(text2);
+
+	m_UIWindow.SetFullSize(true);
 	m_UIWindow.ApplyLayout();
 }
 
@@ -133,20 +151,24 @@ void GameLayer::OnUpdate(Kinematics::Timestep ts)
 	//m_Shader->SetFloat3("u_Lights[0].diffuse", glm::vec3(0.8f));
 	//m_Shader->SetFloat3("u_Lights[0].specular", glm::vec3(0.8f));
 
+	m_UIWindow.Update(ts);
+
 	Kinematics::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 	Kinematics::RenderCommand::Clear();
 
 	Kinematics::RenderCommand::DisableDepthTest();
+	Kinematics::RenderCommand::EnableAlphaBlending();
+	
 	Kinematics::Renderer2D::BeginScene(m_UICamera.GetCamera());
-	/*for (int i = 0; i < 17; i++)
-	{
-		Kinematics::Renderer2D::DrawQuad(glm::vec3(i - 8, 0.0f, -20.0f), { 1.0f, 1.0f }, Kinematics::Resources::Get<Kinematics::Texture2D>("0"));
-	}*/
+	
 	m_UIWindow.Draw(m_UICamera.GetCamera());
-	m_UIWindow.ApplyLayout();
+
 	Kinematics::Renderer2D::EndScene();
+
+	Kinematics::RenderCommand::DisableAlphaBlending();
 	Kinematics::RenderCommand::EnableDepthTest();
 
+	m_UIWindow.ApplyLayout();
 	/*Kinematics::Renderer::BeginScene(m_Camera);
 	Kinematics::Renderer::Submit(m_ModelPlayer, glm::vec3(0, 0, -10.0f), m_Shader);
 	for (int i = 0; i < 17; i++)

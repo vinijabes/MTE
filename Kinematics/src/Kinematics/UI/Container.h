@@ -30,7 +30,7 @@ namespace Kinematics
 			auto drawingPos = pos + size / 2.f + parentPos;
 
 			Renderer2D::DrawQuad(camera.ToWindowPosition(drawingPos), camera.PixelToWindowSize(size), m_CurrentColor);
-			DrawChildren(camera, pos);
+			DrawChildren(camera, pos + parentPos);
 		}
 
 		void SetColor(glm::vec4 color) 

@@ -110,4 +110,143 @@ namespace Kinematics
 		}
 
 	}
+
+	glm::vec2 FlexLayout::GetPreferredSize(UIElementInterface* element) const
+	{
+		glm::vec2 size(0.f);
+
+		int mainAxis = (int)m_Orientation;
+		int secondaryAxis = (mainAxis + 1) % 2;
+
+		for (auto child : element->GetChildren())
+		{
+			if (!child->IsVisible())
+				continue;
+
+			glm::vec2 ps = child->GetPreferredSize();
+			glm::vec2 fs = child->GetFixedSize();
+
+			glm::vec2 targetSize(fs.x ? fs.x : ps.x, fs.y ? fs.y : ps.y);
+
+			size[mainAxis] += targetSize[mainAxis];
+			size[secondaryAxis] = std::max(size[secondaryAxis], targetSize[secondaryAxis]);
+		}
+
+		return size;
+	}
+
+	void FlexLayout::ApplyLayout(UIElementInterface* element) const
+	{
+		glm::vec2 fsElement = element->GetFixedSize();
+		glm::vec2 weight = element->GetWeight();
+
+		glm::vec2 containerSize(
+			fsElement.x ? fsElement.x : element->GetSize().x,
+			fsElement.y ? fsElement.y : element->GetSize().y
+		);
+
+		if (element->GetParent() == nullptr)
+		{
+			auto window = RenderCommand::GetWindow();
+			containerSize.x = weight.x ? weight.x * window->GetWidth() : containerSize.x;
+			containerSize.y = weight.y ? weight.y * window->GetHeight() : containerSize.y;
+		}
+		else
+		{
+			auto parentSize = element->GetParent()->GetSize();
+			containerSize.x = weight.x ? weight.x * parentSize.x : containerSize.x;
+			containerSize.y = weight.y ? weight.y * parentSize.y : containerSize.y;
+		}
+
+
+		int mainAxis = (int)m_Orientation;
+		int secondaryAxis = (mainAxis + 1) % 2;
+		int position = 0;
+
+		glm::vec2 childrenSize(0.f);
+
+		for (auto child : element->GetChildren())
+		{
+			if (!child->IsVisible())
+				continue;
+
+			glm::vec2 ps = child->GetPreferredSize();
+			glm::vec2 fs = child->GetFixedSize();
+
+			glm::vec2 targetSize(fs.x ? fs.x : ps.x, fs.y ? fs.y : ps.y);
+
+			childrenSize[mainAxis] += targetSize[mainAxis];
+			childrenSize[secondaryAxis] = std::max(childrenSize[secondaryAxis], targetSize[secondaryAxis]);
+		}
+
+		int freeSpace = containerSize[mainAxis] - childrenSize[mainAxis];
+		if (freeSpace < 0) freeSpace = 0;
+
+		switch (m_Justify)
+		{
+		case Kinematics::Justify::FlexStart:
+			position = 0;
+			break;
+		case Kinematics::Justify::FlexEnd:
+			position = freeSpace;
+			break;
+		case Kinematics::Justify::Center:
+			position = freeSpace / 2;
+			break;
+		case Kinematics::Justify::SpaceBetween:
+			position = 0;
+			break;
+		case Kinematics::Justify::SpaceAround:
+			if (element->GetChildren().size() > 0)
+			{
+				position = freeSpace / (2 * element->GetChildren().size());
+			}
+			break;
+		default:
+			break;
+		}
+
+		for (auto child : element->GetChildren())
+		{
+			if (!child->IsVisible())
+				continue;
+
+			glm::vec2 pos(0, 0);
+
+			glm::vec2 ps = child->GetPreferredSize();
+			glm::vec2 fs = child->GetFixedSize();
+
+			glm::vec2 targetSize(fs.x ? fs.x : ps.x, fs.y ? fs.y : ps.y);
+
+			pos[mainAxis] = position;
+
+			switch (m_Justify)
+			{
+			case Kinematics::Justify::FlexStart:
+				position += targetSize[mainAxis];
+				break;
+			case Kinematics::Justify::FlexEnd:
+				position += targetSize[mainAxis];
+				break;
+			case Kinematics::Justify::Center:
+				position += targetSize[mainAxis];
+				break;
+			case Kinematics::Justify::SpaceBetween:
+				if(element->GetChildren().size() > 1)
+					position += targetSize[mainAxis] + freeSpace / (element->GetChildren().size() - 1);
+				break;
+			case Kinematics::Justify::SpaceAround:
+				if (element->GetChildren().size() > 0)
+					position += targetSize[mainAxis] + freeSpace / (element->GetChildren().size());
+				break;
+			default:
+				break;
+			}
+
+			child->SetPosition(pos);
+			child->SetSize(targetSize);
+			child->ApplyLayout();
+		}
+
+	}
 }

@@ -30,4 +30,16 @@ namespace Kinematics {
 		KINEMATICS_CORE_ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
 	}
+
+	Ref<FrameBuffer> FrameBuffer::Create()
+	{
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:	KINEMATICS_CORE_ASSERT(false, "RendererAPI::API::None is currently not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:	return CreateRef<OpenGLFrameBuffer>();
+		}
+
+		KINEMATICS_CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
+	}
 }

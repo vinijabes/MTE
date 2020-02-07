@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Texture.h"
+
 namespace Kinematics {
 
 	enum class ShaderDataType
@@ -126,6 +128,19 @@ namespace Kinematics {
 		virtual uint32_t GetCount() const = 0;
 
 		static IndexBuffer* Create(uint32_t* indices, uint32_t count);
+	};
+
+	class FrameBuffer
+	{
+	public:
+		virtual ~FrameBuffer() = default;
+
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
+
+		virtual void SetTargetTexture(Ref<Texture2D> target) = 0;
+
+		static Ref<FrameBuffer> Create();
 	};
 
 }

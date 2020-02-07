@@ -25,6 +25,12 @@ namespace Kinematics {
 		virtual void EnableDepthTest() = 0;
 		virtual void DisableDepthTest() = 0;
 
+		virtual void EnableByteAlignment() = 0;
+		virtual void DisableByteAlignment() = 0;
+
+		virtual void EnableAlphaBlending() = 0;
+		virtual void DisableAlphaBlending() = 0;
+
 		inline static API GetAPI() { return s_API; }
 	private:
 		static API s_API;

@@ -11,6 +11,19 @@ namespace Kinematics {
 		KINEMATICS_CLAMP_TO_BORDER,
 	};
 
+	enum class DataType
+	{
+		RGBA,
+		RGBA8,
+		RED
+	};
+
+	enum class TextureFilter
+	{
+		NEAREST,
+		LINEAR
+	};
+
 	class Texture
 	{
 	public:
@@ -29,7 +42,11 @@ namespace Kinematics {
 	class Texture2D : public Texture
 	{
 	public:
-		static Ref<Texture2D> Create(uint32_t width, uint32_t height);
+		static Ref<Texture2D> Create(uint32_t width, uint32_t height, WrappingOption s = WrappingOption::KINEMATICS_REPEAT, WrappingOption t = WrappingOption::KINEMATICS_REPEAT);
+		static Ref<Texture2D> Create(uint32_t width, uint32_t height, DataType format, WrappingOption s = WrappingOption::KINEMATICS_REPEAT, WrappingOption t = WrappingOption::KINEMATICS_REPEAT);
 		static Ref<Texture2D> Create(const std::string& path, WrappingOption s = WrappingOption::KINEMATICS_REPEAT, WrappingOption t = WrappingOption::KINEMATICS_REPEAT);
+	
+		virtual void SetMagFilter(TextureFilter filter) = 0;
+		virtual void SetMinFilter(TextureFilter filter) = 0;
 	};
 }

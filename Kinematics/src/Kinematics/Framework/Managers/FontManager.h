@@ -13,7 +13,7 @@ namespace Kinematics {
 		void operator=(FontManager const&) = delete;
 
 		static FontManager* GetInstance();
-
+		Ref<FontFace> Load(const std::string& path);
 
 	private:
 		FontManager() {}

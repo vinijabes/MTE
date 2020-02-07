@@ -34,4 +34,18 @@ namespace Kinematics {
 	private:
 		uint32_t m_RendererID, m_Count;
 	};
+
+	class OpenGLFrameBuffer : public FrameBuffer
+	{
+	public:
+		OpenGLFrameBuffer();
+		virtual ~OpenGLFrameBuffer();
+
+		virtual void Bind() const override;
+		virtual void Unbind() const override;
+
+		virtual void SetTargetTexture(Ref<Texture2D> target) override;
+	private:
+		uint32_t m_RendererID, m_Count;
+	};
 }

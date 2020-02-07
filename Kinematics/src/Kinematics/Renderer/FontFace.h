@@ -18,8 +18,15 @@ namespace Kinematics
 
 	class FontFace
 	{
+	public:
+		virtual Character LoadGlyph(char c) = 0;
+		virtual void Load(uint32_t size) = 0;
 
-	private:
+		Character Get(char c) const { return m_Characters.at(c); }
+
+		static Ref<FontFace> DEFAULT;
+
+	protected:
 		std::map<char, Character> m_Characters;
 	};
 }

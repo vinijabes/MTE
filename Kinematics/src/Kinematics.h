@@ -18,6 +18,7 @@
 #include "Kinematics/Renderer/Shader.h"
 #include "Kinematics/Renderer/Texture.h"
 #include "Kinematics/Renderer/VertexArray.h"
+#include "Kinematics/Renderer/Text.h"
 
 #include "Kinematics/Renderer/OrthographicCamera.h"
 #include "Kinematics/Renderer/OrthographicCameraController.h"
@@ -30,6 +31,7 @@
 #include "Kinematics/Framework/Managers/FactoryManager.h"
 #include "Kinematics/Framework/Managers/StateManager.h"
 #include "Kinematics/Framework/Managers/ResourceManager.h"
+#include "Kinematics/Framework/Managers/FontManager.h"
 
 #include "Kinematics/Scripting/LuaScript.h"
 #include "Kinematics/Scripting/Callback.h"

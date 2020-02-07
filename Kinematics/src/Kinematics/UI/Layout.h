@@ -21,6 +21,14 @@ namespace Kinematics
 		Vertical
 	};
 
+	enum class Justify : uint8_t {
+		FlexStart = 0,
+		FlexEnd,
+		Center,
+		SpaceBetween,
+		SpaceAround
+	};
+
 	class Layout : public std::enable_shared_from_this<Layout>
 	{
 	public:
@@ -65,5 +73,18 @@ namespace Kinematics
 
 		uint32_t m_Margin;
 		uint32_t m_Padding;		
+	};
+
+	class FlexLayout : public Layout
+	{
+	public:
+		Justify GetJustify() const { return m_Justify; }
+		void SetJustify(Justify justify) { m_Justify = justify; }
+
+		virtual glm::vec2 GetPreferredSize(UIElementInterface* element) const override;
+		virtual void ApplyLayout(UIElementInterface* element) const override;
+	private:
+		Justify m_Justify;
+		Orientation m_Orientation;
 	};
 }

@@ -7,7 +7,7 @@ namespace Kinematics {
 	void OpenGLRendererAPI::Init()
 	{
 		//glEnable(GL_BLEND);
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glEnable(GL_DEPTH_TEST);
 	}
@@ -46,5 +46,25 @@ namespace Kinematics {
 	void OpenGLRendererAPI::DisableDepthTest()
 	{
 		glDisable(GL_DEPTH_TEST);
+	}
+
+	void OpenGLRendererAPI::EnableByteAlignment()
+	{
+		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	}
+
+	void OpenGLRendererAPI::DisableByteAlignment()
+	{
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	}
+	
+	void OpenGLRendererAPI::EnableAlphaBlending()
+	{
+		glEnable(GL_BLEND);
+	}
+
+	void OpenGLRendererAPI::DisableAlphaBlending()
+	{
+		glDisable(GL_BLEND);
 	}
 }

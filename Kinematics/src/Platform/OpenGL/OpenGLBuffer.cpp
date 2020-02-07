@@ -1,8 +1,10 @@
+
 #include "mtepch.h"
 #include "OpenGLBuffer.h"
 #include "Kinematics/Framework/Managers/EnviromentManager.h"
 
 #include <glad/glad.h>
+#include "OpenGLTexture.h"
 
 namespace Kinematics {
 
@@ -63,5 +65,44 @@ namespace Kinematics {
 	void OpenGLIndexBuffer::Unbind() const
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
+
+	OpenGLFrameBuffer::OpenGLFrameBuffer()
+	{
+		if (EnviromentManager::Get(KINEMATICS_OPENGL_MAJOR) == 4 && EnviromentManager::Get(KINEMATICS_OPENGL_MINOR) >= 5)
+		{
+			glCreateFramebuffers(1, &m_RendererID);
+		}
+		else
+		{
+			glGenFramebuffers(1, &m_RendererID);
+		}
+
+		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
+	}
+
+	OpenGLFrameBuffer::~OpenGLFrameBuffer()
+	{
+		glDeleteFramebuffers(1, &m_RendererID);
+		Unbind();
+	}
+
+	void OpenGLFrameBuffer::Bind() const
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
+	}
+	void OpenGLFrameBuffer::Unbind() const
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void OpenGLFrameBuffer::SetTargetTexture(Ref<Texture2D> target)
+	{
+		auto targetId = std::static_pointer_cast<OpenGLTexture2D>(target)->GetRendereID();
+
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, targetId, 0);
+
+		GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+		glDrawBuffers(1, DrawBuffers);
 	}
 }

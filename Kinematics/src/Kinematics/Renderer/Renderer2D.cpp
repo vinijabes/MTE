@@ -13,6 +13,8 @@ namespace Kinematics {
 		Ref<VertexArray> QuadVertexArray;
 		Ref<Shader> TextureShader;
 		Ref<Texture2D> WhiteTexture;
+
+		Ref<Shader> TextShader;
 	};
 
 	static Renderer2DStorage* s_Data;
@@ -51,6 +53,10 @@ namespace Kinematics {
 		s_Data->TextureShader->SetInt("u_Texture", 0);
 
 		s_Data->TextureShader->SetFloat4("u_TexCoords", { 0.0f, 0.0f, 1.0f, 1.0f });
+
+		s_Data->TextShader = Shader::Create("assets/shaders/Text.glsl");
+		s_Data->TextShader->Bind();
+		s_Data->TextShader->SetFloat3("u_TextColor", glm::vec3(1.f));
 	}
 
 	void Renderer2D::Shutdown()
@@ -60,8 +66,11 @@ namespace Kinematics {
 
 	void Renderer2D::BeginScene(const Camera& camera)
 	{
+		s_Data->TextShader->Bind();
+		s_Data->TextShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+
 		s_Data->TextureShader->Bind();
-		s_Data->TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());		
+		s_Data->TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());	
 	}
 
 	void Renderer2D::EndScene()
@@ -137,5 +146,21 @@ namespace Kinematics {
 		auto rectSize = sprite->GetSize();
 		auto currentFrame = sprite->GetCurrentFrame();
 		DrawQuad(position, size, sprite->GetTexture(), { rectSize.x * currentFrame, 0.0f, rectSize.x * (currentFrame + 1), rectSize.y });
+	}
+
+	void Renderer2D::RenderChar(const glm::vec2& position, const glm::vec2& size, const Character& c, const glm::vec4& color)
+	{
+		s_Data->TextShader->Bind();
+		c.Texture->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(position, 0.0f)) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		s_Data->TextShader->SetMat4("u_Transform", transform);
+		s_Data->TextShader->SetFloat4("u_TexCoords", { 0.0f, 0.0f, 1.0f, 1.0f });
+		s_Data->TextShader->SetFloat3("u_TextColor", glm::vec3(color));
+
+
+		s_Data->QuadVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
+		s_Data->TextureShader->Bind();
 	}
 }

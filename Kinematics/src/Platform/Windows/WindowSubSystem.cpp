@@ -8,6 +8,7 @@
 #include "Kinematics/Core/Timer.h"
 
 #include "Kinematics/Framework/Managers/StateManager.h"
+#include "Kinematics/Framework/Managers/FontManager.h"
 
 namespace Kinematics {
 
@@ -92,7 +93,9 @@ namespace Kinematics {
 		StateManager::GetInstance()->On(EventType::WindowResize, [=](Event& e) {
 			this->OnEvent(e);
 			return false;
-			});
+		});
+
+		FontFace::DEFAULT = Kinematics::FontManager::GetInstance()->Load("assets/fonts/Roboto-Regular.ttf");
 	};
 
 	void WindowSubSystem::Shutdown()

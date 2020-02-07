@@ -23,12 +23,24 @@ namespace Kinematics {
 		return 0;
 	}
 
-	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height)
+	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, WrappingOption s, WrappingOption t)
 	{
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::None:	KINEMATICS_CORE_ASSERT(false, "RendererAPI::API::None is currently not supported!"); return nullptr;
-			case RendererAPI::API::OpenGL:	return CreateRef<OpenGLTexture2D>(width, height);
+			case RendererAPI::API::OpenGL:	return CreateRef<OpenGLTexture2D>(width, height, GetWrapping(s), GetWrapping(t));
+		}
+
+		KINEMATICS_CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
+	}
+
+	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height, DataType format, WrappingOption s, WrappingOption t)
+	{
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:	KINEMATICS_CORE_ASSERT(false, "RendererAPI::API::None is currently not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:	return CreateRef<OpenGLTexture2D>(width, height, format, GetWrapping(s), GetWrapping(t));
 		}
 
 		KINEMATICS_CORE_ASSERT(false, "Unknown RendererAPI!");

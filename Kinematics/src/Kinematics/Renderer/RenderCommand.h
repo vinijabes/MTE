@@ -48,6 +48,26 @@ namespace Kinematics {
 			s_RendererAPI->DisableDepthTest();
 		}
 
+		inline static void EnableByteAlignment()
+		{
+			s_RendererAPI->EnableByteAlignment();
+		}
+
+		inline static void DisableByteAlignment()
+		{
+			s_RendererAPI->DisableByteAlignment();
+		}
+
+		inline static void EnableAlphaBlending()
+		{
+			s_RendererAPI->EnableAlphaBlending();
+		}
+
+		inline static void DisableAlphaBlending()
+		{
+			s_RendererAPI->DisableAlphaBlending();
+		}
+
 		static WindowSubSystemInterface* GetWindow() { return m_Window; }
 		static void SetWindow(WindowSubSystemInterface* window) { m_Window = window; }
 

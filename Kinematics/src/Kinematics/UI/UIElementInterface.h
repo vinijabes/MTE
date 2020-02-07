@@ -13,6 +13,7 @@
 
 #include "UIConstraint.h"
 #include "Layout.h"
+#include "Theme.h"
 #include "Kinematics/Renderer/Camera.h"
 
 namespace Kinematics
@@ -21,7 +22,7 @@ namespace Kinematics
 	{
 	public:
 		UIElementInterface()
-			: m_Parent(nullptr), m_Size(0.f), m_FixedSize(0.f), m_Position(0.f), m_Transformation(1.f),
+			: m_Parent(nullptr), m_Size(0.f), m_FixedSize(0.f), m_Position(0.f), m_Transformation(1.f), m_Weight(0.f),
 			m_Enabled(true), m_Visible(true), m_Focused(false), m_Layout(nullptr)
 		{}
 
@@ -30,7 +31,7 @@ namespace Kinematics
 		virtual void Draw(Camera& camera) { Draw(camera, glm::vec2(0)); };
 		virtual void Draw(Camera& camera, glm::vec2 pos = glm::vec2(0)) = 0;
 
-		virtual void Update(Timestep ts) {};
+		virtual void Update(Timestep ts) { UpdateChildren(ts); };
 		virtual void OnChange() {};
 
 		virtual void OnEvent(Event& e) 
@@ -56,6 +57,21 @@ namespace Kinematics
 		{ 
 			m_Children.push_back(child); 
 			child->SetParent(this);
+			
+			if(m_Theme)
+				child->SetTheme(m_Theme);
+		}
+		
+		virtual void RemoveChild(Ref<UIElementInterface> child)
+		{
+			for (auto c = m_Children.cbegin(); c != m_Children.cend(); c++)
+			{
+				if (*c == child) 
+				{
+					m_Children.erase(c);
+					return;
+				}
+			}
 		}
 
 		std::vector<Ref<UIElementInterface>> GetChildren() { return m_Children; }
@@ -142,6 +158,12 @@ namespace Kinematics
 			}
 		}
 
+		void SetTheme(Ref<Theme> theme) 
+		{ 
+			m_Theme = theme; 
+			for (auto c : m_Children) c->SetTheme(theme);
+		}
+
 	protected:
 		void NotifyEventChildren(Event& e) { for (auto child : m_Children) child->OnEvent(e); }
 		void DrawChildren(Camera& camera, glm::vec2 parentPos) { for (auto child : m_Children) child->Draw(camera, parentPos); }
@@ -205,6 +227,7 @@ namespace Kinematics
 		std::vector<Ref<UIElementInterface>> m_Children;
 
 		Ref<Layout> m_Layout;
+		Ref<Theme> m_Theme;
 
 		bool m_Visible;
 
