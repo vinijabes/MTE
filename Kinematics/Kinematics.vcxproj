@@ -224,6 +224,7 @@
     <ClInclude Include="src\Kinematics\UI\Layout.h" />
     <ClInclude Include="src\Kinematics\UI\Panel.h" />
     <ClInclude Include="src\Kinematics\UI\TextBox.h" />
+    <ClInclude Include="src\Kinematics\UI\TextInput.h" />
     <ClInclude Include="src\Kinematics\UI\Theme.h" />
     <ClInclude Include="src\Kinematics\UI\UI.h" />
     <ClInclude Include="src\Kinematics\UI\UIConstraint.h" />
@@ -648,7 +649,9 @@
     <ClCompile Include="src\Kinematics\UI\Layout.cpp" />
     <ClCompile Include="src\Kinematics\UI\Panel.cpp" />
     <ClCompile Include="src\Kinematics\UI\TextBox.cpp" />
+    <ClCompile Include="src\Kinematics\UI\TextInput.cpp" />
     <ClCompile Include="src\Kinematics\UI\Theme.cpp" />
+    <ClCompile Include="src\Kinematics\UI\UIElementInterface.cpp" />
     <ClCompile Include="src\Kinematics\UI\Window.cpp" />
     <ClCompile Include="src\Platform\FreeType\FreeTypeFontFace.cpp" />
     <ClCompile Include="src\Platform\FreeType\FreeTypeFontLibrary.cpp" />

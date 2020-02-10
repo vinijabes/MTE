@@ -40,6 +40,18 @@ namespace Kinematics {
 
 		virtual inline unsigned int GetWidth() const override { return m_Data.Width; }
 		virtual inline unsigned int GetHeight() const override { return m_Data.Height; }
+		virtual inline std::string GetClipboardString() const override 
+		{ 
+			const char* text = glfwGetClipboardString(m_Window);
+			return std::string(text);
+		}
+
+		virtual inline void SetClipboardString(const std::string& string) const override
+		{
+			glfwSetClipboardString(NULL, string.c_str());
+		}
+
+		
 
 	private:
 		void OnEvent(Event& e);

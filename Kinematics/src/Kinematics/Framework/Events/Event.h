@@ -9,7 +9,7 @@ namespace Kinematics {
 		None = 0,
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
 		AppTick, AppUpdate, AppRender,
-		KeyPressed, KeyReleased, KeyTyped,
+		KeyPressed, KeyReleased, KeyTyped, CharacterTyped,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 

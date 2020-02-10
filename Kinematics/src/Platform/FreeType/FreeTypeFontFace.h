@@ -16,7 +16,7 @@ namespace Kinematics {
 
 		virtual void Load(uint32_t size) override;
 
-		virtual Character LoadGlyph(char c) override;
+		virtual Character LoadGlyph(uint32_t c) override;
 	private:
 		Ref<FontLibrary> m_Library;
 		FT_LibraryRec_* m_Face;		

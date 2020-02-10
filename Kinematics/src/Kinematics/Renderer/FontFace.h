@@ -14,19 +14,29 @@ namespace Kinematics
 		glm::ivec2 Size;
 		glm::ivec2 Bearing;
 		int Advance;
+		unsigned int UCode;
 	};
 
 	class FontFace
 	{
 	public:
-		virtual Character LoadGlyph(char c) = 0;
+		FontFace()
+			: m_MaxBearing(0), m_MaxSize(0)
+		{}
+		
+		virtual Character LoadGlyph(uint32_t c) = 0;
 		virtual void Load(uint32_t size) = 0;
 
 		Character Get(char c) const { return m_Characters.at(c); }
+		uint32_t GetMaxVerticalBearing() const { return m_MaxBearing; }
+		glm::ivec2 GetMaxSize() const { return m_MaxSize; }
 
 		static Ref<FontFace> DEFAULT;
 
 	protected:
 		std::map<char, Character> m_Characters;
+
+		uint32_t m_MaxBearing;
+		glm::ivec2 m_MaxSize;
 	};
 }

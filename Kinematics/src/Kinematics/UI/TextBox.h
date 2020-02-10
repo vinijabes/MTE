@@ -27,6 +27,8 @@ namespace Kinematics {
 				m_Text->SetText(text); 
 			}
 
+			virtual void SetLayout(Ref<Layout> layout) final {}
+
 			Ref<Text> GetText() { return m_Text; }
 
 		private:

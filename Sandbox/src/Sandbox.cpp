@@ -29,7 +29,7 @@ protected:
 	Kinematics::Ref<Kinematics::Shader> m_Shader;
 	Kinematics::PerspectiveCamera m_Camera;
 	Kinematics::OrthographicCameraController m_UICamera;
-	Kinematics::UI::Window m_UIWindow;
+	Kinematics::Ref<Kinematics::UI::Window> m_UIWindow;
 
 	Kinematics::Ref<Kinematics::FrameBuffer> m_FrameBuffer;
 	Kinematics::Ref<Kinematics::Text> m_Text;
@@ -46,6 +46,7 @@ void GameLayer::OnAttach()
 {
 	Kinematics::Application::Get().GetFramework()->AddSubSystem("WindowSubSystem");
 	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::KeyPressed, KINEMATICS_BIND_EVENT_FN(GameLayer::OnEvent));
+	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::CharacterTyped, KINEMATICS_BIND_EVENT_FN(GameLayer::OnEvent));
 	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::MouseMoved, KINEMATICS_BIND_EVENT_FN(GameLayer::OnEvent));
 	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::MouseButtonReleased, KINEMATICS_BIND_EVENT_FN(GameLayer::OnEvent));
 
@@ -96,9 +97,9 @@ void GameLayer::OnAttach()
 
 	Kinematics::Resources::Add("0", Kinematics::Texture2D::Create("assets/textures/0.png", Kinematics::WrappingOption::KINEMATICS_CLAMP_TO_EDGE, Kinematics::WrappingOption::KINEMATICS_CLAMP_TO_EDGE));
 	
-	auto layout = Kinematics::CreateRef<Kinematics::BoxLayout>();
-	auto box = Kinematics::CreateRef<Kinematics::Container>();
-	auto box2 = Kinematics::CreateRef<Kinematics::Container>();
+	auto layout = Kinematics::CreateRef<Kinematics::UI::BoxLayout>();
+	auto box = Kinematics::CreateRef<Kinematics::UI::Container>();
+	auto box2 = Kinematics::CreateRef<Kinematics::UI::Container>();
 
 	box->SetFixedSize({ 200, 200 });
 	box2->SetFixedSize({ 50, 20 });
@@ -117,22 +118,28 @@ void GameLayer::OnAttach()
 	auto roboto = Kinematics::FontManager::GetInstance()->Load("assets/fonts/Roboto-Regular.ttf");
 	Kinematics::Resources::Add("Roboto", roboto);
 
-	m_UIWindow.SetTitle("Teste");
-	m_UIWindow.SetTheme(Kinematics::Theme::DARK_THEME);
-	m_UIWindow.PushChild(box);
-	m_UIWindow.PushChild(box2);
-	m_UIWindow.SetWeight({ 1.f, 1.f });
+	m_UIWindow = Kinematics::CreateRef<Kinematics::UI::Window>();
+
+	m_UIWindow->SetTitle("Teste");
+	m_UIWindow->SetTheme(Kinematics::Theme::DARK_THEME);
+	m_UIWindow->PushChild(box);
+	m_UIWindow->PushChild(box2);
+	m_UIWindow->SetWeight({ 1.f, 1.f });
 
 	auto text = Kinematics::CreateRef<Kinematics::UI::TextBox>();
 	text->SetText("Teste 2");
 
 	auto text2 = Kinematics::CreateRef<Kinematics::UI::TextBox>();
 	text2->SetText("Teste 3");
-	m_UIWindow.PushHeaderChild(text);
-	m_UIWindow.PushHeaderChild(text2);
 
-	m_UIWindow.SetFullSize(true);
-	m_UIWindow.ApplyLayout();
+	auto input = Kinematics::CreateRef<Kinematics::UI::TextInput>();
+
+	m_UIWindow->PushHeaderChild(text);
+	m_UIWindow->PushHeaderChild(text2);
+	m_UIWindow->PushHeaderChild(input);
+
+	m_UIWindow->SetFullSize(true);
+	m_UIWindow->ApplyLayout();
 }
 
 void GameLayer::OnDetach()
@@ -151,7 +158,7 @@ void GameLayer::OnUpdate(Kinematics::Timestep ts)
 	//m_Shader->SetFloat3("u_Lights[0].diffuse", glm::vec3(0.8f));
 	//m_Shader->SetFloat3("u_Lights[0].specular", glm::vec3(0.8f));
 
-	m_UIWindow.Update(ts);
+	m_UIWindow->Update(ts);
 
 	Kinematics::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 	Kinematics::RenderCommand::Clear();
@@ -161,14 +168,14 @@ void GameLayer::OnUpdate(Kinematics::Timestep ts)
 	
 	Kinematics::Renderer2D::BeginScene(m_UICamera.GetCamera());
 	
-	m_UIWindow.Draw(m_UICamera.GetCamera());
+	m_UIWindow->Draw(m_UICamera.GetCamera());
 
 	Kinematics::Renderer2D::EndScene();
 
 	Kinematics::RenderCommand::DisableAlphaBlending();
 	Kinematics::RenderCommand::EnableDepthTest();
 
-	m_UIWindow.ApplyLayout();
+	m_UIWindow->ApplyLayout();
 	/*Kinematics::Renderer::BeginScene(m_Camera);
 	Kinematics::Renderer::Submit(m_ModelPlayer, glm::vec3(0, 0, -10.0f), m_Shader);
 	for (int i = 0; i < 17; i++)
@@ -186,7 +193,7 @@ void GameLayer::OnEvent(Kinematics::Event& e)
 {
 	Kinematics::EventDispatcher dispatcher(e);
 
-	m_UIWindow.OnEvent(e);
+	m_UIWindow->OnEvent(e);
 
 	dispatcher.Dispatch<Kinematics::KeyPressedEvent>([this](Kinematics::KeyPressedEvent& e) {
 

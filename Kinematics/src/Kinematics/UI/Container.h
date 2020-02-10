@@ -4,65 +4,67 @@
 
 namespace Kinematics
 {
-	class Container : public UIElementInterface
-	{
-	public:
-		Container()
-			: m_Color(0), m_HighlighColor(0), m_ClickColor(0)
+	namespace UI {
+		class Container : public UIElementInterface
 		{
-			m_OnEnter = m_OnEnter + CreateRef<FunctionCallback<void, MouseMovedEvent&>>([this](MouseMovedEvent& e){
-				m_CurrentColor = m_HighlighColor;
-			});
-
-			m_OnOut = m_OnOut + CreateRef<FunctionCallback<void, MouseMovedEvent&>>([this](MouseMovedEvent& e) {
-				m_CurrentColor = m_Color;
-			});
-
-			m_OnClick = m_OnClick + CreateRef<FunctionCallback<void, MouseButtonReleasedEvent&>>([this](MouseButtonReleasedEvent& e) {
-				m_CurrentColor = m_ClickColor;
-			});
-		}
-
-		virtual void Draw(Camera& camera, glm::vec2 parentPos = glm::vec2(0)) override
-		{
-			auto pos = m_Position;
-			auto size = m_Size;
-			auto drawingPos = pos + size / 2.f + parentPos;
-
-			Renderer2D::DrawQuad(camera.ToWindowPosition(drawingPos), camera.PixelToWindowSize(size), m_CurrentColor);
-			DrawChildren(camera, pos + parentPos);
-		}
-
-		void SetColor(glm::vec4 color) 
-		{ 
-			if (color != m_Color) 
+		public:
+			Container()
+				: m_Color(0), m_HighlighColor(0), m_ClickColor(0)
 			{
-				m_Color = color;
-				m_CurrentColor = color;
-			}
-		}
+				m_OnEnter = m_OnEnter + CreateRef<FunctionCallback<void, MouseMovedEvent&>>([this](MouseMovedEvent& e) {
+					m_CurrentColor = m_HighlighColor;
+					});
 
-		void SetHighlightColor(glm::vec4 color)
-		{
-			if (color != m_HighlighColor)
+				m_OnOut = m_OnOut + CreateRef<FunctionCallback<void, MouseMovedEvent&>>([this](MouseMovedEvent& e) {
+					m_CurrentColor = m_Color;
+					});
+
+				m_OnClick = m_OnClick + CreateRef<FunctionCallback<void, MouseButtonReleasedEvent&>>([this](MouseButtonReleasedEvent& e) {
+					m_CurrentColor = m_ClickColor;
+					});
+			}
+
+			virtual void Draw(Camera& camera, glm::vec2 parentPos = glm::vec2(0)) override
 			{
-				m_HighlighColor = color;
-			}
-		}
+				auto pos = m_Position;
+				auto size = m_Size;
+				auto drawingPos = pos + size / 2.f + parentPos;
 
-		void SetClickColor(glm::vec4 color)
-		{
-			if (color != m_ClickColor)
+				Renderer2D::DrawQuad(camera.ToWindowPosition(drawingPos), camera.PixelToWindowSize(size), m_CurrentColor);
+				DrawChildren(camera, pos + parentPos);
+			}
+
+			void SetColor(glm::vec4 color)
 			{
-				m_ClickColor = color;
+				if (color != m_Color)
+				{
+					m_Color = color;
+					m_CurrentColor = color;
+				}
 			}
-		}
 
-	private:
-		glm::vec4 m_CurrentColor;
+			void SetHighlightColor(glm::vec4 color)
+			{
+				if (color != m_HighlighColor)
+				{
+					m_HighlighColor = color;
+				}
+			}
 
-		glm::vec4 m_Color;
-		glm::vec4 m_HighlighColor;
-		glm::vec4 m_ClickColor;
-	};
+			void SetClickColor(glm::vec4 color)
+			{
+				if (color != m_ClickColor)
+				{
+					m_ClickColor = color;
+				}
+			}
+
+		private:
+			glm::vec4 m_CurrentColor;
+
+			glm::vec4 m_Color;
+			glm::vec4 m_HighlighColor;
+			glm::vec4 m_ClickColor;
+		};
+	}
 }

@@ -49,6 +49,37 @@ namespace Kinematics {
 			m_Header->SetTitleFont(font);
 		}
 
+		void Window::UpdateFocus(Ref<UIElementInterface> element)
+		{
+			for (auto e : m_FocusPath)
+			{
+				if (!e->IsFocused())
+					continue;
+
+				e->SetFocus(false);
+			}
+
+			m_FocusPath.clear();
+
+			Ref<Window> window = Ref<Window>(nullptr);
+
+			while (element)
+			{
+				m_FocusPath.push_back(element);
+				if (std::dynamic_pointer_cast<Window>(element))
+					window = std::dynamic_pointer_cast<Window>(element);
+
+				if (element->GetParent())
+					element = element->GetParent()->GetPtr();
+				else
+					break;
+			}
+
+			for (auto it = m_FocusPath.rbegin(); it != m_FocusPath.rend(); ++it)
+				(*it)->SetFocus(true);
+
+		}
+
 		void Window::Update(Timestep ts)
 		{
 			if(!m_Parent)
@@ -63,7 +94,7 @@ namespace Kinematics {
 			m_Text = CreateRef<TextBox>();
 
 			auto headerLayout = CreateRef<FlexLayout>();
-			headerLayout->SetJustify(Justify::SpaceBetween);
+			headerLayout->SetJustify(Justify::Center);
 
 			m_Header->PushChild(m_Text);
 

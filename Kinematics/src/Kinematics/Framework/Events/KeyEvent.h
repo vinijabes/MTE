@@ -21,10 +21,11 @@ namespace Kinematics {
 	class KINEMATICS_API KeyPressedEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent(int keycode, int repeatCount)
-			: KeyEvent(keycode), m_RepeatCount(repeatCount) {}
+		KeyPressedEvent(int keycode, int repeatCount, int mods)
+			: KeyEvent(keycode), m_RepeatCount(repeatCount), m_Modifier(mods) {}
 
 		inline int GetRepeatCount() const { return m_RepeatCount; }
+		inline int GetModifiers() const { return m_Modifier; }
 
 		std::string ToString() const override
 		{
@@ -36,6 +37,7 @@ namespace Kinematics {
 		EVENT_CLASS_TYPE(KeyPressed)
 	private:
 		int m_RepeatCount;
+		int m_Modifier;
 	};
 
 	class KINEMATICS_API KeyReleasedEvent : public KeyEvent
@@ -68,5 +70,21 @@ namespace Kinematics {
 		}
 
 		EVENT_CLASS_TYPE(KeyTyped)
+	};
+
+	class KINEMATICS_API CharacterEvent : public KeyEvent
+	{
+	public:
+		CharacterEvent(int keycode)
+			: KeyEvent(keycode) {}
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "CharacterTyped: " << m_KeyCode;
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(CharacterTyped)
 	};
 }

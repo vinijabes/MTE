@@ -42,9 +42,13 @@ namespace Kinematics {
 
 			void SetFullSize(bool full) { m_FullSize = full; }
 
+			void UpdateFocus(Ref<UIElementInterface> element);
+
 		private:
 			Ref<Panel> m_Body;
 			Ref<WindowHeader> m_Header;
+
+			std::vector<Ref<UIElementInterface>> m_FocusPath;
 
 			bool m_FullSize = false;
 		};

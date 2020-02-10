@@ -30,15 +30,20 @@ namespace Kinematics
 
 		Kinematics::RenderCommand::DisableByteAlignment();
 
-		for (unsigned char c = 0; c < 128; c++)
+		m_MaxBearing = 0;
+		m_MaxSize = glm::ivec2(0);
+		for (unsigned int c = 0; c < 128; c++)
 		{
 			m_Characters[c] = LoadGlyph(c);
+			if (m_Characters[c].Bearing.y > m_MaxBearing) m_MaxBearing = m_Characters[c].Bearing.y;
+			if (m_Characters[c].Size.y > m_MaxSize.y) m_MaxSize.y = m_Characters[c].Size.y;
+			if (m_Characters[c].Size.x > m_MaxSize.x) m_MaxSize.x = m_Characters[c].Size.x;
 		}
 
 		Kinematics::RenderCommand::EnableByteAlignment();
 	}
 
-	Character FreeTypeFontFace::LoadGlyph(char c)
+	Character FreeTypeFontFace::LoadGlyph(uint32_t c)
 	{
 		auto face = (FT_Face)m_Face;
 
@@ -56,7 +61,8 @@ namespace Kinematics
 			texture,
 			glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
 			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-			face->glyph->advance.x
+			face->glyph->advance.x,
+			c
 		};
 
 		return character;

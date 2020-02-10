@@ -72,7 +72,7 @@ namespace Kinematics {
 			{
 			case GLFW_PRESS:
 			{
-				StateManager::GetInstance()->Emit(new KeyPressedEvent(key, 0));
+				StateManager::GetInstance()->Emit(new KeyPressedEvent(key, 0, mods));
 				break;
 			}
 			case GLFW_RELEASE:
@@ -82,11 +82,15 @@ namespace Kinematics {
 			}
 			case GLFW_REPEAT:
 			{
-				StateManager::GetInstance()->Emit(new KeyPressedEvent(key, 1));
+				StateManager::GetInstance()->Emit(new KeyPressedEvent(key, 1, mods));
 				break;
 			}
 			}
-			});
+		});
+
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int key){
+			StateManager::GetInstance()->Emit(new CharacterEvent(key));
+		});
 
 		Renderer::Init();
 

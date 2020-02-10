@@ -15,7 +15,7 @@ namespace Kinematics {
 			auto size = m_Size;
 			auto drawingPos = pos + size / 2.f + parentPos;
 			
-			if(m_Text)
+			if(m_Text && m_Text->GetTexture())
 				Renderer2D::DrawQuad(camera.ToWindowPosition(drawingPos), camera.PixelToWindowSize(size.x, -size.y), m_Text->GetTexture());
 
 			DrawChildren(camera, pos + parentPos);
@@ -25,7 +25,8 @@ namespace Kinematics {
 		{
 			if (m_Text)
 			{
-				m_Size = glm::vec2(m_Text->GetTexture()->GetWidth(), m_Text->GetTexture()->GetHeight());
+				if(m_Text->GetTexture())
+					m_Size = glm::vec2(m_Text->GetTexture()->GetWidth(), m_Text->GetTexture()->GetHeight());
 			}
 		}
 	}
