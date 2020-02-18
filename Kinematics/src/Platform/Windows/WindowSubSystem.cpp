@@ -65,6 +65,10 @@ namespace Kinematics {
 			}
 		});
 
+		glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset) {
+			StateManager::GetInstance()->Emit(new MouseScrolledEvent(xOffset, yOffset));
+		});
+
 		glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 

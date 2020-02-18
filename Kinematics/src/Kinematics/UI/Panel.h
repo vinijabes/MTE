@@ -13,9 +13,8 @@ namespace Kinematics
 
 			void SetColor(glm::vec4 color) { m_Color = color; }
 			void SetHighlightColor(glm::vec4 color) { m_HighlightColor = color; }
-		private:
+		protected:
 			glm::vec4 m_Color;
-
 			glm::vec4 m_HighlightColor;
 		};
 	}

@@ -15,6 +15,8 @@ namespace Kinematics {
 
 			virtual void Draw(Camera& camera, glm::vec2 pos = glm::vec2(0)) override;
 			virtual void Update(Timestep ts) override;
+			virtual glm::vec2 GetPreferredSize() const override;
+
 
 			void SetText(Ref<Text> text) { m_Text = text; }
 			void SetText(const std::string& text) 
@@ -26,6 +28,8 @@ namespace Kinematics {
 
 				m_Text->SetText(text); 
 			}
+
+			void RecalculateSize();
 
 			virtual void SetLayout(Ref<Layout> layout) final {}
 

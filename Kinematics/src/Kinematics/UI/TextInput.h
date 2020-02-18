@@ -26,7 +26,11 @@ namespace Kinematics {
 				if (pos == SIZE_MAX) pos = 0;
 				if (pos > m_Text->GetSize()) pos = m_Text->GetSize();
 
-				m_InsertPos = pos; 
+				if (m_InsertPos != pos)
+				{
+					m_InsertPos = pos; 
+					UpdateCursorPos();
+				}
 			}
 			size_t inline GetCursorPos() const { return m_InsertPos; }
 
@@ -49,8 +53,8 @@ namespace Kinematics {
 				{
 					auto ps = UIElementInterface::GetPreferredSize();
 					size = glm::vec2(
-						std::max(ps.x, (float)m_Text->GetTexture()->GetWidth() + 8),
-						std::max(ps.y, (float)m_Text->GetTexture()->GetHeight())
+						std::max(ps.x, (float)m_Text->GetPixelWidth() + 8),
+						std::max(ps.y, (float)m_Text->GetPixelHeight())
 					);
 				}
 
@@ -102,7 +106,9 @@ namespace Kinematics {
 		protected:
 			void HandleDirectionalKeys(KeyPressedEvent& e);
 			void HandleCommandKeys(KeyPressedEvent& e);
-			void HandleCharacterKeys(KeyPressedEvent& e);
+			void HandleCharacterKeys(CharacterEvent& e);
+
+			virtual bool OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e);
 
 		private:
 			Ref<CharacterList> m_Text;
@@ -111,6 +117,7 @@ namespace Kinematics {
 			bool m_FitText = true;
 			bool m_DrawCursor = true;
 			bool m_DrawSelectionBox = false;
+			bool m_MouseDown = false;
 
 			float m_CursorInterval = 0.5f;
 			float m_Counter = 0;

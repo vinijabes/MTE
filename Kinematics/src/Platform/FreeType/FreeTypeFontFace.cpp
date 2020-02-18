@@ -27,17 +27,19 @@ namespace Kinematics
 	void FreeTypeFontFace::Load(uint32_t size)
 	{
 		FT_Set_Pixel_Sizes((FT_Face)m_Face, 0, size);
-
+		auto face = ((FT_Face)m_Face);
 		Kinematics::RenderCommand::DisableByteAlignment();
 
 		m_MaxBearing = 0;
+
 		m_MaxSize = glm::ivec2(0);
-		for (unsigned int c = 0; c < 128; c++)
+		m_MaxSize = glm::ivec2((face->bbox.xMax - face->bbox.xMin) >> 6, (face->size->metrics.ascender - face->size->metrics.descender) >> 6);
+		for (unsigned int c = 0; c < 256; c++)
 		{
 			m_Characters[c] = LoadGlyph(c);
 			if (m_Characters[c].Bearing.y > m_MaxBearing) m_MaxBearing = m_Characters[c].Bearing.y;
-			if (m_Characters[c].Size.y > m_MaxSize.y) m_MaxSize.y = m_Characters[c].Size.y;
-			if (m_Characters[c].Size.x > m_MaxSize.x) m_MaxSize.x = m_Characters[c].Size.x;
+			/*if (m_Characters[c].Size.y > m_MaxSize.y) m_MaxSize.y = m_Characters[c].Size.y;
+			if (m_Characters[c].Size.x > m_MaxSize.x) m_MaxSize.x = m_Characters[c].Size.x;*/
 		}
 
 		Kinematics::RenderCommand::EnableByteAlignment();
@@ -66,5 +68,17 @@ namespace Kinematics
 		};
 
 		return character;
+	}
+	uint32_t FreeTypeFontFace::GetAscender() const
+	{
+		return ((FT_Face)m_Face)->size->metrics.ascender >> 6;
+	}
+	uint32_t FreeTypeFontFace::GetDescender() const
+	{
+		return std::abs(((FT_Face)m_Face)->size->metrics.descender) >> 6;
+	}
+	uint32_t FreeTypeFontFace::GetHeight() const
+	{
+		return ((FT_Face)m_Face)->size->metrics.height >> 6;
 	}
 }

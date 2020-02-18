@@ -16,6 +16,7 @@ namespace Kinematics {
 	public:
 		virtual void Init() = 0;
 		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
+		virtual void SetScissor(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 		virtual void Clear() = 0;
 
@@ -30,6 +31,9 @@ namespace Kinematics {
 
 		virtual void EnableAlphaBlending() = 0;
 		virtual void DisableAlphaBlending() = 0;
+
+		virtual void EnableScissorTest() = 0;
+		virtual void DisableScissorTest() = 0;
 
 		inline static API GetAPI() { return s_API; }
 	private:

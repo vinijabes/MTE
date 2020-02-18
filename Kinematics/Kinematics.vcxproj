@@ -223,6 +223,8 @@
     <ClInclude Include="src\Kinematics\UI\Container.h" />
     <ClInclude Include="src\Kinematics\UI\Layout.h" />
     <ClInclude Include="src\Kinematics\UI\Panel.h" />
+    <ClInclude Include="src\Kinematics\UI\ScrollPanel.h" />
+    <ClInclude Include="src\Kinematics\UI\TextArea.h" />
     <ClInclude Include="src\Kinematics\UI\TextBox.h" />
     <ClInclude Include="src\Kinematics\UI\TextInput.h" />
     <ClInclude Include="src\Kinematics\UI\Theme.h" />
@@ -648,6 +650,8 @@
     <ClCompile Include="src\Kinematics\Scripting\Script.cpp" />
     <ClCompile Include="src\Kinematics\UI\Layout.cpp" />
     <ClCompile Include="src\Kinematics\UI\Panel.cpp" />
+    <ClCompile Include="src\Kinematics\UI\ScrollPanel.cpp" />
+    <ClCompile Include="src\Kinematics\UI\TextArea.cpp" />
     <ClCompile Include="src\Kinematics\UI\TextBox.cpp" />
     <ClCompile Include="src\Kinematics\UI\TextInput.cpp" />
     <ClCompile Include="src\Kinematics\UI\Theme.cpp" />

@@ -17,6 +17,11 @@ namespace Kinematics {
 		glViewport(x, y, width, height);
 	}
 
+	void OpenGLRendererAPI::SetScissor(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+	{
+		glScissor(x, y, width, height);
+	}
+
 	void OpenGLRendererAPI::SetClearColor(const glm::vec4& color)
 	{
 		glClearColor(color.r, color.g, color.b, color.a);
@@ -66,5 +71,15 @@ namespace Kinematics {
 	void OpenGLRendererAPI::DisableAlphaBlending()
 	{
 		glDisable(GL_BLEND);
+	}
+
+	void OpenGLRendererAPI::EnableScissorTest()
+	{
+		glEnable(GL_SCISSOR_TEST);
+	}
+
+	void OpenGLRendererAPI::DisableScissorTest()
+	{
+		glDisable(GL_SCISSOR_TEST);
 	}
 }

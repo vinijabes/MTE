@@ -45,8 +45,11 @@ namespace Kinematics {
 				EventDispatcher dispatcher(e);
 
 				dispatcher.Dispatch<MouseButtonReleasedEvent>(KINEMATICS_BIND_EVENT_FN(UIElementInterface::OnMouseButtonReleasedEvent));
+				dispatcher.Dispatch<MouseButtonPressedEvent>(KINEMATICS_BIND_EVENT_FN(UIElementInterface::OnMouseButtonPressedEvent));
 				dispatcher.Dispatch<KeyPressedEvent>(KINEMATICS_BIND_EVENT_FN(UIElementInterface::OnKeyPressedEvent));
+				dispatcher.Dispatch<CharacterEvent>(KINEMATICS_BIND_EVENT_FN(UIElementInterface::OnCharTypedEvent));
 				dispatcher.Dispatch<MouseMovedEvent>(KINEMATICS_BIND_EVENT_FN(UIElementInterface::OnMouseMovedEvent));
+				dispatcher.Dispatch<MouseScrolledEvent>(KINEMATICS_BIND_EVENT_FN(UIElementInterface::OnMouseScrolledEvent));
 			}
 
 			void NotifyChange()
@@ -65,6 +68,15 @@ namespace Kinematics {
 			virtual void PushChild(Ref<UIElementInterface> child)
 			{
 				m_Children.push_back(child);
+				child->SetParent(this);
+
+				if (m_Theme)
+					child->SetTheme(m_Theme);
+			}
+
+			virtual void PushChild(Ref<UIElementInterface> child, uint32_t pos)
+			{
+				m_Children.insert(m_Children.begin() + pos, child);
 				child->SetParent(this);
 
 				if (m_Theme)
@@ -112,20 +124,24 @@ namespace Kinematics {
 			void Disable() { m_Enabled = false; }
 			void Enable() { m_Enabled = true; }
 
-			glm::vec2 GetFixedSize() { return m_FixedSize; }
-			void SetFixedSize(const glm::vec2& fixedSize) { m_FixedSize = fixedSize; }
+			virtual glm::vec2 GetFixedSize() const { return m_FixedSize; }
+			virtual void SetFixedSize(const glm::vec2& fixedSize) { m_FixedSize = fixedSize; }
 
-			glm::vec2 GetSize() { return m_Size; }
-			void SetSize(const glm::vec2 size) { m_Size = size; }
+			virtual glm::vec2 GetSize() const { return m_Size; }
+			virtual void SetSize(const glm::vec2 size)
+			{ 
+				m_Size = size; 
+				m_OnResize(size);
+			}
 
-			glm::vec2 GetMinSize() { return m_MinSize; }
-			void SetMinSize(const glm::vec2 size) { m_MinSize = size; }
+			virtual glm::vec2 GetMinSize() { return m_MinSize; }
+			virtual void SetMinSize(const glm::vec2 size) { m_MinSize = size; }
 
-			glm::vec2 GetPosition() { return m_Position; }
-			void SetPosition(const glm::vec2 position) { m_Position = position; }
+			virtual glm::vec2 GetPosition() { return m_Position; }
+			virtual void SetPosition(const glm::vec2 position) { m_Position = position; }
 
-			glm::vec2 GetWeight() { return m_Weight; }
-			void SetWeight(const glm::vec2 weight) { m_Weight = weight; }
+			virtual glm::vec2 GetWeight() { return m_Weight; }
+			virtual void SetWeight(const glm::vec2 weight) { m_Weight = weight; }
 
 			virtual glm::vec2 GetAbsolutePosition() const
 			{
@@ -155,12 +171,14 @@ namespace Kinematics {
 				}
 				else
 				{
-					return glm::vec2(std::max(m_MinSize.x, m_Size.x), std::max(m_MinSize.y, m_Size.y));
+					auto size = GetSize();
+					return glm::vec2(std::max(m_MinSize.x, size.x), std::max(m_MinSize.y, size.y));
 				}
 			}
 
 			virtual void SetLayout(Ref<Layout> layout) { m_Layout = layout; }
-			void ApplyLayout()
+			Ref<Layout> GetLayout() const { return m_Layout; }
+			virtual void ApplyLayout()
 			{
 				if (m_Layout)
 				{
@@ -197,8 +215,10 @@ namespace Kinematics {
 
 			void UpdateChildren(Timestep ts) { for (auto child : m_Children) child->Update(ts); }
 
+			virtual bool OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e);
+			virtual bool OnMouseButtonPressedEvent(MouseButtonPressedEvent& e);
+			virtual bool OnMouseScrolledEvent(MouseScrolledEvent& e);
 		private:
-			bool OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e);
 			
 
 			bool InsideElement(double x, double y)
@@ -243,6 +263,12 @@ namespace Kinematics {
 				return e.Handled;
 			}
 
+			bool OnCharTypedEvent(CharacterEvent& e)
+			{
+				m_OnChar(e);
+				return e.Handled;
+			}
+
 		protected:
 			glm::mat4 m_Transformation;
 
@@ -264,8 +290,14 @@ namespace Kinematics {
 			bool m_Enabled;
 			bool m_Focused;
 
+			Callback<void, glm::vec2> m_OnResize;
+
 			Callback<void, MouseButtonReleasedEvent&> m_OnClick;
+			Callback<void, MouseButtonPressedEvent&> m_OnButtonDown;
+			Callback<void, MouseScrolledEvent&> m_OnScroll;
+
 			Callback<void, KeyPressedEvent&> m_OnInput;
+			Callback<void, CharacterEvent&> m_OnChar;
 
 			bool m_MouseInside = false;
 			Callback<void, MouseMovedEvent&> m_OnEnter;

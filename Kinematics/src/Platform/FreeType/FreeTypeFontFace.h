@@ -17,10 +17,14 @@ namespace Kinematics {
 		virtual void Load(uint32_t size) override;
 
 		virtual Character LoadGlyph(uint32_t c) override;
+
+		virtual uint32_t GetAscender() const override;
+		virtual uint32_t GetDescender() const override;
+		virtual uint32_t GetHeight() const override;
 	private:
 		Ref<FontLibrary> m_Library;
 		FT_LibraryRec_* m_Face;		
 
-		std::string m_Path;
+		std::string m_Path;	
 	};
 }

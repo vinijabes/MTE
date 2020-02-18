@@ -18,6 +18,11 @@ namespace Kinematics {
 			s_RendererAPI->SetViewport(x, y, width, height);
 		}
 
+		inline static void SetScissor(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+		{
+			s_RendererAPI->SetScissor(x, y, width, height);
+		}
+
 		inline static void SetClearColor(const glm::vec4& color)
 		{
 			s_RendererAPI->SetClearColor(color);
@@ -66,6 +71,16 @@ namespace Kinematics {
 		inline static void DisableAlphaBlending()
 		{
 			s_RendererAPI->DisableAlphaBlending();
+		}
+
+		inline static void EnableScissorTest()
+		{
+			s_RendererAPI->EnableScissorTest();
+		}
+
+		inline static void DisableScissorTest()
+		{
+			s_RendererAPI->DisableScissorTest();
 		}
 
 		static WindowSubSystemInterface* GetWindow() { return m_Window; }

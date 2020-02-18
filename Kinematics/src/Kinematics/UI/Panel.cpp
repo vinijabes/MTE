@@ -9,7 +9,7 @@ namespace Kinematics {
 			if (m_Color != glm::vec4(0.f))
 			{
 				auto pos = m_Position;
-				auto size = m_Size;
+				auto size = GetSize();
 				auto drawingPos = pos + size / 2.f + parentPos;
 
 				Renderer2D::DrawQuad(camera.ToWindowPosition(drawingPos), camera.PixelToWindowSize(size), m_Color);
@@ -17,13 +17,13 @@ namespace Kinematics {
 			else if (m_Theme)
 			{
 				auto pos = m_Position;
-				auto size = m_Size;
+				auto size = GetSize();
 				auto drawingPos = pos + size / 2.f + parentPos;
 
 				Renderer2D::DrawQuad(camera.ToWindowPosition(drawingPos), camera.PixelToWindowSize(size), m_Theme->m_Color);
 			}
 
-			DrawChildren(camera, m_Position);
+			DrawChildren(camera, parentPos + m_Position);
 		}
 	}
 }

@@ -96,7 +96,7 @@ namespace Kinematics {
 			auto headerLayout = CreateRef<FlexLayout>();
 			headerLayout->SetJustify(Justify::Center);
 
-			m_Header->PushChild(m_Text);
+			//m_Header->PushChild(m_Text);
 
 			m_Header->SetLayout(headerLayout);
 			m_Header->SetWeight({ 1.f, 1.f });
@@ -130,7 +130,7 @@ namespace Kinematics {
 		void WindowHeader::Draw(Camera& camera, glm::vec2 parentPos)
 		{
 			auto pos = m_Position;
-			auto size = m_Size;
+			auto size = GetSize();
 			auto drawingPos = pos + size / 2.f + parentPos;
 			
 			/*if(m_Theme)

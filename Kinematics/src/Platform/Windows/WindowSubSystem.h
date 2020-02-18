@@ -51,7 +51,7 @@ namespace Kinematics {
 			glfwSetClipboardString(NULL, string.c_str());
 		}
 
-		
+		virtual bool GetButtonState(unsigned int button) const { return glfwGetMouseButton(m_Window, button); }
 
 	private:
 		void OnEvent(Event& e);

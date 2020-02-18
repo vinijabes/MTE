@@ -27,7 +27,7 @@ namespace Kinematics
 			virtual void Draw(Camera& camera, glm::vec2 parentPos = glm::vec2(0)) override
 			{
 				auto pos = m_Position;
-				auto size = m_Size;
+				auto size = GetSize();
 				auto drawingPos = pos + size / 2.f + parentPos;
 
 				Renderer2D::DrawQuad(camera.ToWindowPosition(drawingPos), camera.PixelToWindowSize(size), m_CurrentColor);

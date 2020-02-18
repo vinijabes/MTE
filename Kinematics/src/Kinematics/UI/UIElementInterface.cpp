@@ -28,6 +28,15 @@ namespace Kinematics {
 		{
 			auto mousePos = RenderCommand::GetWindow()->GetMousePos();
 
+			if (InsideElement(mousePos))
+				m_OnClick(e);
+			return e.Handled;
+		}
+
+		bool UIElementInterface::OnMouseButtonPressedEvent(MouseButtonPressedEvent& e)
+		{
+			auto mousePos = RenderCommand::GetWindow()->GetMousePos();
+
 			if (m_Children.size() > 0)
 			{
 				bool insideChild = false;
@@ -46,7 +55,17 @@ namespace Kinematics {
 			}
 
 			if (InsideElement(mousePos))
-				m_OnClick(e);
+				m_OnButtonDown(e);
+
+			return e.Handled;
+		}
+
+		bool UIElementInterface::OnMouseScrolledEvent(MouseScrolledEvent& e)
+		{
+			auto mousePos = RenderCommand::GetWindow()->GetMousePos();
+			if (InsideElement(mousePos))
+				m_OnScroll(e);
+
 			return e.Handled;
 		}
 	}

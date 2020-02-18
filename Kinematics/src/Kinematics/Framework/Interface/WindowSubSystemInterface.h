@@ -34,6 +34,8 @@ namespace Kinematics {
 		virtual inline std::string GetClipboardString() const = 0;
 		virtual inline void SetClipboardString(const std::string& string) const = 0;
 
+		virtual bool GetButtonState(unsigned int button) const = 0;
+
 		static Ref<WindowSubSystemInterface> Create() { return std::static_pointer_cast<WindowSubSystemInterface>(s_WindowSubSystemInterfaceFactory()); };
 	private:
 		static SUBSYSTEM_CONSTRUCTOR s_WindowSubSystemInterfaceFactory;

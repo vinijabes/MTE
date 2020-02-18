@@ -20,7 +20,7 @@ namespace Kinematics
 		if (m_Text != text)
 		{
 			m_Text = text;
-			RecreateTextTexture();
+			Text::RecreateTextTexture();
 		}
 	}
 
@@ -111,6 +111,16 @@ namespace Kinematics
 		RecreateTextTexture();
 	}
 
+	void CharacterList::SetText(const std::string& text)
+	{
+		Clear();
+		for (auto c : text)
+		{
+			m_Characters.push_back(m_Font->Get(c));
+		}
+		RecreateTextTexture();
+	}
+
 	void CharacterList::PushCharacter(int character, size_t pos)
 	{
 		std::list<Character>::iterator it;
@@ -148,41 +158,42 @@ namespace Kinematics
 		RecreateTextTexture();
 	}
 
+	void CharacterList::Clear()
+	{
+		m_Characters.clear();
+		RecreateTextTexture();
+	}
+
 	void CharacterList::RecreateTextTexture()
 	{
 		std::list<Character>::const_iterator c;
 
-		uint32_t x = 0, y = 0, maxBearing = 0;
+		uint32_t x = 0;
 
 		for (c = m_Characters.begin(); c != m_Characters.end(); c++)
 		{
 			x += (c->Advance >> 6);
-			if (c->Size.y + (c->Size.y - c->Bearing.y) > y)
-			{
-				y = c->Size.y + (c->Size.y - c->Bearing.y);
-				maxBearing = (c->Size.y - c->Bearing.y);
-			}
 		}
 
-		m_TextTexture = Texture2D::Create(x, m_Font->GetMaxSize().y, WrappingOption::KINEMATICS_CLAMP_TO_EDGE, WrappingOption::KINEMATICS_CLAMP_TO_EDGE);
+		m_TextTexture = Texture2D::Create(x, m_Font->GetAscender() + m_Font->GetDescender(), WrappingOption::KINEMATICS_CLAMP_TO_EDGE, WrappingOption::KINEMATICS_CLAMP_TO_EDGE);
 		auto frameBuffer = FrameBuffer::Create();
 		frameBuffer->SetTargetTexture(m_TextTexture);
 
-		RenderCommand::SetViewport(0, 0, x, m_Font->GetMaxSize().y);
+		RenderCommand::SetViewport(0, 0, x, m_Font->GetAscender() + m_Font->GetDescender());
+		Renderer2D::BeginScene(OrthographicCamera(0, x, 0, m_Font->GetAscender() + m_Font->GetDescender()));
+		
 		uint32_t xIndex = 0;
-		Renderer2D::BeginScene(OrthographicCamera(0, x, 0, m_Font->GetMaxSize().y));
 		Kinematics::RenderCommand::EnableAlphaBlending();
 		for (c = m_Characters.begin(); c != m_Characters.end(); c++)
 		{
 			Character ch = *c;
 
 			float xpos = xIndex + (float)ch.Bearing.x;
-			float ypos = y - (ch.Size.y - ch.Bearing.y);
 
 			float w = ch.Size.x;
 			float h = ch.Size.y;
 
-			Renderer2D::RenderChar(glm::vec2(xpos + w / 2, m_Font->GetMaxVerticalBearing() - (ch.Bearing.y/2.f)), glm::vec2(w, h), ch, m_Color);
+			Renderer2D::RenderChar(glm::vec2(xpos + w / 2, m_Font->GetAscender() - ch.Bearing.y + h/2.f), glm::vec2(w, h), ch, m_Color);
 			xIndex += (ch.Advance >> 6);
 		}
 

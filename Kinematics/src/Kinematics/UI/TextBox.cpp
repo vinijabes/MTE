@@ -7,12 +7,13 @@ namespace Kinematics {
 
 		TextBox::TextBox()
 		{
+			m_Text = CreateRef<Text>(FontFace::DEFAULT);
 		}
 
 		void TextBox::Draw(Camera& camera, glm::vec2 parentPos)
 		{
 			auto pos = m_Position;
-			auto size = m_Size;
+			auto size = GetSize();
 			auto drawingPos = pos + size / 2.f + parentPos;
 			
 			if(m_Text && m_Text->GetTexture())
@@ -23,10 +24,26 @@ namespace Kinematics {
 
 		void TextBox::Update(Timestep ts)
 		{
+			RecalculateSize();
+		}
+		glm::vec2 TextBox::GetPreferredSize() const
+		{
 			if (m_Text)
 			{
-				if(m_Text->GetTexture())
-					m_Size = glm::vec2(m_Text->GetTexture()->GetWidth(), m_Text->GetTexture()->GetHeight());
+				return glm::vec2(
+					std::max(m_Size.x, (float)m_Text->GetPixelWidth()),
+					std::max(m_Size.y, (float)m_Text->GetPixelHeight())
+				);
+			}
+
+			return UIElementInterface::GetPreferredSize();
+		}
+		
+		void TextBox::RecalculateSize()
+		{
+			if (m_Text)
+			{
+				m_Size = glm::vec2(m_Text->GetPixelWidth(), m_Text->GetPixelHeight());
 			}
 		}
 	}

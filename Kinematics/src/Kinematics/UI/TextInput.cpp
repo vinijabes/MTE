@@ -2,6 +2,7 @@
 #include "TextInput.h"
 
 #include "Kinematics/Core/KeyCodes.h"
+#include "Window.h"
 
 namespace Kinematics {
 	namespace UI {
@@ -21,7 +22,7 @@ namespace Kinematics {
 			m_CursorPos.x = layout->GetMargin();
 			m_CursorPos.y = layout->GetMargin();
 
-			UIElementInterface::SetLayout(layout);			
+			UIElementInterface::SetLayout(layout);
 
 			m_TextBox->SetText(m_Text);
 
@@ -30,9 +31,13 @@ namespace Kinematics {
 				{
 					HandleCommandKeys(e);
 					HandleDirectionalKeys(e);
-					HandleCharacterKeys(e);
+				}
+			});
 
-					UpdateCursorPos();
+			m_OnChar = m_OnChar + CreateRef < FunctionCallback<void, CharacterEvent&>>([this](CharacterEvent& e) {
+				if (IsFocused())
+				{
+					HandleCharacterKeys(e);
 				}
 			});
 
@@ -43,20 +48,88 @@ namespace Kinematics {
 
 				mousePos.x -= layout->GetMargin();
 				int index = 0;
+				bool found = false;
 				for (auto c : characters)
 				{
 					index++;
 					if (mousePos.x > m_Text->GetCharacterRect(index).z) continue;
+
+					found = true;
 					break;
 				}
 
-				KINEMATICS_TRACE("Selected: {}", index - 1);
-				if (m_Text->GetSize() > 0)
+				if (index == m_Text->GetSize() && !found)
 				{
-					m_InsertPos = index - 1;
+					index++;
 				}
 
-				UpdateCursorPos();
+				SetCursorPos((size_t)index - 1);
+				m_MouseDown = false;
+			});
+
+			m_OnButtonDown = m_OnButtonDown + CreateRef<FunctionCallback<void, MouseButtonPressedEvent&>>([this](MouseButtonPressedEvent& e) {
+				auto mousePos = RenderCommand::GetWindow()->GetMousePos() - GetAbsolutePosition();
+				auto characters = m_Text->GetCharacters();
+				auto layout = std::static_pointer_cast<BoxLayout>(m_Layout);
+
+				mousePos.x -= layout->GetMargin();
+				int index = 0;
+				bool found = false;
+				for (auto c : characters)
+				{
+					index++;
+					if (mousePos.x > m_Text->GetCharacterRect(index).z) continue;
+
+					found = true;
+					break;
+				}
+
+				if (index == m_Text->GetSize() && !found)
+				{
+					index++;
+				}
+
+				SetCursorPos((size_t)index - 1);
+
+				if (IsSelecting())
+				{
+					StopSelection();
+				}
+
+				StartSelection();
+				m_MouseDown = true;
+			});
+
+			m_OnMove = m_OnMove + CreateRef <FunctionCallback<void, MouseMovedEvent&>>([this](MouseMovedEvent& e) {
+				if (RenderCommand::GetWindow()->GetButtonState(KINEMATICS_MOUSE_BUTTON_LEFT))
+				{
+					auto mousePos = RenderCommand::GetWindow()->GetMousePos() - GetAbsolutePosition();
+					auto characters = m_Text->GetCharacters();
+					auto layout = std::static_pointer_cast<BoxLayout>(m_Layout);
+
+					mousePos.x -= layout->GetMargin();
+					int index = 0;
+					bool found = false;
+					for (auto c : characters)
+					{
+						index++;
+						if (mousePos.x > m_Text->GetCharacterRect(index).z) continue;
+
+						found = true;
+						break;
+					}
+
+					if (index == m_Text->GetSize() && !found)
+					{
+						index++;
+					}
+
+					if (GetCursorPos() != index - 1)
+					{
+						SetCursorPos((size_t)index - 1);
+						UpdateSelection();
+					}
+				}
 			});
 
 			PushChild(m_TextBox);
@@ -65,7 +138,7 @@ namespace Kinematics {
 		void TextInput::Draw(Camera& camera, glm::vec2 parentPos)
 		{
 			auto pos = m_Position;
-			auto size = m_Size;
+			auto size = GetSize();
 			auto drawingPos = pos + size / 2.f + parentPos;
 
 			Renderer2D::DrawQuad(camera.ToWindowPosition(drawingPos), camera.PixelToWindowSize(size), glm::vec4(1.f));
@@ -92,8 +165,11 @@ namespace Kinematics {
 				startPos = temp;
 			}
 
+			if (startPos == endPos) return;
+
 			auto start = m_Text->GetCharacterRect(startPos);
 			auto end = m_Text->GetCharacterRect(endPos);
+
 
 			if (startPos == 0)
 				start = glm::vec4(layout->GetMargin());
@@ -214,34 +290,60 @@ namespace Kinematics {
 					RemoveCharacter(GetCursorPos() + 1);
 				}
 			}
-		}
 
-		void TextInput::HandleCharacterKeys(KeyPressedEvent& e)
-		{
-			if ((e.GetKeyCode() >= 65 && e.GetKeyCode() <= 90))
+			if (e.GetModifiers() == KINEMATICS_MOD_CONTROL)
 			{
-				if (e.GetModifiers() == KINEMATICS_MOD_CONTROL)
+				if (e.GetKeyCode() == KINEMATICS_KEY_A)
 				{
-					if (e.GetKeyCode() == KINEMATICS_KEY_C)
-					{
-						if (IsSelecting())
-							RenderCommand::GetWindow()->SetClipboardString(m_Text->GetString(GetSelectionStart(), GetSelectionEnd()));
-						else
-							RenderCommand::GetWindow()->SetClipboardString("");
-					}
-					else if (e.GetKeyCode() == KINEMATICS_KEY_V)
-					{
+					SetCursorPos(0);
+					StartSelection();
 
-					}
+					SetCursorPos(m_Text->GetSize());
+					UpdateSelection();
 				}
-				else
+				else if (e.GetKeyCode() == KINEMATICS_KEY_C)
 				{
-					int c = e.GetKeyCode() + ((e.GetModifiers() == KINEMATICS_MOD_SHIFT) ? 0 : 32);
-					PushCharacter(c);
-
-					KINEMATICS_TRACE("{}", c);
+					if (IsSelecting())
+						RenderCommand::GetWindow()->SetClipboardString(m_Text->GetString(GetSelectionStart(), GetSelectionEnd()));
+					else
+						RenderCommand::GetWindow()->SetClipboardString("");
+				}
+				else if (e.GetKeyCode() == KINEMATICS_KEY_V)
+				{
+					std::string input = RenderCommand::GetWindow()->GetClipboardString();
+					for (auto c : input)
+						PushCharacter(c);
 				}
 			}
+		}
+
+		void TextInput::HandleCharacterKeys(CharacterEvent& e)
+		{
+			if (IsSelecting())
+			{
+				RemoveCharacter(GetSelectionStart(), GetSelectionEnd());
+				StopSelection();
+			}
+
+			PushCharacter(e.GetKeyCode());
+		}
+
+		bool TextInput::OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e)
+		{
+			if (m_MouseDown)
+			{
+				e.StopPropagation();
+			}
+			if (!m_MouseDown || IsFocused() && m_MouseDown)
+			{
+				m_MouseDown = false;
+				return UIElementInterface::OnMouseButtonReleasedEvent(e);
+			}
+			m_MouseDown = false;
+
+			GetWindow()->UpdateFocus(GetPtr());
+
+			return true;
 		}
 
 		void TextInput::UpdateSelection()
@@ -249,7 +351,7 @@ namespace Kinematics {
 			if (m_SelectionStart != -1)
 			{
 				if (m_InsertPos <= m_Text->GetSize())
-				{	
+				{
 					m_SelectionEnd = m_InsertPos;
 				}
 

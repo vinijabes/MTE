@@ -49,6 +49,8 @@ void GameLayer::OnAttach()
 	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::CharacterTyped, KINEMATICS_BIND_EVENT_FN(GameLayer::OnEvent));
 	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::MouseMoved, KINEMATICS_BIND_EVENT_FN(GameLayer::OnEvent));
 	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::MouseButtonReleased, KINEMATICS_BIND_EVENT_FN(GameLayer::OnEvent));
+	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::MouseButtonPressed, KINEMATICS_BIND_EVENT_FN(GameLayer::OnEvent));
+	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::MouseScrolled, KINEMATICS_BIND_EVENT_FN(GameLayer::OnEvent));
 
 	Kinematics::RenderCommand::SetWindow(Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::WindowSubSystemInterface>().get());
 
@@ -120,7 +122,7 @@ void GameLayer::OnAttach()
 
 	m_UIWindow = Kinematics::CreateRef<Kinematics::UI::Window>();
 
-	m_UIWindow->SetTitle("Teste");
+	m_UIWindow->SetTitle("Window Title");
 	m_UIWindow->SetTheme(Kinematics::Theme::DARK_THEME);
 	m_UIWindow->PushChild(box);
 	m_UIWindow->PushChild(box2);
@@ -132,14 +134,36 @@ void GameLayer::OnAttach()
 	auto text2 = Kinematics::CreateRef<Kinematics::UI::TextBox>();
 	text2->SetText("Teste 3");
 
-	auto input = Kinematics::CreateRef<Kinematics::UI::TextInput>();
+	auto input = Kinematics::CreateRef<Kinematics::UI::TextArea>();
 
-	m_UIWindow->PushHeaderChild(text);
-	m_UIWindow->PushHeaderChild(text2);
 	m_UIWindow->PushHeaderChild(input);
+	//m_UIWindow->PushHeaderChild(input2);
 
 	m_UIWindow->SetFullSize(true);
 	m_UIWindow->ApplyLayout();
+
+	//glm::vec2 pos1(0.f, 10.f);
+	//glm::vec2 pos2(0.f, 0.f);
+
+	//glm::vec2 v1(4.f * std::sqrt(5.f) / 5.f, -2.f * std::sqrt(5.f) / 5.f);
+	//glm::vec2 v2(4.f * std::sqrt(17.f) / 7.f, std::sqrt(17.f) / 7.f);
+
+	//float dist = glm::distance(pos1, pos2);
+	//float t = 0.f;
+
+	//for (float x = 0.f; x < 30.f; x += 0.001f)
+	//{
+	//	pos1 += v1 * 0.001f;
+	//	pos2 += v2 * 0.001f;
+
+	//	if (glm::distance(pos1, pos2) < dist)
+	//	{
+	//		dist = glm::distance(pos1, pos2);
+	//		t = x;
+	//	}
+	//}
+
+	//printf("T: %f Dist: %f\n", t, dist);
 }
 
 void GameLayer::OnDetach()
