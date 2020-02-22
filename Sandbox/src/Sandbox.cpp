@@ -51,6 +51,7 @@ void GameLayer::OnAttach()
 	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::MouseButtonReleased, KINEMATICS_BIND_EVENT_FN(GameLayer::OnEvent));
 	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::MouseButtonPressed, KINEMATICS_BIND_EVENT_FN(GameLayer::OnEvent));
 	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::MouseScrolled, KINEMATICS_BIND_EVENT_FN(GameLayer::OnEvent));
+	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::WindowResize, KINEMATICS_BIND_EVENT_FN(GameLayer::OnEvent));
 
 	Kinematics::RenderCommand::SetWindow(Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::WindowSubSystemInterface>().get());
 
@@ -98,72 +99,34 @@ void GameLayer::OnAttach()
 
 
 	Kinematics::Resources::Add("0", Kinematics::Texture2D::Create("assets/textures/0.png", Kinematics::WrappingOption::KINEMATICS_CLAMP_TO_EDGE, Kinematics::WrappingOption::KINEMATICS_CLAMP_TO_EDGE));
-	
-	auto layout = Kinematics::CreateRef<Kinematics::UI::BoxLayout>();
-	auto box = Kinematics::CreateRef<Kinematics::UI::Container>();
-	auto box2 = Kinematics::CreateRef<Kinematics::UI::Container>();
-
-	box->SetFixedSize({ 200, 200 });
-	box2->SetFixedSize({ 50, 20 });
-
-	box->SetColor(glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
-	box->SetHighlightColor(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
-	box->SetClickColor(glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
-
-	box2->SetColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	box2->SetHighlightColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-	box2->SetClickColor(glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
-
-	layout->SetPadding(4);
-	layout->SetOrientation(Kinematics::Orientation::Vertical);
 
 	auto roboto = Kinematics::FontManager::GetInstance()->Load("assets/fonts/Roboto-Regular.ttf");
 	Kinematics::Resources::Add("Roboto", roboto);
+
+	auto box = Kinematics::CreateRef<Kinematics::UI::Select<int>>();
+	box->GetInflator().SetInflator([](Kinematics::UI::Select<int>* select, int index, const Kinematics::Ref<int>& element) -> Kinematics::Ref<Kinematics::UI::UIElementInterface>{
+		auto box = Kinematics::CreateRef<Kinematics::UI::TextBox>();
+		box->SetText(std::to_string(*element));
+
+		return box;
+	});
+
+	box->AddOption(Kinematics::CreateRef<int>(10));
+	box->AddOption(Kinematics::CreateRef<int>(11));
+	box->AddOption(Kinematics::CreateRef<int>(12));
+	box->AddOption(Kinematics::CreateRef<int>(13));
+	box->AddOption(Kinematics::CreateRef<int>(14));
 
 	m_UIWindow = Kinematics::CreateRef<Kinematics::UI::Window>();
 
 	m_UIWindow->SetTitle("Window Title");
 	m_UIWindow->SetTheme(Kinematics::Theme::DARK_THEME);
-	m_UIWindow->PushChild(box);
-	m_UIWindow->PushChild(box2);
 	m_UIWindow->SetWeight({ 1.f, 1.f });
-
-	auto text = Kinematics::CreateRef<Kinematics::UI::TextBox>();
-	text->SetText("Teste 2");
-
-	auto text2 = Kinematics::CreateRef<Kinematics::UI::TextBox>();
-	text2->SetText("Teste 3");
-
-	auto input = Kinematics::CreateRef<Kinematics::UI::TextArea>();
-
-	m_UIWindow->PushHeaderChild(input);
-	//m_UIWindow->PushHeaderChild(input2);
-
 	m_UIWindow->SetFullSize(true);
+
+	m_UIWindow->PushChild(box);
+	
 	m_UIWindow->ApplyLayout();
-
-	//glm::vec2 pos1(0.f, 10.f);
-	//glm::vec2 pos2(0.f, 0.f);
-
-	//glm::vec2 v1(4.f * std::sqrt(5.f) / 5.f, -2.f * std::sqrt(5.f) / 5.f);
-	//glm::vec2 v2(4.f * std::sqrt(17.f) / 7.f, std::sqrt(17.f) / 7.f);
-
-	//float dist = glm::distance(pos1, pos2);
-	//float t = 0.f;
-
-	//for (float x = 0.f; x < 30.f; x += 0.001f)
-	//{
-	//	pos1 += v1 * 0.001f;
-	//	pos2 += v2 * 0.001f;
-
-	//	if (glm::distance(pos1, pos2) < dist)
-	//	{
-	//		dist = glm::distance(pos1, pos2);
-	//		t = x;
-	//	}
-	//}
-
-	//printf("T: %f Dist: %f\n", t, dist);
 }
 
 void GameLayer::OnDetach()
@@ -199,7 +162,7 @@ void GameLayer::OnUpdate(Kinematics::Timestep ts)
 	Kinematics::RenderCommand::DisableAlphaBlending();
 	Kinematics::RenderCommand::EnableDepthTest();
 
-	m_UIWindow->ApplyLayout();
+	//m_UIWindow->ApplyLayout();
 	/*Kinematics::Renderer::BeginScene(m_Camera);
 	Kinematics::Renderer::Submit(m_ModelPlayer, glm::vec3(0, 0, -10.0f), m_Shader);
 	for (int i = 0; i < 17; i++)
@@ -243,6 +206,12 @@ void GameLayer::OnEvent(Kinematics::Event& e)
 			break;
 		}
 
+		return false;
+	});
+
+	dispatcher.Dispatch<Kinematics::WindowResizeEvent>([this](Kinematics::WindowResizeEvent& e) {
+		m_UIWindow->SetSize(glm::vec2(e.GetWidth(), e.GetHeight()));
+		m_UIWindow->ApplyLayout();
 		return false;
 	});
 }

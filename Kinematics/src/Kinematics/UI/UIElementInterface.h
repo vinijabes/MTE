@@ -15,17 +15,17 @@
 #include "Layout.h"
 #include "Theme.h"
 #include "Kinematics/Renderer/Camera.h"
+#include "Kinematics/Core/KeyCodes.h"
 
 namespace Kinematics {
 	namespace UI {
-
 		class Window;
 
 		class UIElementInterface : public std::enable_shared_from_this<UIElementInterface>
 		{
 		public:
 			UIElementInterface()
-				: m_Parent(nullptr), m_Size(0.f), m_FixedSize(0.f), m_MinSize(0.f), m_Position(0.f), m_Transformation(1.f), m_Weight(0.f),
+				: m_Parent(nullptr), m_Size(0.f), m_FixedSize(0.f), m_MinSize(0.f), m_Position(0.f), m_FixedPosition(0.f), m_Transformation(1.f), m_Weight(0.f),
 				m_Enabled(true), m_Visible(true), m_Focused(false), m_Layout(nullptr)
 			{}
 
@@ -62,40 +62,15 @@ namespace Kinematics {
 			}
 
 			void RecalculateTransformation()
-			{
-			}
+			{}
 
-			virtual void PushChild(Ref<UIElementInterface> child)
-			{
-				m_Children.push_back(child);
-				child->SetParent(this);
+			virtual void PushChild(Ref<UIElementInterface> child);
+			virtual void PushChild(Ref<UIElementInterface> child, uint32_t pos);
 
-				if (m_Theme)
-					child->SetTheme(m_Theme);
-			}
+			virtual void RemoveChild(Ref<UIElementInterface> child);
+			
 
-			virtual void PushChild(Ref<UIElementInterface> child, uint32_t pos)
-			{
-				m_Children.insert(m_Children.begin() + pos, child);
-				child->SetParent(this);
-
-				if (m_Theme)
-					child->SetTheme(m_Theme);
-			}
-
-			virtual void RemoveChild(Ref<UIElementInterface> child)
-			{
-				for (auto c = m_Children.cbegin(); c != m_Children.cend(); c++)
-				{
-					if (*c == child)
-					{
-						m_Children.erase(c);
-						return;
-					}
-				}
-			}
-
-			const std::vector<Ref<UIElementInterface>> &GetChildren() const { return m_Children; }
+			const std::vector<Ref<UIElementInterface>>& GetChildren() const { return m_Children; }
 
 			void SetParent(UIElementInterface* parent)
 			{
@@ -120,28 +95,35 @@ namespace Kinematics {
 
 			bool IsEnabled() { return m_Enabled; }
 			bool IsVisible() { return m_Visible; }
+			void SetVisibility(bool visible) { m_Visible = visible; }
 
 			void Disable() { m_Enabled = false; }
 			void Enable() { m_Enabled = true; }
 
 			virtual glm::vec2 GetFixedSize() const { return m_FixedSize; }
-			virtual void SetFixedSize(const glm::vec2& fixedSize) { m_FixedSize = fixedSize; }
+			virtual void SetFixedSize(const glm::vec2& fixedSize);
 
 			virtual glm::vec2 GetSize() const { return m_Size; }
 			virtual void SetSize(const glm::vec2 size)
-			{ 
-				m_Size = size; 
-				m_OnResize(size);
+			{
+				if (m_Size != size)
+				{
+					m_Size = size;
+					m_OnResize(size);
+				}
 			}
 
 			virtual glm::vec2 GetMinSize() { return m_MinSize; }
 			virtual void SetMinSize(const glm::vec2 size) { m_MinSize = size; }
 
 			virtual glm::vec2 GetPosition() { return m_Position; }
-			virtual void SetPosition(const glm::vec2 position) { m_Position = position; }
+			virtual void SetPosition(const glm::vec2 position){ m_Position = position; }
+
+			virtual glm::vec2 GetFixedPosition() { return m_FixedPosition; }
+			virtual void SetFixedPosition(const glm::vec2 position);
 
 			virtual glm::vec2 GetWeight() { return m_Weight; }
-			virtual void SetWeight(const glm::vec2 weight) { m_Weight = weight; }
+			virtual void SetWeight(const glm::vec2 weight);
 
 			virtual glm::vec2 GetAbsolutePosition() const
 			{
@@ -209,6 +191,24 @@ namespace Kinematics {
 
 			Ref<Window> GetWindow();
 
+		public:
+			/*CALLBACKS*/
+
+			void AddOnEnterCallback(Ref<CallbackInterface<void, MouseMovedEvent&>> cb)
+			{
+				m_OnEnter = m_OnEnter + cb;
+			}
+
+			void AddOnMoveCallback(Ref<CallbackInterface<void, MouseMovedEvent&>> cb)
+			{
+				m_OnMove = m_OnMove + cb;
+			}
+
+			void FireOnMoveEvent(MouseMovedEvent& e)
+			{
+				m_OnMove(e);
+			}
+
 		protected:
 			void NotifyEventChildren(Event& e) { for (auto child : m_Children) child->OnEvent(e); }
 			void DrawChildren(Camera& camera, glm::vec2 parentPos) { for (auto child : m_Children) child->Draw(camera, parentPos); }
@@ -218,8 +218,10 @@ namespace Kinematics {
 			virtual bool OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& e);
 			virtual bool OnMouseButtonPressedEvent(MouseButtonPressedEvent& e);
 			virtual bool OnMouseScrolledEvent(MouseScrolledEvent& e);
+
+			virtual bool OnMouseMovedEvent(MouseMovedEvent& e);
 		private:
-			
+
 
 			bool InsideElement(double x, double y)
 			{
@@ -234,28 +236,6 @@ namespace Kinematics {
 				return InsideElement(pos.x, pos.y);
 			}
 
-			bool OnMouseMovedEvent(MouseMovedEvent& e)
-			{
-				if (InsideElement(e.GetX(), e.GetY()))
-				{
-					if (m_MouseInside == false)
-					{
-						m_OnEnter(e);
-						m_MouseInside = true;
-					}
-					m_OnMove(e);
-				}
-				else
-				{
-					if (m_MouseInside)
-					{
-						m_OnOut(e);
-						m_MouseInside = false;
-					}
-				}
-
-				return e.Handled;
-			}
 
 			bool OnKeyPressedEvent(KeyPressedEvent& e)
 			{
@@ -273,6 +253,7 @@ namespace Kinematics {
 			glm::mat4 m_Transformation;
 
 			glm::vec2 m_Position;
+			glm::vec2 m_FixedPosition;
 
 			glm::vec2 m_Size;
 			glm::vec2 m_MinSize;

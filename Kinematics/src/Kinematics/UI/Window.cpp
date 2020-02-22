@@ -7,7 +7,7 @@ namespace Kinematics {
 	namespace UI {
 		Window::Window()
 		{
-			m_Body = CreateRef<Panel>();
+			m_Body = CreateRef<ScrollPanel>();
 			m_Header = CreateRef<WindowHeader>();
 
 			auto layout = CreateRef<BoxLayout>();
@@ -16,6 +16,7 @@ namespace Kinematics {
 
 			layout->SetOrientation(Orientation::Vertical);
 			layout->SetAlignment(Alignment::Fill);
+			layout->SetMargin(0u);
 
 			windowLayout->SetOrientation(Orientation::Vertical);
 			windowLayout->SetAlignment(Alignment::Fill);
@@ -29,8 +30,17 @@ namespace Kinematics {
 			m_Header->SetLayout(headerLayout);
 			m_Body->SetLayout(layout);
 
-			UIElementInterface::PushChild(m_Header);
-			UIElementInterface::PushChild(m_Body);
+			m_Children.push_back(m_Header);
+			m_Children.push_back(m_Body);
+
+			m_Header->SetParent(this);
+			m_Body->SetParent(this);
+
+			if (m_Theme)
+			{
+				m_Header->SetTheme(m_Theme);
+				m_Body->SetTheme(m_Theme);
+			}
 		}
 
 		void Window::Draw(Camera& camera, glm::vec2 parentPos)
@@ -51,6 +61,8 @@ namespace Kinematics {
 
 		void Window::UpdateFocus(Ref<UIElementInterface> element)
 		{
+			for (auto e : m_FocusPath) if (e == element) return;
+
 			for (auto e : m_FocusPath)
 			{
 				if (!e->IsFocused())
@@ -83,20 +95,27 @@ namespace Kinematics {
 		void Window::Update(Timestep ts)
 		{
 			if(!m_Parent)
-				m_Size = glm::vec2(m_Weight.x * RenderCommand::GetWindow()->GetWidth(), m_Weight.y * RenderCommand::GetWindow()->GetHeight());
-			m_Body->SetSize(glm::vec2(m_Size.x, m_Size.y - m_Header->GetSize().y));
+				SetSize(glm::vec2(m_Weight.x * RenderCommand::GetWindow()->GetWidth(), m_Weight.y * RenderCommand::GetWindow()->GetHeight()));
+	
 			UpdateChildren(ts);
+		}
+
+		void Window::ApplyLayout()
+		{
+			UIElementInterface::ApplyLayout();
+			m_Body->SetFixedSize(glm::vec2(m_Size.x, m_Size.y - m_Header->GetSize().y));
 		}
 
 		WindowHeader::WindowHeader()
 		{
 			m_Header = CreateRef <Panel>();
 			m_Text = CreateRef<TextBox>();
+			m_Text->GetText()->SetFontSize(36);
 
 			auto headerLayout = CreateRef<FlexLayout>();
-			headerLayout->SetJustify(Justify::Center);
+			headerLayout->SetJustify(Justify::SpaceAround);
 
-			//m_Header->PushChild(m_Text);
+			m_Header->PushChild(m_Text);
 
 			m_Header->SetLayout(headerLayout);
 			m_Header->SetWeight({ 1.f, 1.f });

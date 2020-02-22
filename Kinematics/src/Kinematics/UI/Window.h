@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Panel.h"
 #include "TextBox.h"
+#include "ScrollPanel.h"
 
 namespace Kinematics {
 	namespace UI {
@@ -32,7 +32,8 @@ namespace Kinematics {
 
 			virtual void Draw(Camera& camera, glm::vec2 pos = glm::vec2(0)) override;
 			virtual void Update(Timestep ts) override;
-			virtual void PushChild(Ref<UIElementInterface> child) { m_Body->PushChild(child); }
+			virtual void PushChild(Ref<UIElementInterface> child) override { m_Body->PushChild(child); }
+			virtual void ApplyLayout() override ;
 
 			void PushHeaderChild(Ref<UIElementInterface> child) { m_Header->PushChild(child); }
 
@@ -45,7 +46,7 @@ namespace Kinematics {
 			void UpdateFocus(Ref<UIElementInterface> element);
 
 		private:
-			Ref<Panel> m_Body;
+			Ref<ScrollPanel> m_Body;
 			Ref<WindowHeader> m_Header;
 
 			std::vector<Ref<UIElementInterface>> m_FocusPath;

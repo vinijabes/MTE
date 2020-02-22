@@ -23,8 +23,8 @@ namespace Kinematics {
 		auto window = RenderCommand::GetWindow();
 
 		glm::vec2 pos(0);
-		pos.x = m_Left + ((float)(x + window->GetWidth()/2)/ window->GetWidth() - 0.5f)* std::abs(m_Left - m_Right);
-		pos.y = m_Top - ((float)(y + window->GetHeight()/2)/ window->GetHeight() - 0.5f) * std::abs(m_Bottom - m_Top);
+		pos.x = m_Left + ((float)((float)x + (float)window->GetWidth()/2)/ (float)window->GetWidth() - 0.5f)* std::abs(m_Left - m_Right);
+		pos.y = m_Top - ((float)((float)y + (float)window->GetHeight()/2)/ (float)window->GetHeight() - 0.5f) * std::abs(m_Bottom - m_Top);
 
 		return pos;
 	}

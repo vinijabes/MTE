@@ -38,8 +38,6 @@ namespace Kinematics
 		{
 			m_Characters[c] = LoadGlyph(c);
 			if (m_Characters[c].Bearing.y > m_MaxBearing) m_MaxBearing = m_Characters[c].Bearing.y;
-			/*if (m_Characters[c].Size.y > m_MaxSize.y) m_MaxSize.y = m_Characters[c].Size.y;
-			if (m_Characters[c].Size.x > m_MaxSize.x) m_MaxSize.x = m_Characters[c].Size.x;*/
 		}
 
 		Kinematics::RenderCommand::EnableByteAlignment();

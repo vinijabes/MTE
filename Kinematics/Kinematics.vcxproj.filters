@@ -1440,6 +1440,8 @@
     <ClInclude Include="src\Kinematics\UI\TextInput.h" />
     <ClInclude Include="src\Kinematics\UI\TextArea.h" />
     <ClInclude Include="src\Kinematics\UI\ScrollPanel.h" />
+    <ClInclude Include="src\Kinematics\UI\Select.h" />
+    <ClInclude Include="src\Kinematics\UI\Inflator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Kinematics\Bus\MessageBus.cpp">

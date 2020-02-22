@@ -8,13 +8,16 @@ namespace Kinematics {
 	class KINEMATICS_API MouseMovedEvent : public Event
 	{
 	public:
-		MouseMovedEvent(float x, float y)
-			: m_MouseX(x), m_MouseY(y)
+		MouseMovedEvent(float x, float y, float xOffset, float yOffset)
+			: m_MouseX(x), m_MouseY(y), m_XOffset(xOffset), m_YOffset(yOffset)
 		{
 		}
 
 		inline float GetX() const { return m_MouseX; }
 		inline float GetY() const { return m_MouseY; }
+
+		inline float GetXOffset() const { return m_XOffset; }
+		inline float GetYOffset() const { return m_YOffset; }
 
 		std::string ToString() const override
 		{
@@ -27,6 +30,7 @@ namespace Kinematics {
 			EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	private:
 		float m_MouseX, m_MouseY;
+		float m_XOffset, m_YOffset;
 	};
 
 	class KINEMATICS_API MouseScrolledEvent : public Event

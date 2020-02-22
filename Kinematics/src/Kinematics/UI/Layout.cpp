@@ -27,6 +27,7 @@ namespace Kinematics
 
 				glm::vec2 ps = child->GetPreferredSize();
 				glm::vec2 fs = child->GetFixedSize();
+				glm::vec2 fp = child->GetFixedPosition();
 
 				glm::vec2 targetSize(fs.x ? fs.x : ps.x, fs.y ? fs.y : ps.y);
 
@@ -59,6 +60,9 @@ namespace Kinematics
 				containerSize.x = weight.x ? weight.x * parentSize.x : containerSize.x;
 				containerSize.y = weight.y ? weight.y * parentSize.y : containerSize.y;
 			}
+			
+			if (containerSize.x < 0.f) containerSize.x = 0.f;
+			if (containerSize.y < 0.f) containerSize.y = 0.f;
 
 
 			int mainAxis = (int)m_Orientation;
@@ -71,17 +75,21 @@ namespace Kinematics
 				if (!child->IsVisible())
 					continue;
 
+				glm::vec2 fp = child->GetFixedPosition();
+
 				if (first)
 					first = false;
-				else
+				else if (fp == glm::vec2(0.f))
 					position += m_Padding;
 
 				glm::vec2 pos(0, 0);
 
 				glm::vec2 ps = child->GetPreferredSize();
 				glm::vec2 fs = child->GetFixedSize();
+				glm::vec2 weight = child->GetWeight();
 
 				glm::vec2 targetSize(fs.x ? fs.x : ps.x, fs.y ? fs.y : ps.y);
+				if (weight != glm::vec2(0.f)) targetSize = containerSize * weight;
 
 				pos[mainAxis] = position;
 
@@ -104,10 +112,21 @@ namespace Kinematics
 					break;
 				}
 
-				child->SetPosition(pos);
+				
+				if (fp == glm::vec2(0.f))
+				{
+
+					position += targetSize[mainAxis];
+					child->SetPosition(pos);
+				}
+				else
+				{
+					child->SetPosition(fp);
+				}
 				child->SetSize(targetSize);
 				child->ApplyLayout();
-				position += targetSize[mainAxis];
+
+				
 			}
 
 		}
@@ -214,6 +233,7 @@ namespace Kinematics
 
 				glm::vec2 pos(0, 0);
 
+				glm::vec2 fp = child->GetFixedPosition();
 				glm::vec2 ps = child->GetPreferredSize();
 				glm::vec2 fs = child->GetFixedSize();
 
@@ -221,30 +241,38 @@ namespace Kinematics
 
 				pos[mainAxis] = position;
 
-				switch (m_Justify)
+				if (fp == glm::vec2(0.f))
 				{
-				case Kinematics::Justify::FlexStart:
-					position += targetSize[mainAxis];
-					break;
-				case Kinematics::Justify::FlexEnd:
-					position += targetSize[mainAxis];
-					break;
-				case Kinematics::Justify::Center:
-					position += targetSize[mainAxis];
-					break;
-				case Kinematics::Justify::SpaceBetween:
-					if (element->GetChildren().size() > 1)
-						position += targetSize[mainAxis] + freeSpace / (element->GetChildren().size() - 1);
-					break;
-				case Kinematics::Justify::SpaceAround:
-					if (element->GetChildren().size() > 0)
-						position += targetSize[mainAxis] + freeSpace / (element->GetChildren().size());
-					break;
-				default:
-					break;
-				}
 
-				child->SetPosition(pos);
+					switch (m_Justify)
+					{
+					case Kinematics::Justify::FlexStart:
+						position += targetSize[mainAxis];
+						break;
+					case Kinematics::Justify::FlexEnd:
+						position += targetSize[mainAxis];
+						break;
+					case Kinematics::Justify::Center:
+						position += targetSize[mainAxis];
+						break;
+					case Kinematics::Justify::SpaceBetween:
+						if (element->GetChildren().size() > 1)
+							position += targetSize[mainAxis] + freeSpace / (element->GetChildren().size() - 1);
+						break;
+					case Kinematics::Justify::SpaceAround:
+						if (element->GetChildren().size() > 0)
+							position += targetSize[mainAxis] + freeSpace / (element->GetChildren().size());
+						break;
+					default:
+						break;
+					}
+
+					child->SetPosition(pos);
+				}
+				else
+				{
+					child->SetPosition(fp);
+				}
 				child->SetSize(targetSize);
 				child->ApplyLayout();
 			}

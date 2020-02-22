@@ -39,6 +39,11 @@ namespace Kinematics {
 	class FunctionCallback : public CallbackInterface<R, Types...>
 	{
 	public:
+		FunctionCallback()
+		{
+
+		}
+
 		FunctionCallback(std::function<R(Types...)> callable) : m_Callable(callable)
 		{
 

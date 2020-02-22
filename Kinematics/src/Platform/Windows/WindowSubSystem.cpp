@@ -20,6 +20,7 @@ namespace Kinematics {
 		m_Data.Width = 640;
 		m_Data.Height = 480;
 		m_Data.VSync = true;
+		m_Data.LastMousePos = glm::vec2(0.f);
 
 		int success = glfwInit();
 		KINEMATICS_CORE_ASSERT(success, "Could not initialiaze GLFW!");
@@ -50,7 +51,9 @@ namespace Kinematics {
 			});
 
 		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double x, double y) {
-			StateManager::GetInstance()->Emit(new MouseMovedEvent(x, y));
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			StateManager::GetInstance()->Emit(new MouseMovedEvent(x, y, x - data.LastMousePos.x , y - data.LastMousePos.y));
+			data.LastMousePos = glm::vec2(x, y);
 		});
 
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {

@@ -221,9 +221,11 @@
     <ClInclude Include="src\Kinematics\Scripting\ScriptCallable.h" />
     <ClInclude Include="src\Kinematics\UI\Canvas.h" />
     <ClInclude Include="src\Kinematics\UI\Container.h" />
+    <ClInclude Include="src\Kinematics\UI\Inflator.h" />
     <ClInclude Include="src\Kinematics\UI\Layout.h" />
     <ClInclude Include="src\Kinematics\UI\Panel.h" />
     <ClInclude Include="src\Kinematics\UI\ScrollPanel.h" />
+    <ClInclude Include="src\Kinematics\UI\Select.h" />
     <ClInclude Include="src\Kinematics\UI\TextArea.h" />
     <ClInclude Include="src\Kinematics\UI\TextBox.h" />
     <ClInclude Include="src\Kinematics\UI\TextInput.h" />

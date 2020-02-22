@@ -130,23 +130,25 @@ namespace Kinematics {
 				HandleCommands(e);
 				if (e.GetKeyCode() >= KINEMATICS_KEY_RIGHT && e.GetKeyCode() <= KINEMATICS_KEY_UP)
 					HandleDirectionalKeys(e);
+
+				UpdateCursorPanelPosition();
+
 				});
+				
 
 			m_OnClick = m_OnClick + CreateRef<FunctionCallback<void, MouseButtonReleasedEvent&>>([this](MouseButtonReleasedEvent& e) {
 				HandleMouseClick(e);
 			});
-
+			m_ContainerPanel->PushChild(m_CursorPanel);
 		}
 
 		void TextArea::Draw(Camera& camera, glm::vec2 pos)
 		{
 			ScrollPanel::Draw(camera, pos);
-			m_CursorPanel->Draw(camera, pos - m_ScrollPosition + m_Position + m_Lines[m_Cursor.y]->GetPosition());
 		}
 
 		void TextArea::Update(Timestep ts)
 		{
-			UpdateCursorPanelPosition();
 			ScrollPanel::Update(ts);
 		}
 
@@ -231,8 +233,6 @@ namespace Kinematics {
 
 		void TextArea::PushLine()
 		{
-			//m_Lines[m_Cursor.y]->m_String->PushCharacter(13);
-
 			m_Lines.insert(m_Lines.begin() + ++m_Cursor.y, CreateRef<TextLine>());
 			(*(m_Lines.begin() + m_Cursor.y))->SetFontColor(glm::vec4(0.f, 0.f, 0.f, 1.f));
 			PushChild(*(m_Lines.begin() + m_Cursor.y), m_Cursor.y);
@@ -246,6 +246,7 @@ namespace Kinematics {
 			{
 				m_Lines[m_Cursor.y]->m_String->PushCharacter(e.GetKeyCode(), m_Cursor.x++);
 				m_Lines[m_Cursor.y]->m_TextBox->RecalculateSize();
+				UpdateCursorPanelPosition();
 			}
 		}
 
@@ -336,8 +337,11 @@ namespace Kinematics {
 
 		void TextArea::HandleMouseClick(MouseButtonReleasedEvent& e)
 		{
-			auto mousePos = RenderCommand::GetWindow()->GetMousePos();
-			SetCursorPosition(GetCursorPositionFromAbsoluteCoords(mousePos + m_ScrollPosition));
+			if (m_ContainerPanel->IsFocused())
+			{
+				auto mousePos = RenderCommand::GetWindow()->GetMousePos();
+				SetCursorPosition(GetCursorPositionFromAbsoluteCoords(mousePos + m_ScrollPosition));
+			}
 		}
 
 		void TextArea::SetCursorPosition(glm::uvec2 pos)
@@ -397,6 +401,8 @@ namespace Kinematics {
 
 		void TextArea::UpdateCursorPanelPosition()
 		{
+			ApplyLayout();
+
 			auto line = m_Cursor.y;
 			auto linePos = m_Cursor.x;
 
@@ -410,7 +416,7 @@ namespace Kinematics {
 				yPos += m_Lines[i]->GetSize().y;
 			}
 
-			m_CursorPanel->SetPosition(glm::vec2(xPos, 0));
+			m_CursorPanel->SetFixedPosition(glm::vec2(xPos, 0) + m_Lines[m_Cursor.y]->GetPosition());
 
 			auto height = m_Lines[line]->m_String->GetPixelHeight();
 			auto width = m_CursorPanel->GetSize().x;

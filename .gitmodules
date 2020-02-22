@@ -1,14 +1,14 @@
-[submodule "Ava/vendor/spdlog"]
+[submodule "Kinematics/vendor/spdlog"]
 	path = Ava/vendor/spdlog
 	url = https://github.com/gabime/spdlog
-[submodule "Ava/vendor/GLFW"]
-	path = Ava/vendor/GLFW
+[submodule "Kinematics/vendor/GLFW"]
+	path = Kinematics/vendor/GLFW
 	url = https://github.com/TheCherno/GLFW
-[submodule "Ava/vendor/imgui"]
-	path = Ava/vendor/imgui
+[submodule "Kinematics/vendor/imgui"]
+	path = Kinematics/vendor/imgui
 	url = https://github.com/TheCherno/imgui
-[submodule "Ava/vendor/glm"]
-	path = Ava/vendor/glm
+[submodule "Kinematics/vendor/glm"]
+	path = Kinematics/vendor/glm
 	url = https://github.com/g-truc/glm
 [submodule "Kinematics/vendor/tinyxml2"]
 	path = Kinematics/vendor/tinyxml2

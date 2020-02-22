@@ -66,6 +66,7 @@ namespace Kinematics {
 			std::string Title;
 			unsigned int Width, Height;
 			bool VSync;
+			glm::vec2 LastMousePos;
 		};
 
 		WindowData m_Data;

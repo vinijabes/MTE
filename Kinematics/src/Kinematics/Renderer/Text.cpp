@@ -47,34 +47,33 @@ namespace Kinematics
 	{
 		std::string::const_iterator c;
 
-		uint32_t x = 0, y = 0;
+		uint32_t x = 0;
 
 		for (c = m_Text.begin(); c != m_Text.end(); c++)
 		{
 			Character ch = m_Font->Get(*c);
 			x += (ch.Advance >> 6);
-			if (ch.Size.y > y) y = ch.Size.y;
 		}
 
-		m_TextTexture = Texture2D::Create(x, y, WrappingOption::KINEMATICS_CLAMP_TO_EDGE, WrappingOption::KINEMATICS_CLAMP_TO_EDGE);
+		m_TextTexture = Texture2D::Create(x, m_Font->GetAscender() + m_Font->GetDescender(), WrappingOption::KINEMATICS_CLAMP_TO_EDGE, WrappingOption::KINEMATICS_CLAMP_TO_EDGE);
 		auto frameBuffer = FrameBuffer::Create();
 		frameBuffer->SetTargetTexture(m_TextTexture);
 
-		RenderCommand::SetViewport(0, 0, x, y);
+		RenderCommand::SetViewport(0, 0, x, m_Font->GetAscender() + m_Font->GetDescender());
+		Renderer2D::BeginScene(OrthographicCamera(0, x, 0, m_Font->GetAscender() + m_Font->GetDescender()));
+
 		uint32_t xIndex = 0;
-		Renderer2D::BeginScene(OrthographicCamera(0, x, 0, y));
 		Kinematics::RenderCommand::EnableAlphaBlending();
 		for (c = m_Text.begin(); c != m_Text.end(); c++)
 		{
 			Character ch = m_Font->Get(*c);
 
-			float xpos = xIndex + (float)ch.Bearing.x / 2;
-			float ypos = y - (ch.Size.y - ch.Bearing.y);
+			float xpos = xIndex + (float)ch.Bearing.x;
 
 			float w = ch.Size.x;
 			float h = ch.Size.y;
 
-			Renderer2D::RenderChar(glm::vec2(xpos + w/2, ypos - h/2), glm::vec2(w, h), ch, m_Color);
+			Renderer2D::RenderChar(glm::vec2(xpos + w / 2, m_Font->GetAscender() - ch.Bearing.y + h / 2.f), glm::vec2(w, h), ch, m_Color);
 			xIndex += (ch.Advance >> 6);
 		}
 

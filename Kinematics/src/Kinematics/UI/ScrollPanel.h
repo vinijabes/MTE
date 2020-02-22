@@ -12,23 +12,38 @@ namespace Kinematics {
 			{
 			public:
 				void Draw(Camera& camera, glm::vec2 pos, glm::vec2 scroll);
+				virtual void SetFixedSize(const glm::vec2& size);
+
+				virtual void ApplyLayout() override { UIElementInterface::ApplyLayout(); }
 			};
 
 			class ScrollBar : public Panel
 			{
+				friend ScrollPanel;
 			public:
-				ScrollBar(Orientation orientation);
+				ScrollBar(Orientation orientation, Ref<ScrollContainer> container);
 				virtual void Draw(Camera& camera, glm::vec2 pos) override;
 				virtual void Update(Timestep ts) override;
 
 				inline void SetPercentage(float perc)
 				{
+					if (perc < 0.f) perc = 0.f;
+					if (perc > 1.f) perc = 1.f;
+
 					m_Percentage = perc;
 					UpdateScrollPosition();
 				}
 				inline uint8_t GetPercentage() const { return m_Percentage; }
+				inline float GetPercentagePixelValue() const 
+				{ 
+					auto overflow = m_ContainerPanel->GetPreferredSize() - m_ContainerPanel->GetSize();
+					return overflow[(int)m_Orientation] * 0.01f; 
+				}
 
 			protected:
+				virtual bool OnMouseMovedEvent(MouseMovedEvent& e);
+
+
 				void UpdateScrollPosition()
 				{
 					auto pos = (GetSize() - m_Scroll->GetSize());
@@ -40,7 +55,7 @@ namespace Kinematics {
 
 				void ResizeScroll()
 				{
-					auto overflow = m_Parent->GetPreferredSize() - m_Parent->GetSize();
+					auto overflow = m_ContainerPanel->GetPreferredSize() - m_ContainerPanel->GetSize();
 					auto mainAxis = (int)m_Orientation;
 
 					auto size = m_Size;
@@ -48,10 +63,12 @@ namespace Kinematics {
 					size[mainAxis] -= (int)size[mainAxis] % 2 - 1;
 					m_Scroll->SetSize(size);
 				}
-			private:
+			protected:
 				float m_Percentage;
+				float m_LastPercentage;
 
 				Ref<UIElementInterface> m_Scroll;
+				Ref<ScrollContainer> m_ContainerPanel;
 				Orientation m_Orientation;
 			};
 
@@ -59,6 +76,11 @@ namespace Kinematics {
 			ScrollPanel();
 			virtual void Draw(Camera& camera, glm::vec2 pos) override;
 			virtual void Update(Timestep ts) override;
+			virtual void OnEvent(Event& e) override;
+
+			void UpdateContainerSize();
+
+			virtual void SetColor(const glm::vec4& color) override { m_ContainerPanel->SetColor(color); }
 
 			void SetScrollPosition(glm::vec2 pos);
 
@@ -78,6 +100,7 @@ namespace Kinematics {
 			virtual void PushChild(Ref<UIElementInterface> child)
 			{
 				m_ContainerPanel->PushChild(child);
+				UpdateContainerSize();
 			}
 
 			virtual void PushChild(Ref<UIElementInterface> child, uint32_t pos) override
@@ -94,6 +117,9 @@ namespace Kinematics {
 
 		protected:
 			glm::vec2 m_ScrollPosition;
+
+			glm::vec2 m_StartScrollPosition;
+			glm::vec2 m_StartMousePos;
 
 			Ref<ScrollContainer> m_ContainerPanel;
 			Ref<ScrollBar> m_VerticalScroll;
