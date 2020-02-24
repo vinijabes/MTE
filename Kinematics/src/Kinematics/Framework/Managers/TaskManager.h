@@ -69,9 +69,33 @@ namespace Kinematics {
 
 		void SetThreadCount(int count)
 		{
-			this->m_ThreadCount = count;
-			this->m_MaxBackgroundThreads = std::max(count / 4, 1);
+			if (m_Running)
+			{
+				if(m_ThreadCount > count)
+				{
+					Shutdown();
+					this->m_ThreadCount = count;
+					this->m_MaxBackgroundThreads = std::max(count / 4, 1);
+					Initialize();
+				}
+				else
+				{
+					for (int i = m_ThreadCount; i < count; i++)
+					{
+						this->Push();
+					}
+					this->m_ThreadCount = count;
+					this->m_MaxBackgroundThreads = std::max(count / 4, 1);
+				}
+			}
+			else
+			{
+				this->m_ThreadCount = count;
+				this->m_MaxBackgroundThreads = std::max(count / 4, 1);
+			}
 		}
+
+		int GetThreadCount() const { return m_ThreadCount; }
 
 		void Initialize();
 		void Shutdown();

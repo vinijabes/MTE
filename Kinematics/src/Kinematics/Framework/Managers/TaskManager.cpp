@@ -29,6 +29,8 @@ namespace Kinematics {
 		{
 			delete m_Workers[i];
 		}
+
+		m_Workers.clear();
 	}
 
 	void TaskManager::Push()
