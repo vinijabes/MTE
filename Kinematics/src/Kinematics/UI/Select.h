@@ -42,7 +42,9 @@ namespace Kinematics {
 
 		private:
 			Ref<Element> m_Selected;
-			std::list<std::pair<Ref<Element>, Ref<UIElementInterface>>> m_Itens;
+			std::list<Ref<Element>> m_Itens;
+			std::list<Ref<UIElementInterface>> m_RenderingItens;
+
 
 			Inflator<Select*, int, const Ref<Element>&> m_Inflator;
 
@@ -71,7 +73,9 @@ namespace Kinematics {
 			auto item = InflateItem(this, m_Itens.size(), key);
 			if (item)
 			{
-				m_Itens.push_back(std::make_pair(key, item));
+				m_Itens.push_back(key);
+				m_RenderingItens.push_back(item);
+
 				m_SelectionDrop->PushChild(item);
 			}
 		}

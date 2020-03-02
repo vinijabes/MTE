@@ -54,9 +54,6 @@ void GameLayer::OnAttach()
 	Kinematics::StateManager::GetInstance()->On(Kinematics::EventType::WindowResize, KINEMATICS_BIND_EVENT_FN(GameLayer::OnEvent));
 
 	Kinematics::RenderCommand::SetWindow(Kinematics::Application::Get().GetFramework()->GetSubSystem<Kinematics::WindowSubSystemInterface>().get());
-
-	Kinematics::TaskManager::GetInstance()->SetThreadCount(6);
-
 	m_Mesh = Kinematics::Mesh::Create();
 
 	float vertices[] = {

@@ -159,7 +159,8 @@ namespace Kinematics {
 			}
 
 			virtual void SetLayout(Ref<Layout> layout) { m_Layout = layout; }
-			Ref<Layout> GetLayout() const { return m_Layout; }
+			virtual Ref<Layout> GetLayout() const { return m_Layout; }
+
 			virtual void ApplyLayout()
 			{
 				if (m_Layout)

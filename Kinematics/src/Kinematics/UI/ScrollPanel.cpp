@@ -19,7 +19,7 @@ namespace Kinematics {
 				SetScrollPosition(m_ScrollPosition);
 
 				e.StopPropagation();
-			});
+				});
 
 			m_ContainerPanel = CreateRef<ScrollContainer>();
 			m_VerticalScroll = CreateRef<ScrollBar>(Orientation::Vertical, m_ContainerPanel);
@@ -41,14 +41,14 @@ namespace Kinematics {
 
 			m_OnResize = m_OnResize + CreateRef<FunctionCallback<void, glm::vec2>>([this](glm::vec2 size) {
 				UpdateContainerSize();
-			});
+				});
 
 			m_OnButtonDown = m_OnButtonDown + CreateRef<FunctionCallback<void, MouseButtonPressedEvent&>>([this](MouseButtonPressedEvent& e) {
 				m_StartScrollPosition = m_ScrollPosition;
 				m_StartMousePos = RenderCommand::GetWindow()->GetMousePos();
-			});
+				});
 
-			m_HorizontalScroll->m_Scroll->AddOnMoveCallback(CreateRef<FunctionCallback<void, MouseMovedEvent&>>([this](MouseMovedEvent& e){
+			m_HorizontalScroll->m_Scroll->AddOnMoveCallback(CreateRef<FunctionCallback<void, MouseMovedEvent&>>([this](MouseMovedEvent& e) {
 				if (m_HorizontalScroll->m_Scroll->IsFocused())
 				{
 					auto size = (m_HorizontalScroll->GetSize() - m_HorizontalScroll->m_Scroll->GetSize());
@@ -58,7 +58,7 @@ namespace Kinematics {
 						SetScrollPosition(m_StartScrollPosition + move);
 					}
 				}
-			}));
+				}));
 
 			m_VerticalScroll->m_Scroll->AddOnMoveCallback(CreateRef<FunctionCallback<void, MouseMovedEvent&>>([this](MouseMovedEvent& e) {
 				if (m_VerticalScroll->m_Scroll->IsFocused())
@@ -70,7 +70,7 @@ namespace Kinematics {
 						SetScrollPosition(m_StartScrollPosition + move);
 					}
 				}
-			}));
+				}));
 
 			UIElementInterface::PushChild(m_ContainerPanel);
 			UIElementInterface::PushChild(m_HorizontalScroll);
@@ -91,7 +91,7 @@ namespace Kinematics {
 			RenderCommand::DisableScissorTest();
 			RenderCommand::SetScissor(0, 0, window->GetWidth(), window->GetHeight());
 
-			if(m_VerticalScroll->IsVisible())
+			if (m_VerticalScroll->IsVisible())
 				m_VerticalScroll->Draw(camera, parentPos + m_Position);
 
 			if (m_HorizontalScroll->IsVisible())
@@ -180,7 +180,7 @@ namespace Kinematics {
 			if (m_ScrollPosition.x < 0) m_ScrollPosition.x = 0;
 
 			if (overflow.x > 0.f) m_HorizontalScroll->SetPercentage(m_ScrollPosition.x / overflow.x);
-			if (overflow.y - layout->GetMargin() > 0.f) m_VerticalScroll->SetPercentage(m_ScrollPosition.y/(overflow.y - layout->GetMargin()));
+			if (overflow.y - layout->GetMargin() > 0.f) m_VerticalScroll->SetPercentage(m_ScrollPosition.y / (overflow.y - layout->GetMargin()));
 		}
 
 		ScrollPanel::ScrollBar::ScrollBar(Orientation orientation, Ref<ScrollContainer> container)
@@ -229,25 +229,20 @@ namespace Kinematics {
 			return Panel::OnMouseMovedEvent(e);
 		}
 
+		ScrollPanel::ScrollContainer::ScrollContainer()
+		{
+			m_Wrapper = CreateRef<Panel>();
+
+			auto boxLayout = CreateRef<BoxLayout>();
+			boxLayout->SetOrientation(Orientation::Vertical);
+
+			m_Wrapper->SetLayout(boxLayout);
+
+			UIElementInterface::PushChild(m_Wrapper);
+		}
+
 		void ScrollPanel::ScrollContainer::Draw(Camera& camera, glm::vec2 parentPos, glm::vec2 scroll)
 		{
-			if (m_Color != glm::vec4(0.f))
-			{
-				auto pos = m_Position;
-				auto size = GetSize();
-				auto drawingPos = pos + size / 2.f + parentPos;
-
-				Renderer2D::DrawQuad(camera.ToWindowPosition(drawingPos), camera.PixelToWindowSize(size), m_Color);
-			}
-			else if (m_Theme)
-			{
-				auto pos = m_Position;
-				auto size = GetSize();
-				auto drawingPos = pos + size / 2.f + parentPos;
-
-				Renderer2D::DrawQuad(camera.ToWindowPosition(drawingPos), camera.PixelToWindowSize(size), m_Theme->m_Color);
-			}
-
 			DrawChildren(camera, parentPos + m_Position - scroll);
 		}
 		void ScrollPanel::ScrollContainer::SetFixedSize(const glm::vec2& size)

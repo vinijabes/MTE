@@ -11,10 +11,32 @@ namespace Kinematics {
 			class ScrollContainer : public Panel
 			{
 			public:
+				ScrollContainer();
 				void Draw(Camera& camera, glm::vec2 pos, glm::vec2 scroll);
 				virtual void SetFixedSize(const glm::vec2& size);
 
 				virtual void ApplyLayout() override { UIElementInterface::ApplyLayout(); }
+				
+				virtual void PushChild(Ref<UIElementInterface> child)
+				{
+					m_Wrapper->PushChild(child);
+				}
+				virtual void PushChild(Ref<UIElementInterface> child, uint32_t pos) override
+				{
+					m_Wrapper->PushChild(child, pos);
+				}
+
+				virtual void RemoveChild(Ref<UIElementInterface> child)
+				{
+					m_Wrapper->RemoveChild(child);
+				}
+
+				void SetWrapperLayout(Ref<Layout> layout) { m_Wrapper->SetLayout(layout); }
+
+				//virtual Ref<Layout> GetLayout() const override { return m_Wrapper->GetLayout(); }
+
+			private:
+				Ref<Panel> m_Wrapper;
 			};
 
 			class ScrollBar : public Panel
@@ -81,6 +103,7 @@ namespace Kinematics {
 			void UpdateContainerSize();
 
 			virtual void SetColor(const glm::vec4& color) override { m_ContainerPanel->SetColor(color); }
+			virtual void SetLayout(Ref<Layout> layout) override { m_ContainerPanel->SetLayout(layout); }
 
 			void SetScrollPosition(glm::vec2 pos);
 
